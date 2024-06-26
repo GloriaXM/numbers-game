@@ -1,6 +1,12 @@
+import Button from '@mui/material/Button';
+
 function Home () {
     return (
-        <h2> Home Page</h2>
+        <>
+        <Button href="/login">Login </Button>
+        <Button href="/signup">Sign Up </Button>
+        </>
+
     )
 }
 

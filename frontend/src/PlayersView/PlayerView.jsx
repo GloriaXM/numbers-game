@@ -1,11 +1,13 @@
 import PlayerTable from "./PlayerTable";
+import Header from "../Header/Header"
 
-function MainView() {
+function PlayerView() {
   return (
     <>
+        <Header/>
         <PlayerTable/>
     </>
   );
 }
 
-export default MainView
+export default PlayerView
