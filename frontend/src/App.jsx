@@ -6,6 +6,7 @@ import '@fontsource/roboto/700.css';
 import { Route, Routes } from 'react-router-dom';
 
 import Header from "./Header/Header"
+import Home from './Home/Home'
 import MainView from './PlayersView/PlayerView'
 import MyTeamView from './MyTeam/MyTeamView';
 
@@ -15,6 +16,7 @@ function App() {
     <div className="app">
       <Header/>
       <Routes>
+        <Route exact path='/' element={<Home/>}></Route>
         <Route exact path='/Players' element={<MainView/>}></Route>
         <Route exact path='/MyTeam' element={<MyTeamView/>}></Route>
       </Routes>

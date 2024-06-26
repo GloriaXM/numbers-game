@@ -47,9 +47,6 @@ function PlayerTable() {
             <TableCell align="right">AST</TableCell>
             <TableCell align="right">STL</TableCell>
             <TableCell align="right">BLK</TableCell>
-
-
-
           </TableRow>
         </TableHead>
         <TableBody>
