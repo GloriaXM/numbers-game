@@ -43,14 +43,12 @@ model Player {
   PF Int
   PTS Int
   team String
-  season Int
-  favorited FavoritedPlayer?
+  myTeamPlayer MyTeamPlayer?
 }
 
-model FavoritedPlayer {
+model MyTeamPlayer {
   id Int @id @default(autoincrement())
   performanceScore String
-  notes String[]
   player Player @relation(fields: [playerId], references: [id])
   playerId Int @unique
 }

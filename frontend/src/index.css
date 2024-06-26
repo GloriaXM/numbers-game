@@ -33,6 +33,11 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #66fcf1
+}
+
+h2 {
+  color: #c5c6c7
 }
 
 button {
@@ -65,4 +70,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.app {
+  background-color: #0b0c10;
 }
