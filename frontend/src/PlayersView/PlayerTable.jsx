@@ -21,16 +21,33 @@ const rows = [
 
 function PlayerTable() {
   return (
-    <TableContainer stickyHeader component={Paper}>
+    <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Player Name</TableCell>
             <TableCell align="right">Minutes Played</TableCell>
-            <TableCell align="right">Field Goals</TableCell>
+            <TableCell align="right">Field Makes</TableCell>
             <TableCell align="right">Field Attempts</TableCell>
-            <TableCell align="right">Field Percent</TableCell>
+            <TableCell align="right">Field %</TableCell>
             <TableCell align="right">Three Makes</TableCell>
+            <TableCell align="right">Three Makes</TableCell>
+            <TableCell align="right">Three Attempts</TableCell>
+            <TableCell align="right">Threes %</TableCell>
+            <TableCell align="right">Two Makes</TableCell>
+            <TableCell align="right">Two Attempts</TableCell>
+            <TableCell align="right">Twos %</TableCell>
+            <TableCell align="right">Effective FG %</TableCell>
+            <TableCell align="right">Free Throw Makes</TableCell>
+            <TableCell align="right">FT Attempt</TableCell>
+            <TableCell align="right">FT %</TableCell>
+            <TableCell align="right">ORB</TableCell>
+            <TableCell align="right">DRB</TableCell>
+            <TableCell align="right">TRB</TableCell>
+            <TableCell align="right">AST</TableCell>
+            <TableCell align="right">STL</TableCell>
+            <TableCell align="right">BLK</TableCell>
+
 
 
           </TableRow>

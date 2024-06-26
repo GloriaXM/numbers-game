@@ -1,0 +1,9 @@
+.playerCard {
+    display: flex;
+    flex-direction: column;
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: row;
+}

@@ -3,16 +3,21 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import Header from "./Header/Header"
-import MainView from './MainView/MainView'
+import { Route, Routes } from 'react-router-dom';
 
+import Header from "./Header/Header"
+import MainView from './PlayersView/PlayerView'
+import MyTeamView from './MyTeam/MyTeamView';
 
 function App() {
 
   return (
     <div className="app">
       <Header/>
-      <MainView/>
+      <Routes>
+        <Route exact path='/Players' element={<MainView/>}></Route>
+        <Route exact path='/MyTeam' element={<MyTeamView/>}></Route>
+      </Routes>
     </div>
   )
 }
