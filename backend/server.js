@@ -15,7 +15,7 @@ import {} from 'dotenv/config'
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: `http://localhost:${PORT}`,
+  origin: `http://localhost:5173`,
   credentials: true
 }));
 app.use(express.json()); // Middleware for parsing JSON bodies from HTTP requests

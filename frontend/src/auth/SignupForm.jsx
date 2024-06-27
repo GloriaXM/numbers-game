@@ -5,7 +5,6 @@ import { UserContext } from '../UserContext.js';
 
 const SignupForm = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { updateUser } = useContext(UserContext);
@@ -16,12 +15,12 @@ const SignupForm = () => {
 
     try {
       // Make the signup API request
-      const response = await fetch(`http://localhost:3000/users`, {
+      const response = await fetch(`http://localhost:5000/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, password }),
         credentials: 'include'
       });
 
@@ -33,14 +32,13 @@ const SignupForm = () => {
 
         // Reset form fields
         setUsername('');
-        setEmail('');
         setPassword('');
 
         // Update the user context
         updateUser(loggedInUser);
 
         // Navigate to the home page after successful login
-        navigate('/');
+        navigate('/Players');
       } else {
         // Handle signup failure case
         alert('Signup failed');
@@ -62,16 +60,6 @@ const SignupForm = () => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>

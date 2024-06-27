@@ -15,7 +15,7 @@ const LoginForm = () => {
 
     try {
       // Make the login API request
-      const response = await fetch(`http://localhost:3000/users/login`, {
+      const response = await fetch(`http://localhost:5000/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const LoginForm = () => {
         updateUser(loggedInUser);
 
         // Navigate to the home page after successful login
-        navigate('/');
+        navigate('/Players');
       } else {
         // Handle the login failure case
         alert('Login failed');
