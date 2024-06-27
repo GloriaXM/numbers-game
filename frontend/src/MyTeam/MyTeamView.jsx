@@ -1,14 +1,14 @@
 import "./MyTeamView.css"
 import Header from "../Header/Header.jsx"
 import PlayerCardList from "./PlayerCardList.jsx"
-import TeamStats from "./TeamStats.jsx"
+import StatsTable from "../PlayersView/StatsTable"
 
 function MyTeamView() {
 
   return (
     <div className="myTeamView">
       <Header/>
-      <TeamStats/>
+      <StatsTable/>
       <PlayerCardList/>
     </div>
   )
