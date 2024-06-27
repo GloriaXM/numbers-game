@@ -1,9 +1,0 @@
-.modelView {
-    display: flex;
-    flex-direction: row;
-}
-
-.modelImg {
-    width: 800px;
-    height: 800px;
-}
