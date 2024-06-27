@@ -11,15 +11,18 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link as RouterLink, MemoryRouter } from 'react-router-dom';
+import { useContext } from "react";
+import { UserContext } from "../UserContext.js";
+import { useNavigate } from "react-router-dom";
 
 const pages = ['Players', 'MyTeam'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function TestHeader() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const { user, updateUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -35,6 +38,13 @@ function TestHeader() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleLogout = () => {
+        // Perform logout logic here
+        // Example: Clear user data from localStorage, reset user state, etc.
+        updateUser(null);
+        navigate("/login")
+      };
 
     return (
         <AppBar position="static">
@@ -133,11 +143,9 @@ function TestHeader() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
                 >
-                {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                <MenuItem  onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
                     </MenuItem>
-                ))}
                 </Menu>
             </Box>
             </Toolbar>

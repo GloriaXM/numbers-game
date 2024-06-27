@@ -31,13 +31,12 @@ function App() {
     <div className="app">
       <UserContext.Provider value={{ user, updateUser }}>
         <Routes>
-          <Route exact path='/' element={<Home/>}></Route>
           <Route path="/" element={user ? <PlayersView /> : <LoginForm />} />
           <Route exact path='/login' element={<LoginForm/>}></Route>
           <Route exact path='/signup' element={<SignupForm/>}></Route>
-          <Route exact path='/Players' element={<PlayersView/>}></Route>
-          <Route exact path='/MyTeam' element={<MyTeamView/>}></Route>
-          <Route exact path='/player' element={<SinglePlayerView/>}></Route>
+          <Route exact path='/Players' element={user ? <PlayersView /> : <LoginForm />}></Route>
+          <Route exact path='/MyTeam' element={user ? <MyTeamView /> : <LoginForm />}></Route>
+          <Route exact path='/player' element={user ? <SinglePlayerView /> : <LoginForm />}></Route>
         </Routes>
       </UserContext.Provider>
     </div>
