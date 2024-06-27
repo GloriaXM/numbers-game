@@ -52,3 +52,10 @@ model MyTeamPlayer {
   player Player @relation(fields: [playerId], references: [id])
   playerId Int @unique
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String
+  myTeam Int[]
+}
