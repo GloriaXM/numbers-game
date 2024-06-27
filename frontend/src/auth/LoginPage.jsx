@@ -1,7 +1,7 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { FormControl, FormLabel } from '@mui/material';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function LoginPage () {
@@ -14,6 +14,9 @@ function LoginPage () {
             <FormLabel> Password</FormLabel>
             <TextField></TextField>
             <Button>Submit</Button>
+            <p>
+                New to the app? <Link to="/signup">Sign Up</Link>
+            </p>
         </FormControl>
 
     </div>
