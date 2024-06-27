@@ -1,0 +1,11 @@
+.playerCard {
+    display: flex;
+    flex-direction: column;
+    border: solid thick;
+    margin: 10px;
+}
+
+.cardHeader {
+    display: flex;
+    flex-direction: row;
+}
