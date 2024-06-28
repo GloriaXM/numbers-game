@@ -22,17 +22,17 @@ model Player {
   minutes_played Int
   field_goals Int
   field_attempts Int
-  field_percent String
+  field_percent Float
   three_fg Int
   three_attempts Int
-  three_percent String
+  three_percent Float
   two_fg Int
   two_attempts Int
-  two_percent String
+  two_percent Float
   effect_fg_percent String
   ft Int
   fta Int
-  ft_percent String
+  ft_percent Float
   ORB Int
   DRB Int
   TRB Int
