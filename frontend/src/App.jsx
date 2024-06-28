@@ -7,10 +7,9 @@ import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import PlayersView from "./PlayersView/PlayersView";
 import MyTeamView from "./MyTeam/MyTeamView";
-import LoginForm from "./auth/LoginForm";
-import SignupForm from "./auth/SignupForm";
 import SinglePlayerView from "./SinglePlayer/SinglePlayerView";
 import { UserContext } from "./UserContext";
+import LoginSignup from "./auth/LoginSignup";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -27,23 +26,36 @@ function App() {
     <div className="app">
       <UserContext.Provider value={{ user, updateUser }}>
         <Routes>
-          <Route path="/" element={user ? <PlayersView /> : <LoginForm />} />
-          <Route exact path="/login" element={<LoginForm />}></Route>
-          <Route exact path="/signup" element={<SignupForm />}></Route>
+          <Route
+            path="/"
+            element={user ? <PlayersView /> : <LoginSignup loginForm={true} />}
+          />
+          <Route
+            exact
+            path="/login"
+            element={<LoginSignup loginForm={true} />}
+          ></Route>
+          <Route
+            exact
+            path="/signup"
+            element={<LoginSignup loginForm={false} />}
+          ></Route>
           <Route
             exact
             path="/Players"
-            element={user ? <PlayersView /> : <LoginForm />}
+            element={user ? <PlayersView /> : <LoginSignup loginForm={true} />}
           ></Route>
           <Route
             exact
             path="/MyTeam"
-            element={user ? <MyTeamView /> : <LoginForm />}
+            element={user ? <MyTeamView /> : <LoginSignup loginForm={true} />}
           ></Route>
           <Route
             exact
             path="/player"
-            element={user ? <SinglePlayerView /> : <LoginForm />}
+            element={
+              user ? <SinglePlayerView /> : <LoginSignup loginForm={true} />
+            }
           ></Route>
         </Routes>
       </UserContext.Provider>
