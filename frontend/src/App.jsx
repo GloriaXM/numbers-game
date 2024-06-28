@@ -10,6 +10,7 @@ import MyTeamView from "./MyTeam/MyTeamView";
 import SinglePlayerView from "./SinglePlayer/SinglePlayerView";
 import { UserContext } from "./UserContext";
 import LoginSignup from "./auth/LoginSignup";
+import "./App.css";
 
 function App() {
   const [user, setUser] = useState(() => {

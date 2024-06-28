@@ -1,14 +1,13 @@
 import StatsTable from "./StatsTable";
-import Header from "../Header/Header"
+import Header from "../Header/Header";
 
 function PlayersView() {
-
   return (
-    <>
-        <Header/>
-        <StatsTable/>
-    </>
+    <div className="playersView">
+      <Header />
+      <StatsTable />
+    </div>
   );
 }
 
-export default PlayersView
+export default PlayersView;

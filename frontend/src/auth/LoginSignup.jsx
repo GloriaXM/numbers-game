@@ -16,6 +16,9 @@ function LoginSignup({ loginForm }) {
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
+  const [showUserError, setShowUserError] = useState(false);
+  const [showServerError, setShowServerError] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,7 +40,6 @@ function LoginSignup({ loginForm }) {
         const data = await response.json();
         const loggedInUser = data.user;
 
-        console.log("Signup successful");
         // Update the user context
         updateUser(loggedInUser);
 
@@ -45,26 +47,26 @@ function LoginSignup({ loginForm }) {
         navigate("/Players");
       } else {
         // Handle signup failure case
-        alert("Signup failed");
+        setShowUserError(true);
       }
     } catch (error) {
       // Handle any network or API request errors
-      alert("Signup failed: " + error);
+      setShowServerError(true);
     }
   };
 
   return (
-    <form className="loginSignup" onSubmit={handleSubmit}>
-      <Typography> {loginForm ? "Login" : "Signup"}</Typography>
-      <Collapse in={open}>
+    <div className="loginSignup">
+      <Collapse in={showServerError}>
         <Alert
+          severity="error"
           action={
             <IconButton
               aria-label="close"
               color="inherit"
               size="small"
               onClick={() => {
-                setOpen(false);
+                setShowServerError(false);
               }}
             >
               <CloseIcon fontSize="inherit" />
@@ -72,40 +74,64 @@ function LoginSignup({ loginForm }) {
           }
           sx={{ mb: 2 }}
         >
-          Invalid username or password!
+          Server has failed!
         </Alert>
       </Collapse>
 
-      <TextField
-        required
-        label="Username"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <TextField
-        required
-        label="Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button variant="contained" color="primary" type="submit">
-        {loginForm ? "Login" : "Signup"}
-      </Button>
-      <div>
-        <Typography>
-          {loginForm ? "New to the app?" : "Already have an account?"}
-        </Typography>
-        <Link to={!loginForm ? "/login" : "/signup"}>
-          {" "}
-          {!loginForm ? "Log In" : "Sign Up"}{" "}
-        </Link>
-      </div>
-    </form>
+      <form className="loginSignupForm" onSubmit={handleSubmit}>
+        <Typography> {loginForm ? "Login" : "Signup"}</Typography>
+        <Collapse in={showUserError}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setShowUserError(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Invalid username or password!
+          </Alert>
+        </Collapse>
+
+        <TextField
+          required
+          label="Username"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          required
+          label="Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button variant="contained" color="primary" type="submit">
+          {loginForm ? "Login" : "Signup"}
+        </Button>
+        <div>
+          <Typography>
+            {loginForm ? "New to the app?" : "Already have an account?"}
+          </Typography>
+          <Link to={!loginForm ? "/login" : "/signup"}>
+            {" "}
+            {!loginForm ? "Log In" : "Sign Up"}{" "}
+          </Link>
+        </div>
+      </form>
+    </div>
   );
 }
 
