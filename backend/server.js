@@ -30,11 +30,52 @@ app.use(
     cookie: {
       sameSite: false,
       secure: false,
-      expires: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000)) // 1 year in milliseconds
+      expires: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000))
     }
   })
 );
 
 app.use(userRoutes);
 
-//TODO: refer back to lab code on getting user-specific data
+app.post('/player', async (req, res) => {
+    const {AST, BLK, DRB, ORB, PF, PTS, STL, TOV, TRB, age,
+        effect_fg_percent, field_attempts, field_goals, field_percent,
+        ft, ft_percent, fta, games, games_started, id, minutes_played,
+        player_name, team, three_attempts, three_fg, three_percent,
+        two_attempts, two_fg, two_percent} = req.body;
+
+    const newPlayer = await prisma.player.create({
+        data: {
+            AST,
+            BLK,
+            DRB,
+            ORB,
+            PF,
+            PTS,
+            STL,
+            TOV,
+            TRB,
+            age,
+            effect_fg_percent,
+            field_attempts,
+            field_goals,
+            field_percent,
+            ft,
+            ft_percent,
+            fta,
+            games,
+            games_started,
+            id,
+            minutes_played,
+            player_name,
+            team,
+            three_attempts,
+            three_fg,
+            three_percent,
+            two_attempts,
+            two_fg,
+            two_percent,
+        }
+    });
+    res.json(newPlayer);
+  });

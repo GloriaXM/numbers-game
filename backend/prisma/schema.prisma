@@ -44,11 +44,12 @@ model Player {
   PTS Int
   team String
   myTeamPlayer MyTeamPlayer?
+  createdAt  DateTime  @default(now())
 }
 
 model MyTeamPlayer {
   id Int @id @default(autoincrement())
-  performanceScore String
+  performanceScore Int
   player Player @relation(fields: [playerId], references: [id])
   playerId Int @unique
 }
