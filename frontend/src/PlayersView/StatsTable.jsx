@@ -36,7 +36,7 @@ const rows = [
 function isOld(player) {
   const MAX_UPDATE_TIME = 5 * 60 * 1000;
   const offset = new Date();
-  offset.setTime(Date.now() - 5 * 60 * 1000);
+  offset.setTime(Date.now() - MAX_UPDATE_TIME);
 
   return player.createdAt <= offset;
 }

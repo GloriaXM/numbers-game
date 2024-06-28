@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './SignupForm.css'
-import { UserContext } from '../UserContext.js';
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./SignupForm.css";
+import { UserContext } from "../UserContext.js";
 
 const SignupForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -15,37 +15,33 @@ const SignupForm = () => {
 
     try {
       // Make the signup API request
-      const response = await fetch(`http://localhost:5000/users`, {
-        method: 'POST',
+      const response = await fetch(`http://localhost:5000/users/signup`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
-        credentials: 'include'
+        credentials: "include",
       });
 
       if (response.ok) {
         const data = await response.json();
         const loggedInUser = data.user;
 
-        console.log('Signup successful');
-
-        // Reset form fields
-        setUsername('');
-        setPassword('');
+        console.log("Signup successful");
 
         // Update the user context
         updateUser(loggedInUser);
 
         // Navigate to the home page after successful login
-        navigate('/Players');
+        navigate("/Players");
       } else {
         // Handle signup failure case
-        alert('Signup failed');
+        alert("Signup failed");
       }
     } catch (error) {
       // Handle any network or API request errors
-      alert('Signup failed: ' + error);
+      alert("Signup failed: " + error);
     }
   };
 

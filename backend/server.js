@@ -10,9 +10,11 @@ const app = express();
 
 import {} from 'dotenv/config'
 const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY;
+const FRONTEND_PORT = process.env.FRONTEND_PORT;
 
 app.use(cors({
-  origin: `http://localhost:5173`,
+  origin: `http://localhost:${FRONTEND_PORT}`,
   credentials: true
 }));
 app.use(express.json());
@@ -24,13 +26,13 @@ app.listen(PORT, () =>
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {
       sameSite: false,
       secure: false,
-      expires: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000))
+      expires: new Date(Date.now() + (30 * 24 * 60 * 60 * 1000))
     }
   })
 );
