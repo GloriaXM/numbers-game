@@ -1,14 +1,14 @@
-import "./PlayerCardList.css"
-import PlayerCard from "./PlayerCard"
+import "./PlayerCardList.css";
+import PlayerCard from "./PlayerCard";
 
-function PlayerCardList () {
-    return (
-        <div className="playerCardList">
-            <PlayerCard/>
-            <PlayerCard/>
-            <PlayerCard/>
-        </div>
-    )
+function PlayerCardList() {
+  return (
+    <div className="playerCardList">
+      <PlayerCard />
+      <PlayerCard />
+      <PlayerCard />
+    </div>
+  );
 }
 
-export default PlayerCardList
+export default PlayerCardList;
