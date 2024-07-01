@@ -7,12 +7,12 @@ function PlayersView() {
   const [page, setPage] = useState(1);
 
   async function loadPlayers(page) {
-    // const response = await fetch(
-    //   `https://nba-stats-db.herokuapp.com/api/playerdata/?page=${page}`
-    // );
-    // const data = await response.json();
-    // const players = data.results;
-    // setPlayersList(players);
+    const response = await fetch(
+      `https://nba-stats-db.herokuapp.com/api/playerdata/?page=${page}`
+    );
+    const data = await response.json();
+    const players = data.results;
+    setPlayersList(players);
   }
 
   useEffect(() => {
