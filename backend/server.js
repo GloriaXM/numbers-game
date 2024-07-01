@@ -41,6 +41,7 @@ app.use(
 
 app.use(userRoutes);
 
+//POSTS
 app.post("/player", async (req, res) => {
   const {
     AST,
@@ -108,4 +109,79 @@ app.post("/player", async (req, res) => {
     },
   });
   res.json(newPlayer);
+});
+
+app.post("/myTeamPlayer", async (req, res) => {
+  const { performanceScore, playerId } = req.body;
+
+  const newPlayer = await prisma.myTeamPlayer.create({
+    data: {
+      performanceScore,
+      playerId,
+    },
+  });
+  res.json(newPlayer);
+});
+
+//GETS
+app.get("/player", async (req, res) => {
+  const { team, orderParam, ascending } = req.query;
+  let orderBy = {};
+
+  switch (orderParam) {
+    case "three_percent":
+      orderBy = { three_percent: ascending };
+      break;
+    default:
+      orderBy = { id: "asc" };
+  }
+
+  const players = await prisma.player.findMany({
+    where: { team },
+    orderBy,
+  });
+  res.json(players);
+});
+
+//TODO: this should be a direct fetch from the third party api
+app.get("/player/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const player = await prisma.player.findUnique({
+    where: { id },
+  });
+  res.json(player);
+});
+
+//TODO: decide if we expect to make a lot of state changes / if it should be stored as state array or in datatbase
+app.get("/myTeamPlayer", async (req, res) => {
+  const players = await prisma.myTeamPlayer.findMany({});
+  res.json(players);
+});
+
+app.patch("/myTeamPlayer", async (req, res) => {
+  const { id, performanceScore, playerId } = req.body;
+
+  const newPlayer = await prisma.myTeamPlayer.update({
+    where: {
+      id,
+    },
+    data: {
+      performanceScore,
+      playerId,
+    },
+  });
+  res.json(newPlayer);
+});
+
+app.delete("/myTeamPlayer", async (req, res) => {
+  const id = req.body.id;
+  await prisma.myTeamPlayer.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  //TODO: add error handling here
+  res.status(204).send();
 });
