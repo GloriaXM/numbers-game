@@ -43,20 +43,22 @@ model Player {
   PF Int
   PTS Int
   team String
-  myTeamPlayer MyTeamPlayer?
   createdAt  DateTime  @default(now())
+  teamPlayer MyTeamPlayer[]
 }
 
 model MyTeamPlayer {
   id Int @id @default(autoincrement())
   performanceScore Int
   player Player @relation(fields: [playerId], references: [id])
-  playerId Int @unique
+  playerId Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 }
 
 model User {
   id Int @id @default(autoincrement())
   username String @unique
   password String
-  myTeam Int[]
+  myTeamPlayers MyTeamPlayer[]
 }
