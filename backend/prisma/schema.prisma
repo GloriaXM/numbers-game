@@ -15,33 +15,33 @@ datasource db {
 
 model Player {
   id Int @id @default(autoincrement())
-  player_name String
+  name String
   age Int
   games Int
   games_started Int
-  minutes_played Int
-  field_goals Int
-  field_attempts Int
+  minutes_pg Float
+  field_goals Float
+  field_attempts Float
   field_percent Float
-  three_fg Int
-  three_attempts Int
+  three_fg Float
+  three_attempts Float
   three_percent Float
-  two_fg Int
-  two_attempts Int
+  two_fg Float
+  two_attempts Float
   two_percent Float
   effect_fg_percent String
-  ft Int
-  fta Int
+  ft Float
+  fta Float
   ft_percent Float
-  ORB Int
-  DRB Int
-  TRB Int
-  AST Int
-  STL Int
-  BLK Int
-  TOV Int
-  PF Int
-  PTS Int
+  ORB Float
+  DRB Float
+  TRB Float
+  AST Float
+  STL Float
+  BLK Float
+  TOV Float
+  PF Float
+  PTS Float
   team String
   createdAt  DateTime  @default(now())
   teamPlayer MyTeamPlayer[]

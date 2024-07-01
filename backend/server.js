@@ -17,13 +17,13 @@ app.use(
   cors({
     origin: `http://localhost:${FRONTEND_PORT}`,
     credentials: true,
-  }),
+  })
 );
 app.use(express.json());
 app.use(morgan());
 
 app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`),
+  console.log(`Server running on http://localhost:${PORT}`)
 );
 
 app.use(
@@ -36,7 +36,7 @@ app.use(
       secure: false,
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
-  }),
+  })
 );
 
 app.use(userRoutes);

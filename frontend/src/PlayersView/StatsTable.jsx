@@ -14,7 +14,7 @@ function createData(
   field_goals,
   field_attempts,
   field_percent,
-  three_makes,
+  three_makes
 ) {
   return {
     player_name,
@@ -51,7 +51,7 @@ async function fetchPlayer(id) {
 
 async function handleFetchPlayers() {
   const response = await fetch(
-    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023",
+    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023"
   );
   const data = await response.json();
   const loadedPlayers = data.results;
@@ -78,7 +78,7 @@ async function handleFetchPlayers() {
   }
 }
 
-function StatsTable() {
+function StatsTable({ playersList }) {
   return (
     <>
       <TableContainer className="statsTable" component={Paper}>
