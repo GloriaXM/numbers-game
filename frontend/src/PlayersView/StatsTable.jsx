@@ -89,7 +89,7 @@ function StatsTable({ playersList }) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {player.name}
+                  {player.player_name}
                 </TableCell>
                 <TableCell align="right">{player.minutes_pg}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
