@@ -60,7 +60,7 @@ function StatsTable({ playersList }) {
           <TableHead>
             <TableRow>
               <TableCell>Player Name</TableCell>
-              <TableCell align="right">Minutes Per Game</TableCell>
+              <TableCell align="right">Minutes</TableCell>
               <TableCell align="right">Field Makes</TableCell>
               <TableCell align="right">Field Attempts</TableCell>
               <TableCell align="right">Field %</TableCell>
