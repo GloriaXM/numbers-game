@@ -35,7 +35,6 @@ function PlayersView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    console.log(sortType);
     loadPlayers(sortType);
   }, [sortType]);
 
