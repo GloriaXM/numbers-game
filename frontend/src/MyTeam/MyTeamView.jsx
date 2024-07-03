@@ -1,7 +1,7 @@
 import "./MyTeamView.css";
 import Header from "../Header/Header.jsx";
 import PlayerCardList from "./PlayerCardList.jsx";
-import StatsTable from "../PlayersView/StatsTable";
+import StatsTable from "../TableComponents/StatsTable";
 
 function MyTeamView() {
   return (
