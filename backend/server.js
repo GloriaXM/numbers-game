@@ -44,9 +44,24 @@ app.use(userRoutes);
 
 //GETS
 app.get("/players", async (req, res) => {
-  const { team, orderParam, ascending } = req.query;
+  const { sortType } = req.query;
+  let players = null;
 
-  const players = await prisma.player.findMany({});
+  switch (sortType) {
+    case "alphabetical":
+      console.log("HERE");
+      players = await prisma.player.findMany({
+        orderBy: [
+          {
+            player_name: "asc",
+          },
+        ],
+      });
+      break;
+    default:
+      players = await prisma.player.findMany({});
+  }
+
   res.json(players);
 });
 

@@ -91,7 +91,7 @@ function StatsTable({ playersList }) {
                 <TableCell component="th" scope="row">
                   {player.player_name}
                 </TableCell>
-                <TableCell align="right">{player.minutes_pg}</TableCell>
+                <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>
                 <TableCell align="right">{player.field_percent}</TableCell>

@@ -21,10 +21,11 @@ function PlayersView() {
   };
 
   async function loadPlayers(sortType) {
-    const response = await fetch(`http://localhost:5000/players`);
+    let queryUrl = new URL("http://localhost:5000/players");
+    queryUrl.searchParams.append("sortType", sortType);
+    const response = await fetch(queryUrl);
     const players = await response.json();
     setPlayersList(players);
-    setPage(0);
   }
 
   useEffect(() => {
@@ -34,8 +35,14 @@ function PlayersView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
+    console.log(sortType);
     loadPlayers(sortType);
   }, [sortType]);
+
+  useEffect(() => {
+    setPlayersDisplayed(playersList.slice(0, rowsPerPage));
+    setPage(0);
+  }, [playersList]);
 
   return (
     <div className="playersView">
