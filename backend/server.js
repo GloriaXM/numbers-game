@@ -42,116 +42,12 @@ app.use(
 
 app.use(userRoutes);
 
-//POSTS
-app.post("/players", async (req, res) => {
-  const {
-    AST,
-    BLK,
-    DRB,
-    ORB,
-    PF,
-    PTS,
-    STL,
-    TOV,
-    TRB,
-    age,
-    effect_fg_percent,
-    field_attempts,
-    field_goals,
-    field_percent,
-    ft,
-    ft_percent,
-    fta,
-    games,
-    games_started,
-    id,
-    minutes_played,
-    player_name,
-    team,
-    three_attempts,
-    three_fg,
-    three_percent,
-    two_attempts,
-    two_fg,
-    two_percent,
-  } = req.body;
-
-  const newPlayer = await prisma.player.create({
-    data: {
-      AST,
-      BLK,
-      DRB,
-      ORB,
-      PF,
-      PTS,
-      STL,
-      TOV,
-      TRB,
-      age,
-      effect_fg_percent,
-      field_attempts,
-      field_goals,
-      field_percent,
-      ft,
-      ft_percent,
-      fta,
-      games,
-      games_started,
-      id,
-      minutes_played,
-      player_name,
-      team,
-      three_attempts,
-      three_fg,
-      three_percent,
-      two_attempts,
-      two_fg,
-      two_percent,
-    },
-  });
-  res.json(newPlayer);
-});
-
-app.post("/myTeamPlayers", async (req, res) => {
-  const { performanceScore, playerId } = req.body;
-
-  const newPlayer = await prisma.myTeamPlayer.create({
-    data: {
-      performanceScore,
-      playerId,
-    },
-  });
-  res.json(newPlayer);
-});
-
 //GETS
 app.get("/players", async (req, res) => {
   const { team, orderParam, ascending } = req.query;
-  let orderBy = {};
 
-  switch (orderParam) {
-    case "three_percent":
-      orderBy = { three_percent: ascending };
-      break;
-    default:
-      orderBy = { id: "asc" };
-  }
-
-  const players = await prisma.player.findMany({
-    where: { team },
-    orderBy,
-  });
+  const players = await prisma.player.findMany({});
   res.json(players);
-});
-
-//TODO: this should be a direct fetch from the third party api
-app.get("/players/:id", async (req, res) => {
-  const id = req.params.id;
-
-  const player = await prisma.player.findUnique({
-    where: { id },
-  });
-  res.json(player);
 });
 
 //TODO: decide if we expect to make a lot of state changes / if it should be stored as state array or in datatbase
@@ -162,33 +58,6 @@ app.get("/myTeamPlayers", async (req, res) => {
     },
   });
   res.json(players);
-});
-
-app.patch("/myTeamPlayers", async (req, res) => {
-  const { id, performanceScore, playerId } = req.body;
-
-  const newPlayer = await prisma.myTeamPlayer.update({
-    where: {
-      id,
-    },
-    data: {
-      performanceScore,
-      playerId,
-    },
-  });
-  res.json(newPlayer);
-});
-
-app.delete("/myTeamPlayer", async (req, res) => {
-  const id = req.body.id;
-  await prisma.myTeamPlayer.delete({
-    where: {
-      id: id,
-    },
-  });
-
-  //TODO: add error handling here
-  res.status(204).send();
 });
 
 //Define cron job

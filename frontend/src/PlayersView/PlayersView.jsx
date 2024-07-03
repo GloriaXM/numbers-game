@@ -19,10 +19,6 @@ function PlayersView() {
     loadPlayers(page);
   }, [page]);
 
-  useEffect(() => {
-    console.log(playersList);
-  });
-
   return (
     <div className="playersView">
       <Header />
