@@ -66,7 +66,7 @@ async function updatePlayer(player) {
     where: { id: player.id },
   });
 
-  if (oldPlayer.id == null) {
+  if (oldPlayer == null) {
     createPlayer(player);
   } else {
     changePlayerData(player, oldPlayer);
