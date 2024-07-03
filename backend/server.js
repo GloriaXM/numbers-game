@@ -49,7 +49,6 @@ app.get("/players", async (req, res) => {
 
   switch (sortType) {
     case "alphabetical":
-      console.log("HERE");
       players = await prisma.player.findMany({
         orderBy: [
           {
