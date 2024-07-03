@@ -8,32 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./StatsTable.css";
 
-function createData(
-  player_name,
-  minutes_played,
-  field_goals,
-  field_attempts,
-  field_percent,
-  three_makes,
-) {
-  return {
-    player_name,
-    minutes_played,
-    field_goals,
-    field_attempts,
-    field_percent,
-    three_makes,
-  };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 function isOld(player) {
   const MAX_UPDATE_TIME = 5 * 60 * 1000;
   const offset = new Date();
@@ -51,7 +25,7 @@ async function fetchPlayer(id) {
 
 async function handleFetchPlayers() {
   const response = await fetch(
-    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023",
+    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023"
   );
   const data = await response.json();
   const loadedPlayers = data.results;
@@ -78,7 +52,7 @@ async function handleFetchPlayers() {
   }
 }
 
-function StatsTable() {
+function StatsTable({ playersList }) {
   return (
     <>
       <TableContainer className="statsTable" component={Paper}>
@@ -86,14 +60,13 @@ function StatsTable() {
           <TableHead>
             <TableRow>
               <TableCell>Player Name</TableCell>
-              <TableCell align="right">Minutes Played</TableCell>
+              <TableCell align="right">Minutes Per Game</TableCell>
               <TableCell align="right">Field Makes</TableCell>
               <TableCell align="right">Field Attempts</TableCell>
               <TableCell align="right">Field %</TableCell>
               <TableCell align="right">Three Makes</TableCell>
-              <TableCell align="right">Three Makes</TableCell>
               <TableCell align="right">Three Attempts</TableCell>
-              <TableCell align="right">Threes %</TableCell>
+              <TableCell align="right">Three %</TableCell>
               <TableCell align="right">Two Makes</TableCell>
               <TableCell align="right">Two Attempts</TableCell>
               <TableCell align="right">Twos %</TableCell>
@@ -110,25 +83,39 @@ function StatsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {playersList.map((player) => (
               <TableRow
-                key={row.name}
+                key={player.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {player.player_name}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="right">{player.minutes_pg}</TableCell>
+                <TableCell align="right">{player.field_goals}</TableCell>
+                <TableCell align="right">{player.field_attempts}</TableCell>
+                <TableCell align="right">{player.field_percent}</TableCell>
+                <TableCell align="right">{player.three_fg}</TableCell>
+                <TableCell align="right">{player.three_attempts}</TableCell>
+                <TableCell align="right">{player.three_percent}</TableCell>
+                <TableCell align="right">{player.two_fg}</TableCell>
+                <TableCell align="right">{player.two_attempts}</TableCell>
+                <TableCell align="right">{player.two_percent}</TableCell>
+                <TableCell align="right">{player.effect_fg_percent}</TableCell>
+                <TableCell align="right">{player.ft}</TableCell>
+                <TableCell align="right">{player.fta}</TableCell>
+                <TableCell align="right">{player.ft_percent}</TableCell>
+                <TableCell align="right">{player.ORB}</TableCell>
+                <TableCell align="right">{player.DRB}</TableCell>
+                <TableCell align="right">{player.TRB}</TableCell>
+                <TableCell align="right">{player.AST}</TableCell>
+                <TableCell align="right">{player.STL}</TableCell>
+                <TableCell align="right">{player.BLK}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-
-      <button onClick={handleFetchPlayers}>Fetch Players</button>
     </>
   );
 }
