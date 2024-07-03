@@ -311,8 +311,6 @@ function isEqual(player, oldPlayer) {
   return (
     player.player_name === oldPlayer.player_name &&
     player.age === oldPlayer.age &&
-    player.games === oldPlayer.games &&
-    player.games_started === oldPlayer.games_started &&
     player.minutes_played === oldPlayer.minutes_played
   );
 }
