@@ -45,21 +45,15 @@ app.use(userRoutes);
 //GETS
 app.get("/players", async (req, res) => {
   const { sortType } = req.query;
-  let players = null;
+  const [feature, ascending] = sortType.split(" ");
 
-  switch (sortType) {
-    case "alphabetical":
-      players = await prisma.player.findMany({
-        orderBy: [
-          {
-            player_name: "asc",
-          },
-        ],
-      });
-      break;
-    default:
-      players = await prisma.player.findMany({});
-  }
+  const players = await prisma.player.findMany({
+    orderBy: [
+      {
+        [feature]: ascending,
+      },
+    ],
+  });
 
   res.json(players);
 });
