@@ -94,17 +94,25 @@ function StatsTable({ playersList }) {
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>
-                <TableCell align="right">{player.field_percent}</TableCell>
+                <TableCell align="right">
+                  {(player.field_percent * 100).toFixed(2)}
+                </TableCell>
                 <TableCell align="right">{player.three_fg}</TableCell>
                 <TableCell align="right">{player.three_attempts}</TableCell>
-                <TableCell align="right">{player.three_percent}</TableCell>
+                <TableCell align="right">
+                  {player.three_percent.toFixed(2)}
+                </TableCell>
                 <TableCell align="right">{player.two_fg}</TableCell>
                 <TableCell align="right">{player.two_attempts}</TableCell>
-                <TableCell align="right">{player.two_percent}</TableCell>
+                <TableCell align="right">
+                  {player.two_percent.toFixed(2)}
+                </TableCell>
                 <TableCell align="right">{player.effect_fg_percent}</TableCell>
                 <TableCell align="right">{player.ft}</TableCell>
                 <TableCell align="right">{player.fta}</TableCell>
-                <TableCell align="right">{player.ft_percent}</TableCell>
+                <TableCell align="right">
+                  {player.ft_percent.toFixed(2)}
+                </TableCell>
                 <TableCell align="right">{player.ORB}</TableCell>
                 <TableCell align="right">{player.DRB}</TableCell>
                 <TableCell align="right">{player.TRB}</TableCell>
