@@ -35,7 +35,7 @@ function PlayersView() {
       return;
     }
 
-    let queryUrl = new URL("http://localhost:5000/players");
+    let queryUrl = new URL("http://localhost:5000/searchPlayers");
     queryUrl.searchParams.append("playerName", playerName);
     const response = await fetch(queryUrl);
     const players = await response.json();
