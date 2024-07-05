@@ -2,7 +2,7 @@ import Header from "../Header/Header";
 import PlayerBanner from "./PlayerBanner";
 import ModelView from "../Models/ModelView";
 import StatsTable from "../TableComponents/StatsTable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function SinglePlayerView() {
   const currWindowPath = window.location.pathname;
@@ -14,13 +14,13 @@ function SinglePlayerView() {
       `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
     );
     const data = await response.json();
-    const careerStatsBySeason = data.results;
-    console.log(careerStatsBySeason);
-    generateSummaryStats(careerStatsBySeason);
-    setBySeasonStats(careerStatsBySeason);
+    setBySeasonStats(data.results);
+    generateSummaryStats(data.results);
   }
 
-  fetchPlayerDetails();
+  useEffect(() => {
+    fetchPlayerDetails();
+  }, []);
 
   function generateSummaryStats(careerStatsBySeason) {
     //TODO: aggregate data into summary stats
@@ -29,7 +29,7 @@ function SinglePlayerView() {
   return (
     <div className="singlePlayerView">
       <Header />
-      <PlayerBanner playerName={playerName} />
+      <PlayerBanner playerName={"playerName"} />
       <ModelView />
       <StatsTable playersList={bySeasonStats} />
     </div>

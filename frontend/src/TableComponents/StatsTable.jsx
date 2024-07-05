@@ -9,50 +9,6 @@ import Paper from "@mui/material/Paper";
 import "./StatsTable.css";
 import Link from "@mui/material/Link";
 
-function isOld(player) {
-  const MAX_UPDATE_TIME = 5 * 60 * 1000;
-  const offset = new Date();
-  offset.setTime(Date.now() - MAX_UPDATE_TIME);
-
-  return player.createdAt <= offset;
-}
-
-async function fetchPlayer(id) {
-  const response = await fetch(`http://localhost:5000/player/${id}`);
-  const data = await response.json();
-  const player = data.results;
-  return player;
-}
-
-async function handleFetchPlayers() {
-  const response = await fetch(
-    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023"
-  );
-  const data = await response.json();
-  const loadedPlayers = data.results;
-
-  for (const player in loadedPlayers) {
-    const existingPlayer = await fetchPlayer(player.id);
-
-    if (!existingPlayer || isOld(existingPlayer)) {
-      fetch("http://localhost:5000/players", {
-        method: "POST",
-        body: JSON.stringify({
-          title: document.getElementById("inputTitle").value,
-          note: document.getElementById("inputNote").value,
-          author: document.getElementById("inputAuthor").value,
-          gifSrc: currGif,
-          upvotes: 0,
-          boardId: displayedBoardId,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }).then((response) => response.json());
-    }
-  }
-}
-
 function StatsTable({ playersList }) {
   return (
     <>
@@ -90,29 +46,39 @@ function StatsTable({ playersList }) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  <Link href={`/player/${player.player_name}`}>Here</Link>
+                  <Link href={`/player/${player.player_name}`}>
+                    {player.player_name}
+                  </Link>
                 </TableCell>
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>
                 <TableCell align="right">
-                  {(player.field_percent * 100).toFixed(2)}
+                  {typeof player.field_percent === "number"
+                    ? (player.field_percent * 100).toFixed(2)
+                    : player.field_percent}
                 </TableCell>
                 <TableCell align="right">{player.three_fg}</TableCell>
                 <TableCell align="right">{player.three_attempts}</TableCell>
                 <TableCell align="right">
-                  {player.three_percent.toFixed(2)}
+                  {typeof player.three_percent === "number"
+                    ? (player.three_percent * 100).toFixed(2)
+                    : player.three_percent}
                 </TableCell>
                 <TableCell align="right">{player.two_fg}</TableCell>
                 <TableCell align="right">{player.two_attempts}</TableCell>
                 <TableCell align="right">
-                  {player.two_percent.toFixed(2)}
+                  {typeof player.two_percent === "number"
+                    ? (player.two_percent * 100).toFixed(2)
+                    : player.two_percent}
                 </TableCell>
                 <TableCell align="right">{player.effect_fg_percent}</TableCell>
                 <TableCell align="right">{player.ft}</TableCell>
                 <TableCell align="right">{player.fta}</TableCell>
                 <TableCell align="right">
-                  {player.ft_percent.toFixed(2)}
+                  {typeof player.effect_fg_percent === "number"
+                    ? (player.effect_fg_percent * 100).toFixed(2)
+                    : player.effect_fg_percent}
                 </TableCell>
                 <TableCell align="right">{player.ORB}</TableCell>
                 <TableCell align="right">{player.DRB}</TableCell>
