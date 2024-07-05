@@ -1,6 +1,7 @@
 import StatsTable from "../TableComponents/StatsTable";
 import SortMenu from "../TableComponents/SortMenu";
 import Header from "../Header/Header";
+import SearchBar from "../TableComponents/SearchBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 
@@ -10,6 +11,7 @@ function PlayersView() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortType, setSortType] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -23,6 +25,18 @@ function PlayersView() {
   async function loadPlayers(sortType) {
     let queryUrl = new URL("http://localhost:5000/players");
     queryUrl.searchParams.append("sortType", sortType);
+    const response = await fetch(queryUrl);
+    const players = await response.json();
+    setPlayersList(players);
+  }
+
+  async function searchPlayer(playerName) {
+    if (playerName === "") {
+      return;
+    }
+
+    let queryUrl = new URL("http://localhost:5000/players");
+    queryUrl.searchParams.append("playerName", playerName);
     const response = await fetch(queryUrl);
     const players = await response.json();
     setPlayersList(players);
@@ -43,9 +57,14 @@ function PlayersView() {
     setPage(0);
   }, [playersList]);
 
+  useEffect(() => {
+    searchPlayer(searchQuery);
+  }, [searchQuery]);
+
   return (
     <div className="playersView">
       <Header />
+      <SearchBar setSearchQuery={setSearchQuery} />
       <SortMenu setSortType={setSortType} />
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
