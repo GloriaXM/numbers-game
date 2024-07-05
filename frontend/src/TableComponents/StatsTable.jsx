@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./StatsTable.css";
+import Link from "@mui/material/Link";
 
 function isOld(player) {
   const MAX_UPDATE_TIME = 5 * 60 * 1000;
@@ -89,7 +90,7 @@ function StatsTable({ playersList }) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {player.player_name}
+                  <Link href={`/player/${player.player_name}`}>Here</Link>
                 </TableCell>
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>

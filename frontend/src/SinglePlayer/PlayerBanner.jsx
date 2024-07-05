@@ -1,6 +1,6 @@
 import "./PlayerBanner.css";
 
-function PlayerBanner() {
+function PlayerBanner({ playerId }) {
   return (
     <div className="playerBanner">
       <div>
@@ -8,7 +8,7 @@ function PlayerBanner() {
         <h2> Player Name</h2>
       </div>
       <div>
-        <h1> 89</h1>
+        <h1> {playerId}</h1>
       </div>
     </div>
   );

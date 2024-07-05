@@ -72,6 +72,7 @@ app.get("/searchPlayers", async (req, res) => {
 
   res.json(players);
 });
+
 //TODO: decide if we expect to make a lot of state changes / if it should be stored as state array or in datatbase
 app.get("/myTeamPlayers", async (req, res) => {
   const players = await prisma.myTeamPlayer.findMany({});
