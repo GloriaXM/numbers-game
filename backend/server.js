@@ -79,6 +79,38 @@ app.get("/myTeamPlayers", async (req, res) => {
   res.json(players);
 });
 
+//POSTS
+app.post("/myTeamPlayer", async (req, res) => {
+  const playerId = parseInt(req.body.playerId);
+  const userId = parseInt(req.body.userId);
+
+  try {
+    const existingPlayer = await prisma.myTeamPlayer.findMany({
+      where: {
+        playerId,
+        userId,
+      },
+    });
+    if (existingPlayer.length != 0) {
+      return res
+        .status(400)
+        .json({ error: "Player has already been added to MyTeam" });
+    }
+    //TODO: define algorithm to calculate initial performance score
+    const newMyTeamPlayer = await prisma.myTeamPlayer.create({
+      data: {
+        performanceScore: 50,
+        playerId,
+        userId,
+      },
+    });
+
+    res.json({ player: newMyTeamPlayer });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 //Define cron job
 async function updatePlayer(player) {
   const oldPlayer = await prisma.player.findUnique({
