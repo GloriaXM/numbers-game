@@ -33,7 +33,7 @@ function LoginSignup({ loginForm }) {
           },
           body: JSON.stringify({ username, password }),
           credentials: "include",
-        },
+        }
       );
 
       if (response.ok) {
