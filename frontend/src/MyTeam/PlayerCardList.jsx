@@ -1,12 +1,19 @@
 import "./PlayerCardList.css";
 import PlayerCard from "./PlayerCard";
 
-function PlayerCardList() {
+function PlayerCardList({ myTeamPlayers, playersStats }) {
   return (
     <div className="playerCardList">
-      <PlayerCard />
-      <PlayerCard />
-      <PlayerCard />
+      {playersStats.map((player, index) => {
+        const performanceScore = myTeamPlayers[index].performanceScore;
+        return (
+          <PlayerCard
+            key={player.id}
+            player={player}
+            performanceScore={performanceScore}
+          />
+        );
+      })}
     </div>
   );
 }

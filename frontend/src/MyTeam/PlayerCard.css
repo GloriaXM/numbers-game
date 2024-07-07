@@ -8,4 +8,13 @@
 .cardHeader {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+}
+.summaryStatsBar {
+  display: flex;
+  flex-direction: row;
+}
+
+.stat {
+  margin: 10px;
 }
