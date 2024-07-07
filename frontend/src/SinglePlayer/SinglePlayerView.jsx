@@ -10,6 +10,7 @@ function SinglePlayerView() {
   const currWindowPath = window.location.pathname;
   const playerName = currWindowPath.substring(8);
   const [bySeasonStats, setBySeasonStats] = useState([]);
+  const [byAggregateStats, setByAggregateStats] = useState([]);
   const userContext = useContext(UserContext);
 
   async function fetchPlayerDetails() {
@@ -39,14 +40,33 @@ function SinglePlayerView() {
     fetchPlayerDetails();
   }, []);
 
-  function generateSummaryStats(careerStatsBySeason) {
-    //TODO: aggregate data into summary stats
+  function generateSummaryStats(statsBySeason) {
+    let aggregateStats = ["", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0];
+    aggregateStats[0] = statsBySeason[0].player_name;
+    aggregateStats[12] = statsBySeason[0].age;
+    aggregateStats[13] = statsBySeason[0].team;
+
+    statsBySeason.map((season) => {
+      aggregateStats[1] += season.games;
+      aggregateStats[2] += season.PTS;
+      aggregateStats[3] += season.games_started;
+      aggregateStats[4] += season.minutes_played;
+      aggregateStats[5] += season.field_goals;
+      aggregateStats[6] += season.field_attempts;
+      aggregateStats[7] += season.ft;
+      aggregateStats[8] += season.fta;
+      aggregateStats[9] += season.TRB;
+      aggregateStats[10] += season.TOV;
+      aggregateStats[11] += season.PF;
+    });
+
+    setByAggregateStats(aggregateStats);
   }
 
   return (
     <div className="singlePlayerView">
       <Header />
-      <PlayerBanner playerName={"playerName"} />
+      <PlayerBanner player={byAggregateStats} />
       <Button onClick={handleAddPlayer}> Add to MyTeam</Button>
       <ModelView />
       <StatsTable playersList={bySeasonStats} />
