@@ -1,11 +1,11 @@
 import "./PlayerCard.css";
 
-function PlayerCard({ player, performanceScore }) {
+function PlayerCard({ player }) {
   return (
     <div className="playerCard">
       <div className="cardHeader">
         <h1> {player.player_name}</h1>
-        <h1> {performanceScore}</h1>
+        <h1> {player.performanceScore}</h1>
       </div>
       <div className="summaryStatsBar">
         <h3 className="stat gamesPlayed">Games Played: {player.games}</h3>

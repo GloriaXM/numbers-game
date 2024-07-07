@@ -18,11 +18,12 @@ function MyTeamView() {
     setMyTeamPlayers(data);
   }
 
-  async function fetchSinglePlayer(playerId) {
+  async function fetchSinglePlayer(playerId, performanceScore) {
     const queryUrl = new URL(`http://localhost:5000/singlePlayerStats`);
     queryUrl.searchParams.append("playerId", playerId);
     const response = await fetch(queryUrl);
-    const player = await response.json();
+    let player = await response.json();
+    player.performanceScore = performanceScore;
     setPlayersStats((playersStats) => [...playersStats, player]);
   }
 
@@ -32,17 +33,14 @@ function MyTeamView() {
 
   useEffect(() => {
     myTeamPlayers.map((player) => {
-      fetchSinglePlayer(player.playerId);
+      fetchSinglePlayer(player.playerId, player.performanceScore);
     });
   }, [myTeamPlayers]);
 
   return (
     <div className="myTeamView">
       <Header />
-      <PlayerCardList
-        myTeamPlayers={myTeamPlayers}
-        playersStats={playersStats}
-      />
+      <PlayerCardList playersStats={playersStats} />
       <StatsTable playersList={playersStats} />
     </div>
   );
