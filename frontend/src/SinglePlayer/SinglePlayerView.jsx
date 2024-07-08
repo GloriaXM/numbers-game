@@ -64,7 +64,7 @@ function SinglePlayerView() {
   }
 
   return (
-    <div className="singlePlayerView">
+    <div className="view singlePlayerView">
       <Header />
       <PlayerBanner player={byAggregateStats} />
       <Button onClick={handleAddPlayer}> Add to MyTeam</Button>

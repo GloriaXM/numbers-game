@@ -1,4 +1,3 @@
-import "./MyTeamView.css";
 import Header from "../Header/Header.jsx";
 import PlayerCardList from "./PlayerCardList.jsx";
 import StatsTable from "../TableComponents/StatsTable";
@@ -38,7 +37,7 @@ function MyTeamView() {
   }, [myTeamPlayers]);
 
   return (
-    <div className="myTeamView">
+    <div className="view myTeamView">
       <Header />
       <PlayerCardList playersStats={playersStats} />
       <StatsTable playersList={playersStats} />

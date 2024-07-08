@@ -3,6 +3,20 @@
   flex-direction: column;
   border: solid thick;
   margin: 10px;
+  width: 450px;
+  min-width: 400px;
+  border-radius: 15px;
+  transition: all 0.5s ease-out 100ms;
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+.playerCard:hover {
+  border-color: #88d9e6;
+  box-shadow: 10px 5px 5px #88d9e6;
+}
+.performanceScore {
+  margin: 10px;
 }
 
 .cardHeader {
@@ -10,11 +24,29 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
 .summaryStatsBar {
   display: flex;
   flex-direction: row;
+  margin: 5px;
+}
+
+.hiddenStatsBar {
+  display: flex;
+  margin: -40px;
+  flex-direction: row;
+  transition: all 0.5s ease-out 0.2s;
+  color: white;
+}
+.playerCard:hover .hiddenStatsBar {
+  margin: 0px;
+  color: #1f2833;
 }
 
 .stat {
   margin: 10px;
+}
+
+.playerName {
+  max-width: 260px;
 }

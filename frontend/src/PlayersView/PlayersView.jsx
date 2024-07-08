@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import SearchBar from "../TableComponents/SearchBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
+import "./PlayersView.css";
 
 function PlayersView() {
   const [playersList, setPlayersList] = useState([]);
@@ -62,7 +63,7 @@ function PlayersView() {
   }, [searchQuery]);
 
   return (
-    <div className="playersView">
+    <div className="view playersView">
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
       <SortMenu setSortType={setSortType} />
