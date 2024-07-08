@@ -23,9 +23,38 @@ function MyTeamView() {
     queryUrl.searchParams.append("playerId", playerId);
     const response = await fetch(queryUrl);
     let player = await response.json();
-    player.performanceScore = performanceScore;
+    player.performanceScore = await checkPerformanceScore(
+      playerId,
+      player,
+      performanceScore
+    );
     player.myTeamId = myTeamId;
     setPlayersStats((playersStats) => [...playersStats, player]);
+  }
+
+  async function checkPerformanceScore(playerId, player, performanceScore) {
+    //TODO: Make formula more significant
+    let expectedScore = (
+      ((player.PTS + 3 * player.TRB + 5 * player.STL + 4 * player.BLK) /
+        player.games -
+        (6 * player.TOV + player.PF) / player.minutes_played) *
+      1.4
+    ).toFixed(0);
+
+    if (!expectedScore) {
+      expectedScore = 30;
+    }
+
+    if (performanceScore != expectedScore) {
+      updatePerformance(playerId, expectedScore);
+      return expectedScore;
+    } else {
+      return performanceScore;
+    }
+  }
+
+  async function updatePerformance() {
+    //TODO: implement database post
   }
 
   useEffect(() => {
