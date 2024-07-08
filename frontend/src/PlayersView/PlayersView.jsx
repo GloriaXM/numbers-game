@@ -7,6 +7,7 @@ import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
 
 function PlayersView() {
+  const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [playersList, setPlayersList] = useState([]);
   const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(1);
@@ -24,7 +25,7 @@ function PlayersView() {
   };
 
   async function loadPlayers(sortType) {
-    let queryUrl = new URL("http://localhost:5000/players");
+    let queryUrl = new URL(`${PORT}/players`);
     queryUrl.searchParams.append("sortType", sortType);
     const response = await fetch(queryUrl);
     const players = await response.json();
@@ -36,7 +37,7 @@ function PlayersView() {
       return;
     }
 
-    let queryUrl = new URL("http://localhost:5000/searchPlayers");
+    let queryUrl = new URL(`${PORT}/searchPlayers`);
     queryUrl.searchParams.append("playerName", playerName);
     const response = await fetch(queryUrl);
     const players = await response.json();

@@ -5,12 +5,13 @@ import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 
 function MyTeamView() {
+  const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
   const [playersStats, setPlayersStats] = useState([]);
   const userContext = useContext(UserContext);
 
   async function fetchMyTeam() {
-    const queryUrl = new URL(`http://localhost:5000/myTeamPlayers`);
+    const queryUrl = new URL(`${PORT}/myTeamPlayers`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     const response = await fetch(queryUrl);
     const data = await response.json();
@@ -18,7 +19,7 @@ function MyTeamView() {
   }
 
   async function fetchSinglePlayer(playerId, performanceScore, myTeamId) {
-    const queryUrl = new URL(`http://localhost:5000/singlePlayerStats`);
+    const queryUrl = new URL(`${PORT}/singlePlayerStats`);
     queryUrl.searchParams.append("playerId", playerId);
     const response = await fetch(queryUrl);
     let player = await response.json();
@@ -32,6 +33,7 @@ function MyTeamView() {
   }, []);
 
   useEffect(() => {
+    setPlayersStats([]);
     myTeamPlayers.map((player) => {
       fetchSinglePlayer(player.playerId, player.performanceScore, player.id);
     });

@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { UserContext } from "../UserContext.js";
 
 function SinglePlayerView() {
+  const PORT = import.meta.env.VITE_BACKEND_PORT;
   const currWindowPath = window.location.pathname;
   const playerName = currWindowPath.substring(8);
   const [bySeasonStats, setBySeasonStats] = useState([]);
@@ -23,7 +24,7 @@ function SinglePlayerView() {
   }
 
   async function handleAddPlayer() {
-    const queryUrl = new URL(`http://localhost:5000/myTeamPlayer`);
+    const queryUrl = new URL(`${PORT}/myTeamPlayer`);
     fetch(queryUrl, {
       method: "POST",
       body: JSON.stringify({

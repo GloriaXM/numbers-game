@@ -2,6 +2,8 @@ import "./PlayerCard.css";
 import { useState } from "react";
 
 function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
+  const PORT = import.meta.env.VITE_BACKEND_PORT;
+
   function onDeleteClick() {
     setDisplayDeleteModal(true);
   }
@@ -9,7 +11,7 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
   async function handleDeleteCard(e) {
     setDisplayDeleteModal(false);
 
-    const queryUrl = new URL(`http://localhost:5000/singlePlayerStats`);
+    const queryUrl = new URL(`${PORT}/singlePlayerStats`);
     await fetch(queryUrl, {
       method: "DELETE",
       body: JSON.stringify({
