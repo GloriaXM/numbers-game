@@ -27,7 +27,7 @@ function LoginSignup({ loginForm }) {
     try {
       // Make the signup API request
       const response = await fetch(
-        `${PORT}/${loginForm ? "login" : "signup"}`,
+        `${PORT}/users/${loginForm ? "login" : "signup"}`,
         {
           method: "POST",
           headers: {
