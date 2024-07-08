@@ -125,6 +125,28 @@ app.post("/myTeamPlayer", async (req, res) => {
   }
 });
 
+//UPDATES
+app.patch("/myTeamPlayer/performance", async (req, res) => {
+  const playerId = parseInt(req.query.playerId);
+  const performance = parseFloat(req.query.performance);
+
+  try {
+    //TODO: define algorithm to calculate initial performance score
+    const newMyTeamPlayer = await prisma.myTeamPlayer.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        performanceScore: performance,
+      },
+    });
+
+    res.json({ player: newMyTeamPlayer });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 //DELETES
 app.delete("/myTeamPlayer", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
