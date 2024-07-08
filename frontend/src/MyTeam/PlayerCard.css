@@ -1,3 +1,8 @@
+.playerCardList {
+  display: flex;
+  overflow-x: scroll;
+}
+
 .playerCard {
   display: flex;
   flex-direction: column;

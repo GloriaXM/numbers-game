@@ -1,8 +1,8 @@
 import Header from "../Header/Header.jsx";
-import PlayerCardList from "./PlayerCardList.jsx";
 import StatsTable from "../TableComponents/StatsTable";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
+import PlayerCard from "./PlayerCard.jsx";
 
 function MyTeamView() {
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
@@ -40,7 +40,11 @@ function MyTeamView() {
   return (
     <div className="view myTeamView">
       <Header />
-      <PlayerCardList playersStats={playersStats} />
+      <div className="playerCardList">
+        {playersStats.map((player, index) => {
+          return <PlayerCard key={player.id} player={player} />;
+        })}
+      </div>
       <StatsTable playersList={playersStats} />
     </div>
   );
