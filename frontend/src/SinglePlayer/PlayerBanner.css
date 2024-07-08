@@ -1,4 +1,17 @@
 .playerBanner {
   display: flex;
   background-color: #c5c6c7;
+  min-width: 500px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
 }
