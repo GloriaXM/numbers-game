@@ -125,6 +125,19 @@ app.post("/myTeamPlayer", async (req, res) => {
   }
 });
 
+//DELETES
+app.delete("/myTeamPlayer", async (req, res) => {
+  const playerId = parseInt(req.query.playerId);
+  await prisma.myTeamPlayer.delete({
+    where: {
+      id: playerId,
+    },
+  });
+
+  //TODO: add error handling here
+  res.status(204).send();
+});
+
 //Define cron job
 async function updatePlayer(player) {
   const oldPlayer = await prisma.player.findUnique({

@@ -17,6 +17,7 @@ function StatsTable({ playersList }) {
           <TableHead>
             <TableRow>
               <TableCell>Player Name</TableCell>
+              <TableCell align="right">Season</TableCell>
               <TableCell align="right">Minutes</TableCell>
               <TableCell align="right">Field Makes</TableCell>
               <TableCell align="right">Field Attempts</TableCell>
@@ -50,6 +51,7 @@ function StatsTable({ playersList }) {
                     {player.player_name}
                   </Link>
                 </TableCell>
+                <TableCell align="right">{player.season}</TableCell>
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>
