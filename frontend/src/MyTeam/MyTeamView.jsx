@@ -32,12 +32,19 @@ function MyTeamView() {
   }
 
   async function checkPerformanceScore(player, performanceScore) {
-    //TODO: Make formula more significant
     let expectedScore = (
-      ((player.PTS + 3 * player.TRB + 5 * player.STL + 4 * player.BLK) /
-        player.games -
-        (6 * player.TOV + player.PF) / player.minutes_played) *
-      1.4
+      70 +
+      (1.5 + player.ft_percent) *
+        ((8 * player.PTS +
+          12 * player.ORB +
+          11 * player.DRB +
+          15 * player.STL +
+          10 * player.AST +
+          13 * player.BLK -
+          10 * (player.PF / player.games - 3)) /
+          player.minutes_played) -
+      (15 * player.TOV + 10 * (1 - player.field_percent)) /
+        player.minutes_played
     ).toFixed(0);
 
     if (!expectedScore) {
