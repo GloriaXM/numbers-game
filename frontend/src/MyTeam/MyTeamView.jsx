@@ -23,16 +23,15 @@ function MyTeamView() {
     queryUrl.searchParams.append("playerId", playerId);
     const response = await fetch(queryUrl);
     let player = await response.json();
+    player.myTeamId = myTeamId;
     player.performanceScore = await checkPerformanceScore(
-      playerId,
       player,
       performanceScore
     );
-    player.myTeamId = myTeamId;
     setPlayersStats((playersStats) => [...playersStats, player]);
   }
 
-  async function checkPerformanceScore(playerId, player, performanceScore) {
+  async function checkPerformanceScore(player, performanceScore) {
     //TODO: Make formula more significant
     let expectedScore = (
       ((player.PTS + 3 * player.TRB + 5 * player.STL + 4 * player.BLK) /
@@ -46,15 +45,26 @@ function MyTeamView() {
     }
 
     if (performanceScore != expectedScore) {
-      updatePerformance(playerId, expectedScore);
+      updatePerformance(player.myTeamId, expectedScore);
       return expectedScore;
     } else {
       return performanceScore;
     }
   }
 
-  async function updatePerformance() {
-    //TODO: implement database post
+  async function updatePerformance(playerId, newScore) {
+    const queryUrl = new URL(`${PORT}/myTeamPlayer/performance`);
+
+    const response = await fetch(queryUrl, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ playerId: playerId, performance: newScore }),
+      credentials: "include",
+    });
+
+    await response.json();
   }
 
   useEffect(() => {

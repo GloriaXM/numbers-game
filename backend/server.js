@@ -127,8 +127,8 @@ app.post("/myTeamPlayer", async (req, res) => {
 
 //UPDATES
 app.patch("/myTeamPlayer/performance", async (req, res) => {
-  const playerId = parseInt(req.query.playerId);
-  const performance = parseFloat(req.query.performance);
+  const playerId = parseInt(req.body.playerId);
+  const performance = parseFloat(req.body.performance);
 
   try {
     //TODO: define algorithm to calculate initial performance score
