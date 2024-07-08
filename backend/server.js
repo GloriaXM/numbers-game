@@ -127,15 +127,15 @@ app.post("/myTeamPlayer", async (req, res) => {
 
 //DELETES
 app.delete("/myTeamPlayer", async (req, res) => {
-  const playerId = parseInt(req.query.playerId);
-  await prisma.myTeamPlayer.delete({
+  const playerId = parseInt(req.body.playerId);
+  const player = await prisma.myTeamPlayer.delete({
     where: {
       id: playerId,
     },
   });
 
   //TODO: add error handling here
-  res.status(204).send();
+  res.json(player);
 });
 
 //Define cron job

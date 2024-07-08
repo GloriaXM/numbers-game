@@ -41,8 +41,15 @@ function MyTeamView() {
     <div className="view myTeamView">
       <Header />
       <div className="playerCardList">
-        {playersStats.map((player, index) => {
-          return <PlayerCard key={player.id} player={player} />;
+        {playersStats.map((player) => {
+          return (
+            <PlayerCard
+              key={player.id}
+              player={player}
+              setMyTeamPlayers={setMyTeamPlayers}
+              myTeamPlayers={myTeamPlayers}
+            />
+          );
         })}
       </div>
       <StatsTable playersList={playersStats} />

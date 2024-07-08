@@ -1,13 +1,30 @@
 import "./PlayerCard.css";
 import { useState } from "react";
 
-function PlayerCard({ player }) {
+function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
   function onDeleteClick() {
     setDisplayDeleteModal(true);
   }
 
-  function handleDeleteCard(e) {
+  async function handleDeleteCard(e) {
     setDisplayDeleteModal(false);
+
+    const queryUrl = new URL(`http://localhost:5000/singlePlayerStats`);
+    await fetch(queryUrl, {
+      method: "DELETE",
+      body: JSON.stringify({
+        playerId: player.myTeamId,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+
+    setMyTeamPlayers(
+      myTeamPlayers.filter(function (existingPlayer) {
+        return existingPlayer.id != player.myTeamId;
+      })
+    );
   }
 
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false);
