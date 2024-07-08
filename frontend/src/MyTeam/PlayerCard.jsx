@@ -1,6 +1,16 @@
 import "./PlayerCard.css";
+import { useState } from "react";
 
 function PlayerCard({ player }) {
+  function onDeleteClick() {
+    setDisplayDeleteModal(true);
+  }
+
+  function handleDeleteCard(e) {
+    setDisplayDeleteModal(false);
+  }
+
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false);
   return (
     <div className="playerCard">
       <div className="cardHeader">
@@ -18,18 +28,43 @@ function PlayerCard({ player }) {
         </h3>
       </div>
       <div className="hiddenStatsBar">
-        <h3 className="stat fieldPercent">
-          Field %: {(100 * player.three_percent).toFixed(2)}
-        </h3>
-        <h3 className="stat threePercent">
-          Three %: {(100 * player.three_percent).toFixed(2)}
-        </h3>
-        <h3 className="stat twoPercent">
-          Two %: {(100 * player.two_percent).toFixed(2)}
-        </h3>
-        <h3 className="stat ftPercent">
-          FT %: {(100 * player.ft_percent).toFixed(2)}
-        </h3>
+        <div className="statRow">
+          <h3 className="stat fieldPercent">
+            Field %: {(100 * player.three_percent).toFixed(2)}
+          </h3>
+          <h3 className="stat threePercent">
+            Three %: {(100 * player.three_percent).toFixed(2)}
+          </h3>
+          <h3 className="stat twoPercent">
+            Two %: {(100 * player.two_percent).toFixed(2)}
+          </h3>
+          <h3 className="stat ftPercent">
+            FT %: {(100 * player.ft_percent).toFixed(2)}
+          </h3>
+        </div>
+
+        <button className="deleteButton" onClick={onDeleteClick}>
+          Delete
+        </button>
+        <div
+          className="deleteCard"
+          style={{ display: displayDeleteModal ? "block" : "none" }}
+        >
+          <div className="deleteCardContent">
+            <p> Are you sure?</p>
+            <button
+              className="cancelDelete"
+              onClick={() => {
+                setDisplayDeleteModal(false);
+              }}
+            >
+              No, Cancel
+            </button>
+            <button className="confirmDelete" onClick={handleDeleteCard}>
+              Yes, Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

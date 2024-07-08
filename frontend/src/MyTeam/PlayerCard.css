@@ -33,8 +33,8 @@
 
 .hiddenStatsBar {
   display: flex;
+  flex-direction: column;
   margin: -40px;
-  flex-direction: row;
   transition: all 0.5s ease-out 0.2s;
   color: white;
 }
@@ -49,4 +49,15 @@
 
 .playerName {
   max-width: 260px;
+}
+
+.statRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.deleteButton {
+  color: red;
+  width: 200px;
+  align-self: center;
 }
