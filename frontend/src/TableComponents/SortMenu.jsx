@@ -4,7 +4,7 @@ import "./SortMenu.css";
 
 function SortMenu({ setSortType }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const isOpen = anchorEl == null ? false : true;
   const playerInfoSortOptions = [
     ["id asc", "ID"],
     ["player_name asc", "Alphabetical"],
@@ -61,7 +61,7 @@ function SortMenu({ setSortType }) {
       <Button
         id="sortButton"
         className="sortButton"
-        aria-controls={open ? "sortMenu" : undefined}
+        aria-controls={isOpen ? "sortMenu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
@@ -71,7 +71,7 @@ function SortMenu({ setSortType }) {
       <Menu
         id="sortMenu"
         anchorEl={anchorEl}
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
