@@ -50,7 +50,7 @@ function SortMenu({ setSortType, setSortDirection }) {
     <div className="sortMenu">
       <Button
         id="sortOptions"
-        className="sortButton"
+        className="sort sortButton"
         aria-controls={optionsIsOpen ? "sortMenu" : undefined}
         aria-haspopup="true"
         aria-expanded={optionsIsOpen ? "true" : undefined}
@@ -71,7 +71,7 @@ function SortMenu({ setSortType, setSortDirection }) {
           <MenuItem
             key={option}
             id={option}
-            className="sortOptions"
+            className="sort sortOptions"
             onClick={handleOptionsClose}
           >
             {option}
@@ -81,7 +81,7 @@ function SortMenu({ setSortType, setSortDirection }) {
 
       <Button
         id="sortDirection"
-        className="sortButton"
+        className="sort sortButton"
         aria-controls={directionIsOpen ? "sortMenu" : undefined}
         aria-haspopup="true"
         aria-expanded={directionIsOpen ? "true" : undefined}
@@ -102,7 +102,7 @@ function SortMenu({ setSortType, setSortDirection }) {
           <MenuItem
             key={option}
             id={option}
-            className="sortOptions"
+            className="sort sortOptions"
             onClick={handleDirectionClose}
           >
             {option}

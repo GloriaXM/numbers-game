@@ -12,8 +12,8 @@ function PlayersView() {
   const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sortType, setSortType] = useState("");
-  const [sortDirection, setSortDirection] = useState("");
+  const [sortType, setSortType] = useState("no_sort");
+  const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleChangePage = (event, newPage) => {
@@ -53,9 +53,7 @@ function PlayersView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    if (sortType !== "no_sort" && sortDirection !== "no_direction") {
-      loadPlayers(sortType, sortDirection);
-    }
+    loadPlayers(sortType, sortDirection);
   }, [sortType, sortDirection]);
 
   useEffect(() => {
