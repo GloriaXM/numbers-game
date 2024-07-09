@@ -72,10 +72,92 @@ app.get("/searchPlayers", async (req, res) => {
 
   res.json(players);
 });
-//TODO: decide if we expect to make a lot of state changes / if it should be stored as state array or in datatbase
+
 app.get("/myTeamPlayers", async (req, res) => {
-  const players = await prisma.myTeamPlayer.findMany({});
+  const userId = parseInt(req.query.userId);
+  const players = await prisma.myTeamPlayer.findMany({
+    where: {
+      userId,
+    },
+  });
   res.json(players);
+});
+
+app.get("/singlePlayerStats", async (req, res) => {
+  const playerId = parseInt(req.query.playerId);
+  const player = await prisma.player.findUnique({
+    where: {
+      id: playerId,
+    },
+  });
+  res.json(player);
+});
+
+//POSTS
+app.post("/myTeamPlayer", async (req, res) => {
+  const playerId = parseInt(req.body.playerId);
+  const userId = parseInt(req.body.userId);
+
+  try {
+    const existingPlayer = await prisma.myTeamPlayer.findMany({
+      where: {
+        playerId,
+        userId,
+      },
+    });
+    if (existingPlayer.length != 0) {
+      return res
+        .status(400)
+        .json({ error: "Player has already been added to MyTeam" });
+    }
+    //TODO: define algorithm to calculate initial performance score
+    const newMyTeamPlayer = await prisma.myTeamPlayer.create({
+      data: {
+        performanceScore: 50,
+        playerId,
+        userId,
+      },
+    });
+
+    res.json({ player: newMyTeamPlayer });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+//UPDATES
+app.patch("/myTeamPlayer/performance", async (req, res) => {
+  const playerId = parseInt(req.body.playerId);
+  const performance = parseFloat(req.body.performance);
+
+  try {
+    //TODO: define algorithm to calculate initial performance score
+    const newMyTeamPlayer = await prisma.myTeamPlayer.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        performanceScore: performance,
+      },
+    });
+
+    res.json({ player: newMyTeamPlayer });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+//DELETES
+app.delete("/myTeamPlayer", async (req, res) => {
+  const playerId = parseInt(req.body.playerId);
+  const player = await prisma.myTeamPlayer.delete({
+    where: {
+      id: playerId,
+    },
+  });
+
+  //TODO: add error handling here
+  res.json(player);
 });
 
 //Define cron job

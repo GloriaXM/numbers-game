@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext.js";
 import "./LoginSignup.css";
 
+const PORT = import.meta.env.VITE_BACKEND_PORT;
+
 function LoginSignup({ loginForm }) {
   const [open, setOpen] = useState(false);
 
@@ -25,7 +27,7 @@ function LoginSignup({ loginForm }) {
     try {
       // Make the signup API request
       const response = await fetch(
-        `http://localhost:5000/users/${loginForm ? "login" : "signup"}`,
+        `${PORT}/users/${loginForm ? "login" : "signup"}`,
         {
           method: "POST",
           headers: {
@@ -33,7 +35,7 @@ function LoginSignup({ loginForm }) {
           },
           body: JSON.stringify({ username, password }),
           credentials: "include",
-        },
+        }
       );
 
       if (response.ok) {

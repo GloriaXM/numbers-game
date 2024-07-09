@@ -52,8 +52,7 @@ function App() {
             element={user ? <MyTeamView /> : <LoginSignup loginForm={true} />}
           ></Route>
           <Route
-            exact
-            path="/player"
+            path="/player/:id"
             element={
               user ? <SinglePlayerView /> : <LoginSignup loginForm={true} />
             }
