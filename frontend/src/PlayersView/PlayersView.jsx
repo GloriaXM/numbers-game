@@ -13,6 +13,7 @@ function PlayersView() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortType, setSortType] = useState("");
+  const [sortDirection, setSortDirection] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleChangePage = (event, newPage) => {
@@ -27,6 +28,7 @@ function PlayersView() {
   async function loadPlayers(sortType) {
     let queryUrl = new URL(`${PORT}/players`);
     queryUrl.searchParams.append("sortType", sortType);
+    queryUrl.searchParams.append("sortDirection", sortDirection);
     const response = await fetch(queryUrl);
     const players = await response.json();
     setPlayersList(players);
@@ -51,8 +53,10 @@ function PlayersView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    loadPlayers(sortType);
-  }, [sortType]);
+    if (sortType !== "no_sort" && sortDirection !== "no_direction") {
+      loadPlayers(sortType, sortDirection);
+    }
+  }, [sortType, sortDirection]);
 
   useEffect(() => {
     setPlayersDisplayed(playersList.slice(0, rowsPerPage));
@@ -67,7 +71,7 @@ function PlayersView() {
     <div className="view playersView">
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <SortMenu setSortType={setSortType} />
+      <SortMenu setSortType={setSortType} setSortDirection={setSortDirection} />
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
         component="div"

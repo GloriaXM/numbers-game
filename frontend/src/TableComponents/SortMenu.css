@@ -6,23 +6,3 @@
   min-width: 300px;
   margin: 10px;
 }
-
-.MuiButtonBase-root.playerInfoSortOptions {
-  background-color: #eee8ab;
-}
-
-.MuiButtonBase-root.scoringSortOptionsDecreasing {
-  background-color: #c1e1c1;
-}
-
-.MuiButtonBase-root.scoringSortOptionsIncreasing {
-  background-color: #fac898;
-}
-
-.MuiButtonBase-root.miscSortOptionsDecreasing {
-  background-color: #aec6cf;
-}
-
-.MuiButtonBase-root.miscSortOptionsIncreasing {
-  background-color: #faa0a0;
-}
