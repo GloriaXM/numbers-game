@@ -3,6 +3,7 @@ import StatsTable from "../TableComponents/StatsTable";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
+import TeamSummary from "./TeamSummary.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -89,6 +90,8 @@ function MyTeamView() {
     <div className="view myTeamView">
       <Header />
       <div className="playerCardList">
+        {/* TODO: Add scrolling styling or move to separate div if more team stats added */}
+        <TeamSummary playersStats={playersStats} />
         {playersStats.map((player) => {
           return (
             <PlayerCard
