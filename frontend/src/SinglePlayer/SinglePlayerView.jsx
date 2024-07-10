@@ -69,7 +69,7 @@ function SinglePlayerView() {
       <Header />
       <PlayerBanner player={byAggregateStats} />
       <Button onClick={handleAddPlayer}> Add to MyTeam</Button>
-      <ModelView />
+      <ModelView careerData={bySeasonStats} />
       <StatsTable playersList={bySeasonStats} />
     </div>
   );
