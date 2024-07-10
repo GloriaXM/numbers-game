@@ -1,7 +1,7 @@
-import StatsTable from "../TableComponents/StatsTable";
-import SortMenu from "../TableComponents/SortMenu";
-import Header from "../Header/Header";
-import SearchBar from "../TableComponents/SearchBar";
+import StatsTable from "../table_components/StatsTable";
+import SortMenu from "../table_components/SortMenu";
+import Header from "../header/Header";
+import SearchBar from "../table_components/SearchBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
@@ -15,6 +15,7 @@ function PlayersView() {
   const [sortType, setSortType] = useState("no_sort");
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
+  const testArr = ["a", "b", "c", "d", "e", "f"];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -69,7 +70,11 @@ function PlayersView() {
     <div className="view playersView">
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <SortMenu setSortType={setSortType} setSortDirection={setSortDirection} />
+      <SortMenu
+        setSortType={setSortType}
+        setSortDirection={setSortDirection}
+        testArr={testArr}
+      />
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
         component="div"

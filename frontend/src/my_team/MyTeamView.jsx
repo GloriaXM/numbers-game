@@ -1,5 +1,5 @@
-import Header from "../Header/Header.jsx";
-import StatsTable from "../TableComponents/StatsTable";
+import Header from "../header/Header.jsx";
+import StatsTable from "../table_components/StatsTable.jsx";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";

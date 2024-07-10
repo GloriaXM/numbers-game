@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem, Divider } from "@mui/material";
 import { useState } from "react";
 import "./SortMenu.css";
 
-function SortMenu({ setSortType, setSortDirection }) {
+function SortMenu({ setSortType, setSortDirection, testArr }) {
   const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
   const optionsIsOpen = optionsAnchorEl == null ? false : true;
 
