@@ -11,15 +11,15 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import { useNavigate } from "react-router-dom";
 
 const pages = ["Players", "MyTeam"];
 
 function TestHeader() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const { user, updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -107,7 +107,7 @@ function TestHeader() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
-                href={page}
+                href={`/${page}`}
               >
                 {page}
               </Button>
