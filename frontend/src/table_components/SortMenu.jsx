@@ -1,15 +1,15 @@
-import { Button, Menu, MenuItem, Divider } from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import "./SortMenu.css";
 
-function SortMenu({ setSortType, setSortDirection, testArr }) {
+function SortMenu({ setSortType, setSortDirection }) {
   const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
   const optionsIsOpen = optionsAnchorEl == null ? false : true;
 
   const [directionAnchorEl, setDirectionAnchorEl] = useState(null);
   const directionIsOpen = directionAnchorEl == null ? false : true;
 
-  const sortOptions = [
+  const SORT_OPTIONS = [
     "no_sort",
     "id",
     "player_name",
@@ -29,7 +29,7 @@ function SortMenu({ setSortType, setSortDirection, testArr }) {
     "PF",
   ];
 
-  const sortDirections = ["no_direction", "asc", "desc"];
+  const SORT_DIRECTIONS = ["no_direction", "asc", "desc"];
 
   const handleOptionsClick = (event) => {
     setOptionsAnchorEl(event.currentTarget);
@@ -67,7 +67,7 @@ function SortMenu({ setSortType, setSortDirection, testArr }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        {sortOptions.map((option) => (
+        {SORT_OPTIONS.map((option) => (
           <MenuItem
             key={option}
             id={option}
@@ -98,7 +98,7 @@ function SortMenu({ setSortType, setSortDirection, testArr }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        {sortDirections.map((option) => (
+        {SORT_DIRECTIONS.map((option) => (
           <MenuItem
             key={option}
             id={option}

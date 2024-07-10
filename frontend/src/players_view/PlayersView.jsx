@@ -15,7 +15,6 @@ function PlayersView() {
   const [sortType, setSortType] = useState("no_sort");
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
-  const testArr = ["a", "b", "c", "d", "e", "f"];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -67,11 +66,7 @@ function PlayersView() {
     <div className="view playersView">
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <SortMenu
-        setSortType={setSortType}
-        setSortDirection={setSortDirection}
-        testArr={testArr}
-      />
+      <SortMenu setSortType={setSortType} setSortDirection={setSortDirection} />
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
         component="div"
