@@ -14,6 +14,7 @@
   transition: all 0.5s ease-out 100ms;
   overflow: hidden;
   align-self: flex-start;
+  padding: 10px;
 }
 
 .playerCard:hover {
@@ -52,8 +53,12 @@
   margin: 10px;
 }
 
-.playerName {
-  max-width: 260px;
+.playerCardName {
+  display: block;
+  max-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .statRow {

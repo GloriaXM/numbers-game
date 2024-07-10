@@ -1,4 +1,5 @@
 import { Button, Menu, MenuItem } from "@mui/material";
+import "./SortMenu.css";
 
 function SortBar({
   isOpen,

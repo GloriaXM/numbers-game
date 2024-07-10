@@ -5,6 +5,7 @@ import SortBar from "../table_components/SortBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
+import Typography from "@mui/material/Typography";
 
 function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -93,23 +94,29 @@ function PlayersView() {
   return (
     <div className="view playersView">
       <Header />
-      <SearchBar setSearchQuery={setSearchQuery} />
-      <SortBar
-        isOpen={optionsIsOpen}
-        option={sortType}
-        setOption={setSortType}
-        anchorEl={optionsAnchorEl}
-        setAnchorEl={setOptionsAnchorEl}
-        optionsList={SORT_OPTIONS}
-      />
-      <SortBar
-        isOpen={directionIsOpen}
-        option={sortDirection}
-        setOption={setSortDirection}
-        anchorEl={directionAnchorEl}
-        setAnchorEl={setDirectionAnchorEl}
-        optionsList={SORT_DIRECTIONS}
-      />
+
+      <div className="sortMenu">
+        <Typography variant="h6" component="h3">
+          Sort Players:
+        </Typography>
+        <SortBar
+          isOpen={optionsIsOpen}
+          option={sortType}
+          setOption={setSortType}
+          anchorEl={optionsAnchorEl}
+          setAnchorEl={setOptionsAnchorEl}
+          optionsList={SORT_OPTIONS}
+        />
+        <SortBar
+          isOpen={directionIsOpen}
+          option={sortDirection}
+          setOption={setSortDirection}
+          anchorEl={directionAnchorEl}
+          setAnchorEl={setDirectionAnchorEl}
+          optionsList={SORT_DIRECTIONS}
+        />
+        <SearchBar setSearchQuery={setSearchQuery} />
+      </div>
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
         component="div"

@@ -33,7 +33,7 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
   return (
     <div className="playerCard">
       <div className="cardHeader">
-        <h2 className="playerName"> {player.player_name}</h2>
+        <h2 className="playerCardName"> {player.player_name}</h2>
         <h1 className="performanceScore"> {player.performanceScore}</h1>
       </div>
 

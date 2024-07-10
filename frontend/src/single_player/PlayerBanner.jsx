@@ -6,7 +6,7 @@ function PlayerBanner({ player }) {
   return (
     <div className="playerBanner">
       <div className="bannerLeft">
-        <h1 className="playerName"> {player[0]}</h1>
+        <h1 className="playerName playerBannerName"> {player[0]}</h1>
         <h3 className="age">Age: {player[12]}</h3>
         <h3 className="team">Team: {player[13]}</h3>
       </div>

@@ -10,3 +10,8 @@
 .sort {
   width: 300px;
 }
+
+.searchBar {
+  width: 300px;
+  margin-left: 50px;
+}
