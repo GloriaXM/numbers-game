@@ -1,0 +1,12 @@
+.statsTable {
+  min-width: 500px;
+  margin-bottom: 20px;
+}
+
+.playerName {
+  display: block;
+  width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

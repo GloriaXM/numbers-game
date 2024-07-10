@@ -5,9 +5,9 @@ import "@fontsource/roboto/700.css";
 
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import PlayersView from "./PlayersView/PlayersView";
-import MyTeamView from "./MyTeam/MyTeamView";
-import SinglePlayerView from "./SinglePlayer/SinglePlayerView";
+import PlayersView from "./players_view/PlayersView";
+import MyTeamView from "./my_team/MyTeamView";
+import SinglePlayerView from "./single_player/SinglePlayerView";
 import { UserContext } from "./UserContext";
 import LoginSignup from "./auth/LoginSignup";
 import "./App.css";

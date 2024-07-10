@@ -47,11 +47,13 @@ function StatsTable({ playersList }) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  <Link href={`/player/${player.player_name}`}>
-                    {player.player_name}
-                  </Link>
+                  <div className="playerName">
+                    <Link href={`/player/${player.player_name}`}>
+                      {player.player_name}
+                    </Link>
+                  </div>
                 </TableCell>
-                <TableCell align="right">{player.season}</TableCell>
+                <TableCell align="right">{2023}</TableCell>
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>

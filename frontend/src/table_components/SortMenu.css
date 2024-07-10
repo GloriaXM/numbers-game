@@ -1,0 +1,12 @@
+.MuiButtonBase-root.sortButton {
+  background-color: #c5c6c7;
+  border: solid;
+  border-color: #1f2833;
+  border-radius: 10px;
+  min-width: 300px;
+  margin: 10px;
+}
+
+.sort {
+  width: 300px;
+}
