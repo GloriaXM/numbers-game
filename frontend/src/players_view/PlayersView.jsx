@@ -26,10 +26,11 @@ function PlayersView() {
     setPage(0);
   };
 
-  async function loadPlayers(sortType) {
+  async function loadPlayers() {
     let queryUrl = new URL(`${PORT}/players`);
     queryUrl.searchParams.append("sortType", sortType);
     queryUrl.searchParams.append("sortDirection", sortDirection);
+    queryUrl.searchParams.append("playerName", searchQuery);
     const response = await fetch(queryUrl);
     const players = await response.json();
     setPlayersList(players);
@@ -54,17 +55,13 @@ function PlayersView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    loadPlayers(sortType, sortDirection);
-  }, [sortType, sortDirection]);
+    loadPlayers();
+  }, [sortType, sortDirection, searchQuery]);
 
   useEffect(() => {
     setPlayersDisplayed(playersList.slice(0, rowsPerPage));
     setPage(0);
   }, [playersList]);
-
-  useEffect(() => {
-    searchPlayer(searchQuery);
-  }, [searchQuery]);
 
   return (
     <div className="view playersView">
