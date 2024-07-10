@@ -44,10 +44,20 @@ app.use(userRoutes);
 
 //GETS
 app.get("/players", async (req, res) => {
-  const sortType = req.query.sortType;
-  const sortDirection = req.query.sortDirection;
+  const { sortType, sortDirection, playerName } = req.query;
+
   if (sortType != "no_sort" && sortDirection != "no_direction") {
     const players = await prisma.player.findMany({
+      where: {
+        ...(playerName !== ""
+          ? {
+              player_name: {
+                contains: playerName,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
       orderBy: [
         {
           [sortType]: sortDirection,
@@ -56,7 +66,18 @@ app.get("/players", async (req, res) => {
     });
     res.json(players);
   } else {
-    const players = await prisma.player.findMany({});
+    const players = await prisma.player.findMany({
+      where: {
+        ...(playerName !== ""
+          ? {
+              player_name: {
+                contains: playerName,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
+    });
     res.json(players);
   }
 });

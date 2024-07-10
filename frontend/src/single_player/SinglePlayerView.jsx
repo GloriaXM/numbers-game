@@ -1,6 +1,6 @@
 import Header from "../header/Header.jsx";
 import PlayerBanner from "./PlayerBanner";
-import ModelView from "../Models/ModelView";
+import ModelView from "../models/ModelView.jsx";
 import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
