@@ -1,7 +1,7 @@
 import StatsTable from "../table_components/StatsTable";
-import SortMenu from "../table_components/SortMenu";
 import Header from "../header/Header";
 import SearchBar from "../table_components/SearchBar";
+import SortBar from "../table_components/SortBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
@@ -15,6 +15,34 @@ function PlayersView() {
   const [sortType, setSortType] = useState("no_sort");
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
+  const optionsIsOpen = optionsAnchorEl == null ? false : true;
+
+  const [directionAnchorEl, setDirectionAnchorEl] = useState(null);
+  const directionIsOpen = directionAnchorEl == null ? false : true;
+
+  const SORT_OPTIONS = [
+    "no_sort",
+    "id",
+    "player_name",
+    "PTS",
+    "field_percent",
+    "three_percent",
+    "two_percent",
+    "effect_fg_percent",
+    "ft_percent",
+    "ORB",
+    "DRB",
+    "TRB",
+    "AST",
+    "STL",
+    "BLK",
+    "TOV",
+    "PF",
+  ];
+
+  const SORT_DIRECTIONS = ["no_direction", "asc", "desc"];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -66,7 +94,22 @@ function PlayersView() {
     <div className="view playersView">
       <Header />
       <SearchBar setSearchQuery={setSearchQuery} />
-      <SortMenu setSortType={setSortType} setSortDirection={setSortDirection} />
+      <SortBar
+        isOpen={optionsIsOpen}
+        option={sortType}
+        setOption={setSortType}
+        anchorEl={optionsAnchorEl}
+        setAnchorEl={setOptionsAnchorEl}
+        optionsList={SORT_OPTIONS}
+      />
+      <SortBar
+        isOpen={directionIsOpen}
+        option={sortDirection}
+        setOption={setSortDirection}
+        anchorEl={directionAnchorEl}
+        setAnchorEl={setDirectionAnchorEl}
+        optionsList={SORT_DIRECTIONS}
+      />
       <StatsTable playersList={playersDisplayed} />
       <TablePagination
         component="div"
