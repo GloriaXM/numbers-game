@@ -4,11 +4,15 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import TeamSummary from "./TeamSummary.jsx";
+import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
+  //TODO: rename variable
   const [playersStats, setPlayersStats] = useState([]);
+  const [displayScout, setDisplayScout] = useState(false);
+  const [opponents, setOpponents] = useState([]);
   const userContext = useContext(UserContext);
 
   async function fetchMyTeam() {
@@ -94,6 +98,10 @@ function MyTeamView() {
     await response.json();
   }
 
+  function openScout() {
+    setDisplayScout(true);
+  }
+
   useEffect(() => {
     fetchMyTeam();
   }, []);
@@ -118,6 +126,14 @@ function MyTeamView() {
             />
           );
         })}
+      </div>
+      <div>
+        <button onClick={openScout}> Scout Opponent</button>
+        <ScoutOpponent
+          display={displayScout}
+          setDisplay={setDisplayScout}
+          opponents={opponents}
+        />
       </div>
       <StatsTable playersList={playersStats} />
     </div>
