@@ -15,12 +15,18 @@ function MyTeamView() {
   const [opponents, setOpponents] = useState([]);
   const userContext = useContext(UserContext);
 
-  async function fetchMyTeam() {
-    const queryUrl = new URL(`${PORT}/myTeamPlayers`);
+  async function fetchTeamPlayers(teamType) {
+    const queryUrl = new URL(`${PORT}/${teamType}`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     const response = await fetch(queryUrl);
+
     const data = await response.json();
-    setMyTeamPlayers(data);
+    console.log(data);
+    if (teamType === "myTeamPlayers") {
+      setMyTeamPlayers(data);
+    } else {
+      setOpponents(data);
+    }
   }
 
   async function fetchSinglePlayer(playerId, performanceScore, myTeamId) {
@@ -103,7 +109,9 @@ function MyTeamView() {
   }
 
   useEffect(() => {
-    fetchMyTeam();
+    // fetchMyTeam();
+    fetchTeamPlayers("myTeamPlayers");
+    fetchTeamPlayers("opponents");
   }, []);
 
   useEffect(() => {
