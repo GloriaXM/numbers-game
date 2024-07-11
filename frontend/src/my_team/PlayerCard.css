@@ -3,26 +3,41 @@
   overflow-x: scroll;
 }
 
-.playerCard {
-  display: flex;
-  flex-direction: column;
-  border: solid thick;
-  margin: 10px;
-  width: 450px;
-  min-width: 400px;
-  border-radius: 15px;
-  transition: all 0.5s ease-out 100ms;
-  overflow: hidden;
-  align-self: flex-start;
-  padding: 10px;
+.scene {
+  min-width: 450px;
+  height: 260px;
+  perspective: 600px;
 }
 
-.playerCard:hover {
-  border-color: #88d9e6;
-  box-shadow: 10px 5px 5px #88d9e6;
-}
-.performanceScore {
+.playerCard {
+  width: 90%;
+  height: 90%;
+  background-color: #77b9ff;
+  position: relative;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+  display: flex;
+  border: solid thick;
   margin: 10px;
+  border-radius: 15px;
+  align-self: flex-start;
+}
+
+.playerCard:hover,
+.playerCard:focus-within {
+  transform: scale(1.05);
+  box-shadow: 8px 5px 5px #1f2833;
+}
+
+.card__face {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+}
+
+.card__face--back {
+  transform: rotateY(180deg);
 }
 
 .cardHeader {
@@ -41,12 +56,7 @@
   display: flex;
   flex-direction: column;
   margin: -40px;
-  transition: all 0.5s ease-out 0.2s;
   color: white;
-}
-.playerCard:hover .hiddenStatsBar {
-  margin: 0px;
-  color: #1f2833;
 }
 
 .stat {
@@ -66,8 +76,23 @@
   flex-direction: row;
 }
 
-.deleteButton {
+.button {
+  width: 180px;
+  margin: 5px;
+}
+
+.delete {
   color: red;
-  width: 200px;
   align-self: center;
+}
+
+.deleteCard {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-content: center;
 }
