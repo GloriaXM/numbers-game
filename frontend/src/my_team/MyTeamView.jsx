@@ -29,7 +29,26 @@ function MyTeamView() {
       player,
       performanceScore
     );
-    setPlayersStats((playersStats) => [...playersStats, player]);
+    return player;
+  }
+
+  async function fetchPlayers(myTeamPlayers) {
+    let newPlayersStats = await Promise.all(
+      myTeamPlayers.map(async (player) => {
+        try {
+          const result = await fetchSinglePlayer(
+            player.playerId,
+            player.performanceScore,
+            player.id
+          );
+
+          return result;
+        } catch (error) {
+          //handle errors
+        }
+      })
+    );
+    setPlayersStats(newPlayersStats);
   }
 
   async function checkPerformanceScore(player, performanceScore) {
@@ -80,10 +99,7 @@ function MyTeamView() {
   }, []);
 
   useEffect(() => {
-    setPlayersStats([]);
-    myTeamPlayers.map((player) => {
-      fetchSinglePlayer(player.playerId, player.performanceScore, player.id);
-    });
+    fetchPlayers(myTeamPlayers);
   }, [myTeamPlayers]);
 
   return (
