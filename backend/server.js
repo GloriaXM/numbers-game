@@ -145,12 +145,19 @@ app.post("/player", async (req, res) => {
         .status(400)
         .json({ error: "Player has already been added to MyTeam" });
     }
-    //TODO: define algorithm to calculate initial performance score
+
+    const performanceScores = calcPerformanceScores(playerId);
+
     const newPlayer = await prisma[playerType].create({
       data: {
-        performanceScore: 50,
         playerId,
         userId,
+        outsideOffenseScore: performanceScores.outsideOffenseScore,
+        insideOffenseScore: performanceScores.insideOffenseScore,
+        offenseDisciplineScore: performanceScores.offenseDisciplineScore,
+        defenseDisciplineScore: performanceScores.defenseDisciplineScore,
+        consistencyScore: performanceScores.consistencyScore,
+        reboundingScore: performanceScores.reboundingScore,
       },
     });
 
