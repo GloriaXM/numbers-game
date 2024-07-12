@@ -47,7 +47,6 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
       >
         <div className="card__face card__face--front">
           <h2 className="playerCardName"> {player.player_name}</h2>
-          <h1 className="performanceScore"> {player.performanceScore}</h1>
         </div>
         <div className="card__face card__face--back">
           <div className="summaryStatsBar">
