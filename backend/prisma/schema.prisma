@@ -46,6 +46,7 @@ model Player {
   team              String
   createdAt         DateTime       @default(now())
   teamPlayer        MyTeamPlayer[]
+  Opponent          Opponent[]
 }
 
 model MyTeamPlayer {
@@ -55,6 +56,7 @@ model MyTeamPlayer {
   playerId         Int
   user             User   @relation(fields: [userId], references: [id])
   userId           Int
+  playingStyle     String @default("versatile")
 }
 
 model User {
@@ -62,4 +64,15 @@ model User {
   username      String         @unique
   password      String
   myTeamPlayers MyTeamPlayer[]
+  Opponent      Opponent[]
+}
+
+model Opponent {
+  id               Int    @id @default(autoincrement())
+  performanceScore Int
+  player           Player @relation(fields: [playerId], references: [id])
+  playerId         Int
+  user             User   @relation(fields: [userId], references: [id])
+  userId           Int
+  playingStyle     String @default("versatile")
 }

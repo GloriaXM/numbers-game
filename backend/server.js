@@ -117,6 +117,16 @@ app.get("/singlePlayerStats", async (req, res) => {
   res.json(player);
 });
 
+app.get("/opponents", async (req, res) => {
+  const userId = parseInt(req.query.userId);
+  const players = await prisma.opponent.findMany({
+    where: {
+      userId,
+    },
+  });
+  res.json(players);
+});
+
 //POSTS
 app.post("/myTeamPlayer", async (req, res) => {
   const playerId = parseInt(req.body.playerId);

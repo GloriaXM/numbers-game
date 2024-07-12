@@ -4,22 +4,34 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import TeamSummary from "./TeamSummary.jsx";
+import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
-  const [playersStats, setPlayersStats] = useState([]);
+  const [myTeamStats, setMyTeamStats] = useState([]);
+  const [displayScout, setDisplayScout] = useState(false);
+  const [opponents, setOpponents] = useState([]);
   const userContext = useContext(UserContext);
 
-  async function fetchMyTeam() {
-    const queryUrl = new URL(`${PORT}/myTeamPlayers`);
+  async function fetchTeamPlayers(teamType) {
+    const queryUrl = new URL(`${PORT}/${teamType}`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     const response = await fetch(queryUrl);
+
     const data = await response.json();
-    setMyTeamPlayers(data);
+    if (teamType === "myTeamPlayers") {
+      setMyTeamPlayers(data);
+    } else {
+      setOpponents(data);
+    }
   }
 
-  async function fetchSinglePlayer(playerId, performanceScore, myTeamId) {
+  async function fetchSinglePlayer(
+    playerId,
+    performanceScore = 0,
+    myTeamId = 0
+  ) {
     const queryUrl = new URL(`${PORT}/singlePlayerStats`);
     queryUrl.searchParams.append("playerId", playerId);
     const response = await fetch(queryUrl);
@@ -32,14 +44,15 @@ function MyTeamView() {
     return player;
   }
 
-  async function fetchPlayers(myTeamPlayers) {
+  async function fetchPlayersStats(fetchType) {
     let newPlayersStats = await Promise.all(
       myTeamPlayers.map(async (player) => {
         try {
           const result = await fetchSinglePlayer(
             player.playerId,
             player.performanceScore,
-            player.id
+            player.id,
+            player.playingStyle
           );
 
           return result;
@@ -48,7 +61,11 @@ function MyTeamView() {
         }
       })
     );
-    setPlayersStats(newPlayersStats);
+    if (fetchType === "myTeamPlayers") {
+      setMyTeamStats(newPlayersStats);
+    } else {
+      setOpponentStats(newPlayersStats);
+    }
   }
 
   async function checkPerformanceScore(player, performanceScore) {
@@ -94,12 +111,17 @@ function MyTeamView() {
     await response.json();
   }
 
+  function openScout() {
+    setDisplayScout(true);
+  }
+
   useEffect(() => {
-    fetchMyTeam();
+    fetchTeamPlayers("myTeamPlayers");
+    fetchTeamPlayers("opponents");
   }, []);
 
   useEffect(() => {
-    fetchPlayers(myTeamPlayers);
+    fetchPlayersStats("myTeamPlayers");
   }, [myTeamPlayers]);
 
   return (
@@ -107,8 +129,8 @@ function MyTeamView() {
       <Header />
       <div className="playerCardList">
         {/* TODO: Add scrolling styling or move to separate div if more team stats added */}
-        <TeamSummary playersStats={playersStats} />
-        {playersStats.map((player) => {
+        <TeamSummary playersStats={myTeamStats} />
+        {myTeamStats.map((player) => {
           return (
             <PlayerCard
               key={player.id}
@@ -119,7 +141,15 @@ function MyTeamView() {
           );
         })}
       </div>
-      <StatsTable playersList={playersStats} />
+      <div>
+        <button onClick={openScout}> Scout Opponent</button>
+        <ScoutOpponent
+          display={displayScout}
+          setDisplay={setDisplayScout}
+          opponents={opponents}
+        />
+      </div>
+      <StatsTable playersList={myTeamStats} />
     </div>
   );
 }
