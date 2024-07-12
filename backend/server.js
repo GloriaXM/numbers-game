@@ -4,6 +4,7 @@ import morgan from "morgan";
 import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
+import { calcPerformanceScores } from "./routes/scoreCalculations.js";
 const prisma = new PrismaClient();
 
 import express from "express";
@@ -43,6 +44,11 @@ app.use(
 app.use(userRoutes);
 
 //GETS
+app.get("/backdoor", async (req, res) => {
+  calcPerformanceScores(1);
+  res.json({});
+});
+
 app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
 
@@ -146,7 +152,7 @@ app.post("/player", async (req, res) => {
         .json({ error: "Player has already been added to MyTeam" });
     }
 
-    const performanceScores = calcPerformanceScores(playerId);
+    const performanceScores = await calcPerformanceScores(playerId);
 
     const newPlayer = await prisma[playerType].create({
       data: {
