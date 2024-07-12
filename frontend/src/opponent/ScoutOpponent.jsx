@@ -1,12 +1,12 @@
 import OpponentCard from "./OpponentCard";
 
-function ScoutOpponent({ display, setDisplay, opponents }) {
+function ScoutOpponent({ setDisplay, opponents }) {
   function closeScout() {
     setDisplay(false);
   }
 
   return (
-    <div style={{ display: display ? "block" : "none" }}>
+    <div>
       <button onClick={closeScout}> X</button>
       <h1> Scout opponent</h1>
       {opponents.map((player) => {

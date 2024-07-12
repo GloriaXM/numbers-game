@@ -50,10 +50,6 @@ function MyTeamView() {
     setMyTeamStats(newPlayersStats);
   }
 
-  function openScout() {
-    setDisplayScout(true);
-  }
-
   useEffect(() => {
     fetchTeamPlayers("myTeamPlayers");
     fetchTeamPlayers("opponents");
@@ -81,12 +77,14 @@ function MyTeamView() {
         })}
       </div>
       <div>
-        <button onClick={openScout}> Scout Opponent</button>
-        <ScoutOpponent
-          display={displayScout}
-          setDisplay={setDisplayScout}
-          opponents={opponents}
-        />
+        <button onClick={setDisplayScout}> Scout Opponent</button>
+        {displayScout && (
+          <ScoutOpponent
+            display={displayScout}
+            setDisplay={setDisplayScout}
+            opponents={opponents}
+          />
+        )}
       </div>
       <StatsTable playersList={myTeamStats} />
     </div>
