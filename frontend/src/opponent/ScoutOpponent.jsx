@@ -1,5 +1,3 @@
-import CancelIcon from "@mui/icons-material/Cancel";
-import { useState } from "react";
 import OpponentCard from "./OpponentCard";
 
 function ScoutOpponent({ display, setDisplay, opponents }) {
