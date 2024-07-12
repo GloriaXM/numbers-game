@@ -25,11 +25,12 @@ function SinglePlayerView() {
 
   async function handleAddPlayer(event) {
     const playerType = event.target.id;
-    const queryUrl = new URL(`${PORT}/${playerType}`);
+    const queryUrl = new URL(`${PORT}/player`);
 
     fetch(queryUrl, {
       method: "POST",
       body: JSON.stringify({
+        playerType: playerType,
         playerId: bySeasonStats[0].id,
         userId: userContext.user.id,
       }),
