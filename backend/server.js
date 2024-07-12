@@ -128,12 +128,13 @@ app.get("/opponents", async (req, res) => {
 });
 
 //POSTS
-app.post("/myTeamPlayer", async (req, res) => {
+app.post("/player", async (req, res) => {
+  const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
 
   try {
-    const existingPlayer = await prisma.myTeamPlayer.findMany({
+    const existingPlayer = await prisma[playerType].findMany({
       where: {
         playerId,
         userId,
@@ -145,7 +146,7 @@ app.post("/myTeamPlayer", async (req, res) => {
         .json({ error: "Player has already been added to MyTeam" });
     }
     //TODO: define algorithm to calculate initial performance score
-    const newMyTeamPlayer = await prisma.myTeamPlayer.create({
+    const newPlayer = await prisma[playerType].create({
       data: {
         performanceScore: 50,
         playerId,
@@ -153,9 +154,9 @@ app.post("/myTeamPlayer", async (req, res) => {
       },
     });
 
-    res.json({ player: newMyTeamPlayer });
+    res.json({ player: newPlayer });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: error });
   }
 });
 
