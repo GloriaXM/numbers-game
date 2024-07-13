@@ -44,11 +44,6 @@ app.use(
 app.use(userRoutes);
 
 //GETS
-app.get("/backdoor", async (req, res) => {
-  calcPerformanceScores(1);
-  res.json({});
-});
-
 app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
 
