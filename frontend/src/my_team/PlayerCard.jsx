@@ -14,7 +14,7 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
     event.stopPropagation();
     setDisplayDeleteModal(false);
 
-    const queryUrl = new URL(`${PORT}/singlePlayerStats`);
+    const queryUrl = new URL(`${PORT}/myTeamPlayer`);
     await fetch(queryUrl, {
       method: "DELETE",
       body: JSON.stringify({

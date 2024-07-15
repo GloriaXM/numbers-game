@@ -128,6 +128,22 @@ app.get("/opponents", async (req, res) => {
   res.json(players);
 });
 
+app.get("/teams/startingFive", async (req, res) => {
+  const playingStyle = req.query.playingStyle;
+  const userId = parseInt(req.query.userId);
+  const teamType = req.query.teamType;
+
+  const players = await prisma[teamType].findMany({
+    where: { userId },
+    orderBy: [
+      {
+        [playingStyle]: "desc",
+      },
+    ],
+  });
+  res.json(players);
+});
+
 //POSTS
 app.post("/player", async (req, res) => {
   const playerType = req.body.playerType;
@@ -191,9 +207,11 @@ app.patch("/myTeamPlayer/performance", async (req, res) => {
 });
 
 //DELETES
-app.delete("/myTeamPlayer", async (req, res) => {
+app.delete("/teamPlayer", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
-  const player = await prisma.myTeamPlayer.delete({
+  const teamType = req.body.teamType;
+
+  const player = await prisma[teamType].delete({
     where: {
       id: playerId,
     },

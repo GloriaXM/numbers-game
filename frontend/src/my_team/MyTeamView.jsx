@@ -39,8 +39,8 @@ function MyTeamView() {
     let newPlayersStats = await Promise.all(
       myTeamPlayers.map(async (player) => {
         try {
-          const result = await fetchSinglePlayer(player.playerId);
-
+          let result = await fetchSinglePlayer(player.playerId);
+          result.myTeamId = player.id;
           return result;
         } catch (error) {
           //handle errors
