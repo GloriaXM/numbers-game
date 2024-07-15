@@ -50,6 +50,14 @@ function MyTeamView() {
     setMyTeamStats(newPlayersStats);
   }
 
+  async function handleScoutClick() {
+    setDisplayScout(true);
+    const queryUrl = new URL(`${PORT}/scoutOpponent`);
+    queryUrl.searchParams.append("userId", userContext.user.id);
+    const response = await fetch(queryUrl);
+    const results = await response.json();
+  }
+
   useEffect(() => {
     fetchTeamPlayers("myTeamPlayers");
     fetchTeamPlayers("opponents");
@@ -77,7 +85,7 @@ function MyTeamView() {
         })}
       </div>
       <div>
-        <button onClick={setDisplayScout}> Scout Opponent</button>
+        <button onClick={handleScoutClick}> Scout Opponent</button>
         {displayScout && (
           <ScoutOpponent
             display={displayScout}

@@ -144,6 +144,10 @@ app.get("/teams/startingFive", async (req, res) => {
   res.json(players);
 });
 
+app.get("/scoutOpponent", async (req, res) => {
+  const userId = parseInt(req.query.userId);
+});
+
 //POSTS
 app.post("/player", async (req, res) => {
   const playerType = req.body.playerType;
