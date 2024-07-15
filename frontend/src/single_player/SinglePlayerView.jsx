@@ -76,7 +76,7 @@ function SinglePlayerView() {
         {" "}
         Add to MyTeam
       </Button>
-      <Button id="opponent" onClick={handleAddPlayer}>
+      <Button id="opponentTeamPlayer" onClick={handleAddPlayer}>
         {" "}
         Add to Opponents
       </Button>

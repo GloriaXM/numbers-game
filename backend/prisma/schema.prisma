@@ -15,7 +15,7 @@ datasource db {
 
 // All Player stats are totals over the entire season
 model Player {
-  id                Int            @id @default(autoincrement())
+  id                Int                  @id @default(autoincrement())
   player_name       String
   age               Int
   games             Int
@@ -44,9 +44,9 @@ model Player {
   PF                Int // Personal Fouls
   PTS               Int // Points
   team              String
-  createdAt         DateTime       @default(now())
+  createdAt         DateTime             @default(now())
   teamPlayer        MyTeamPlayer[]
-  opponent          Opponent[]
+  opponent          OpponentTeamPlayer[]
 }
 
 model MyTeamPlayer {
@@ -65,14 +65,14 @@ model MyTeamPlayer {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  username      String         @unique
+  id            Int                  @id @default(autoincrement())
+  username      String               @unique
   password      String
   myTeamPlayers MyTeamPlayer[]
-  opponents     Opponent[]
+  opponents     OpponentTeamPlayer[]
 }
 
-model Opponent {
+model OpponentTeamPlayer {
   id                     Int    @id @default(autoincrement())
   player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId               Int

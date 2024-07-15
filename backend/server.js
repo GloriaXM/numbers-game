@@ -120,7 +120,7 @@ app.get("/singlePlayerStats", async (req, res) => {
 
 app.get("/opponents", async (req, res) => {
   const userId = parseInt(req.query.userId);
-  const players = await prisma.opponent.findMany({
+  const players = await prisma.opponentTeamPlayer.findMany({
     where: {
       userId,
     },
