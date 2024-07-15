@@ -33,6 +33,7 @@ function SinglePlayerView() {
         playerType: playerType,
         playerId: bySeasonStats[0].id,
         userId: userContext.user.id,
+        playerName: playerName,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",

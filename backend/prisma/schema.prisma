@@ -53,6 +53,7 @@ model MyTeamPlayer {
   id                     Int    @id @default(autoincrement())
   player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId               Int
+  playerName             String @default("")
   user                   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                 Int
   outsideOffenseScore    Int    @default(0)

@@ -149,6 +149,7 @@ app.post("/player", async (req, res) => {
   const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
+  const playerName = decodeURI(req.body.playerName);
 
   try {
     const existingPlayer = await prisma[playerType].findMany({
@@ -169,6 +170,7 @@ app.post("/player", async (req, res) => {
       data: {
         playerId,
         userId,
+        playerName,
         outsideOffenseScore: performanceScores.outsideOffenseScore,
         insideOffenseScore: performanceScores.insideOffenseScore,
         offenseDisciplineScore: performanceScores.offenseDisciplineScore,
