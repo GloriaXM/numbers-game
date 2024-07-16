@@ -51,10 +51,8 @@ model Player {
   defenseDisciplineScore Int      @default(0)
   consistencyScore       Int      @default(0)
   reboundingScore        Int      @default(0)
-  myTeams                User     @relation("myTeamPlayers", fields: [myTeamUserId], references: [id])
-  myTeamUserId           Int
-  opponentTeams          User     @relation("opponents", fields: [opponentUserId], references: [id])
-  opponentUserId         Int
+  myTeams                User[]   @relation("myTeamPlayers")
+  opponentTeams          User[]   @relation("opponents")
 }
 
 model User {
