@@ -1,5 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
+import {
+  STAT_MEANS,
+  STAT_VARIANCES,
+  POP_SIZE,
+  incrementPopSize,
+} from "./statDictionaries.js";
 const prisma = new PrismaClient();
 
 async function updatePlayer(player) {
@@ -16,22 +21,41 @@ async function updatePlayer(player) {
 }
 
 function updatePopulationStats(player) {
-  const dictIterator = STAT_MEANS.keys();
+  if (POP_SIZE === 0) {
+    Object.keys(STAT_MEANS).forEach(function (stat) {
+      if (stat !== "effect_fg_percent") {
+        STAT_MEANS[stat] = player[stat];
+      }
+    });
 
-  for (const stat of dictIterator) {
-    STAT_MEANS[stat] = player[stat];
-    STAT_VARIANCES[stat] =
-      (609 / 610) *
-      (STAT_VARIANCES[stat] + (STAT_MEANS[stat] - player[stat] ** 2) / 610);
+    STAT_MEANS.effect_fg_percent = parseFloat(player.effect_fg_percent);
+  } else {
+    Object.keys(STAT_MEANS).forEach(function (stat) {
+      if (stat !== "effect_fg_percent") {
+        STAT_MEANS[stat] =
+          (STAT_MEANS[stat] * POP_SIZE + player[stat]) / (POP_SIZE + 1);
+
+        STAT_VARIANCES[stat] =
+          (POP_SIZE / (POP_SIZE + 1)) *
+          (STAT_VARIANCES[stat] +
+            (player[stat] - STAT_MEANS[stat]) ** 2 / (POP_SIZE + 1));
+      }
+    });
+
+    const effect_fg_percent_float = parseFloat(player.effect_fg_percent);
+    STAT_MEANS.effect_fg_percent =
+      (STAT_MEANS.effect_fg_percent * POP_SIZE + effect_fg_percent_float) /
+      (POP_SIZE + 1);
+
+    STAT_VARIANCES.effect_fg_percent =
+      (POP_SIZE / (POP_SIZE + 1)) *
+      (STAT_VARIANCES.effect_fg_percent +
+        (effect_fg_percent_float -
+          (STAT_MEANS.effect_fg_percent / POP_SIZE) ** 2) /
+          (POP_SIZE + 1));
   }
-  const effect_fg_percent_float = parseFloat(player.effect_fg_percent);
-  STAT_MEANS.effect_fg_percent = effect_fg_percent_float;
-  STAT_VARIANCES.effect_fg_percent =
-    (609 / 610) *
-    (STAT_VARIANCES.effect_fg_percent_float +
-      (STAT_MEANS.effect_fg_percent_float -
-        player.effect_fg_percent_float ** 2) /
-        610);
+
+  incrementPopSize();
 }
 
 async function createPlayer(player) {
@@ -160,7 +184,7 @@ async function run() {
     queryUrl = data.next;
 
     for (let i = 0; i < players.length; ++i) {
-      updatePlayer(players[0]);
+      updatePlayer(players[i]);
     }
   } while (queryUrl !== null);
 
