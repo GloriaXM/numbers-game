@@ -23,11 +23,14 @@ function SinglePlayerView() {
     generateSummaryStats(data.results);
   }
 
-  async function handleAddPlayer() {
-    const queryUrl = new URL(`${PORT}/myTeamPlayer`);
+  async function handleAddPlayer(event) {
+    const playerType = event.target.id;
+    const queryUrl = new URL(`${PORT}/player`);
+
     fetch(queryUrl, {
       method: "POST",
       body: JSON.stringify({
+        playerType: playerType,
         playerId: bySeasonStats[0].id,
         userId: userContext.user.id,
       }),
@@ -68,7 +71,14 @@ function SinglePlayerView() {
     <div className="view singlePlayerView">
       <Header />
       <PlayerBanner player={byAggregateStats} />
-      <Button onClick={handleAddPlayer}> Add to MyTeam</Button>
+      <Button id="myTeamPlayer" onClick={handleAddPlayer}>
+        {" "}
+        Add to MyTeam
+      </Button>
+      <Button id="opponent" onClick={handleAddPlayer}>
+        {" "}
+        Add to Opponents
+      </Button>
       <ModelView careerData={bySeasonStats} />
       <StatsTable playersList={bySeasonStats} />
     </div>

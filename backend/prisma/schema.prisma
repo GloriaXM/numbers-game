@@ -46,17 +46,21 @@ model Player {
   team              String
   createdAt         DateTime       @default(now())
   teamPlayer        MyTeamPlayer[]
-  Opponent          Opponent[]
+  opponent          Opponent[]
 }
 
 model MyTeamPlayer {
-  id               Int    @id @default(autoincrement())
-  performanceScore Int
-  player           Player @relation(fields: [playerId], references: [id])
-  playerId         Int
-  user             User   @relation(fields: [userId], references: [id])
-  userId           Int
-  playingStyle     String @default("versatile")
+  id                     Int    @id @default(autoincrement())
+  player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId               Int
+  user                   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 Int
+  outsideOffenseScore    Int    @default(0)
+  insideOffenseScore     Int    @default(0)
+  offenseDisciplineScore Int    @default(0)
+  defenseDisciplineScore Int    @default(0)
+  consistencyScore       Int    @default(0)
+  reboundingScore        Int    @default(0)
 }
 
 model User {
@@ -64,15 +68,20 @@ model User {
   username      String         @unique
   password      String
   myTeamPlayers MyTeamPlayer[]
-  Opponent      Opponent[]
+  opponents     Opponent[]
 }
 
 model Opponent {
-  id               Int    @id @default(autoincrement())
-  performanceScore Int
-  player           Player @relation(fields: [playerId], references: [id])
-  playerId         Int
-  user             User   @relation(fields: [userId], references: [id])
-  userId           Int
-  playingStyle     String @default("versatile")
+  id                     Int    @id @default(autoincrement())
+  player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId               Int
+  user                   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 Int
+  playerName             String @default("")
+  outsideOffenseScore    Int    @default(0)
+  insideOffenseScore     Int    @default(0)
+  offenseDisciplineScore Int    @default(0)
+  defenseDisciplineScore Int    @default(0)
+  consistencyScore       Int    @default(0)
+  reboundingScore        Int    @default(0)
 }

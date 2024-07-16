@@ -13,7 +13,34 @@ function PlayersView() {
   const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sortType, setSortType] = useState("no_sort");
+
+  const SORT_OPTIONS = Object.freeze({
+    no_sort: "no_sort",
+    id: "id",
+    player_name: "player_name",
+    PTS: "PTS",
+    field_percent: "field_percent",
+    three_percent: "three_percent",
+    two_percent: "two_percent",
+    effect_fg_percent: "effect_fg_percent",
+    ft_percent: "ft_percent",
+    ORB: "ORB",
+    DRB: "DRB",
+    TRB: "TRB",
+    AST: "AST",
+    STL: "STL",
+    BLK: "BLK",
+    TOV: "TOV",
+    PF: "PF",
+  });
+  const [sortType, setSortType] = useState(SORT_OPTIONS.no_sort);
+
+  const SORT_DIRECTIONS = Object.freeze({
+    no_direction: "no_direction",
+    asc: "asc",
+    desc: "desc",
+  });
+
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -22,28 +49,6 @@ function PlayersView() {
 
   const [directionAnchorEl, setDirectionAnchorEl] = useState(null);
   const directionIsOpen = directionAnchorEl == null ? false : true;
-
-  const SORT_OPTIONS = [
-    "no_sort",
-    "id",
-    "player_name",
-    "PTS",
-    "field_percent",
-    "three_percent",
-    "two_percent",
-    "effect_fg_percent",
-    "ft_percent",
-    "ORB",
-    "DRB",
-    "TRB",
-    "AST",
-    "STL",
-    "BLK",
-    "TOV",
-    "PF",
-  ];
-
-  const SORT_DIRECTIONS = ["no_direction", "asc", "desc"];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,7 +110,7 @@ function PlayersView() {
           setOption={setSortType}
           anchorEl={optionsAnchorEl}
           setAnchorEl={setOptionsAnchorEl}
-          optionsList={SORT_OPTIONS}
+          optionsList={Object.values(SORT_OPTIONS)}
         />
         <SortBar
           isOpen={directionIsOpen}
@@ -113,7 +118,7 @@ function PlayersView() {
           setOption={setSortDirection}
           anchorEl={directionAnchorEl}
           setAnchorEl={setDirectionAnchorEl}
-          optionsList={SORT_DIRECTIONS}
+          optionsList={Object.values(SORT_DIRECTIONS)}
         />
         <SearchBar setSearchQuery={setSearchQuery} />
       </div>

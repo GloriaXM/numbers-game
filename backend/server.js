@@ -4,6 +4,7 @@ import morgan from "morgan";
 import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
+import { calcPerformanceScores } from "./routes/scoreCalculations.js";
 const prisma = new PrismaClient();
 
 import express from "express";
@@ -127,13 +128,30 @@ app.get("/opponents", async (req, res) => {
   res.json(players);
 });
 
+app.get("/teams/startingFive", async (req, res) => {
+  const playingStyle = req.query.playingStyle;
+  const userId = parseInt(req.query.userId);
+  const teamType = req.query.teamType;
+
+  const players = await prisma[teamType].findMany({
+    where: { userId },
+    orderBy: [
+      {
+        [playingStyle]: "desc",
+      },
+    ],
+  });
+  res.json(players);
+});
+
 //POSTS
-app.post("/myTeamPlayer", async (req, res) => {
+app.post("/player", async (req, res) => {
+  const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
 
   try {
-    const existingPlayer = await prisma.myTeamPlayer.findMany({
+    const existingPlayer = await prisma[playerType].findMany({
       where: {
         playerId,
         userId,
@@ -144,18 +162,25 @@ app.post("/myTeamPlayer", async (req, res) => {
         .status(400)
         .json({ error: "Player has already been added to MyTeam" });
     }
-    //TODO: define algorithm to calculate initial performance score
-    const newMyTeamPlayer = await prisma.myTeamPlayer.create({
+
+    const performanceScores = await calcPerformanceScores(playerId);
+
+    const newPlayer = await prisma[playerType].create({
       data: {
-        performanceScore: 50,
         playerId,
         userId,
+        outsideOffenseScore: performanceScores.outsideOffenseScore,
+        insideOffenseScore: performanceScores.insideOffenseScore,
+        offenseDisciplineScore: performanceScores.offenseDisciplineScore,
+        defenseDisciplineScore: performanceScores.defenseDisciplineScore,
+        consistencyScore: performanceScores.consistencyScore,
+        reboundingScore: performanceScores.reboundingScore,
       },
     });
 
-    res.json({ player: newMyTeamPlayer });
+    res.json({ player: newPlayer });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: error });
   }
 });
 
@@ -182,9 +207,11 @@ app.patch("/myTeamPlayer/performance", async (req, res) => {
 });
 
 //DELETES
-app.delete("/myTeamPlayer", async (req, res) => {
+app.delete("/teamPlayer", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
-  const player = await prisma.myTeamPlayer.delete({
+  const teamType = req.body.teamType;
+
+  const player = await prisma[teamType].delete({
     where: {
       id: playerId,
     },
