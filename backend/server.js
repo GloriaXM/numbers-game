@@ -149,19 +149,7 @@ app.get("/teams/startingFive", async (req, res) => {
 
 app.get("/scoutOpponent", async (req, res) => {
   const userId = parseInt(req.query.userId);
-});
-
-app.get("/backdoor", async (req, res) => {
-  const playerId = 1;
-  const player = await prisma.player.findUnique({
-    where: {
-      id: playerId,
-    },
-  });
-  res.json(player);
-  run();
-  console.log(STAT_MEANS);
-  console.log(STAT_VARIANCES);
+  return {};
 });
 
 //POSTS

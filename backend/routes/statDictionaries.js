@@ -1,7 +1,8 @@
-let meansObject = {
+let STAT_MEANS = {
   minutes_played: 0,
   field_goals: 0,
   field_attempts: 0,
+  field_percent: 0,
   three_fg: 0,
   three_attempts: 0,
   three_percent: 0,
@@ -23,10 +24,11 @@ let meansObject = {
   PTS: 0,
 };
 
-let variancesObject = {
+let STAT_VARIANCES = {
   minutes_played: 0,
   field_goals: 0,
   field_attempts: 0,
+  field_percent: 0,
   three_fg: 0,
   three_attempts: 0,
   three_percent: 0,
@@ -48,7 +50,10 @@ let variancesObject = {
   PTS: 0,
 };
 
-let STAT_MEANS = new Map([...Object.entries(meansObject)]);
-let STAT_VARIANCES = new Map([...Object.entries(variancesObject)]);
+let POP_SIZE = 0;
 
-export { STAT_MEANS, STAT_VARIANCES };
+function incrementPopSize() {
+  ++POP_SIZE;
+}
+
+export { STAT_MEANS, STAT_VARIANCES, POP_SIZE, incrementPopSize };
