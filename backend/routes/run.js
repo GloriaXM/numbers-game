@@ -30,8 +30,6 @@ function updatePopulationStats(player) {
 
     STAT_MEANS.effect_fg_percent = parseFloat(player.effect_fg_percent);
   } else {
-    console.log(player);
-    console.log(STAT_MEANS);
     Object.keys(STAT_MEANS).forEach(function (stat) {
       if (stat !== "effect_fg_percent") {
         STAT_MEANS[stat] =
@@ -56,8 +54,6 @@ function updatePopulationStats(player) {
           (STAT_MEANS.effect_fg_percent / POP_SIZE) ** 2) /
           (POP_SIZE + 1));
   }
-
-  console.log(STAT_VARIANCES);
 
   incrementPopSize();
 }
