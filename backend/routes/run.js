@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
 const prisma = new PrismaClient();
 
 async function updatePlayer(player) {
@@ -7,10 +8,30 @@ async function updatePlayer(player) {
   });
 
   if (oldPlayer == null) {
-    createPlayer(player);
+    player = await createPlayer(player);
   } else {
-    changePlayerData(player, oldPlayer);
+    player = await changePlayerData(player, oldPlayer);
   }
+  updatePopulationStats(player);
+}
+
+function updatePopulationStats(player) {
+  const dictIterator = STAT_MEANS.keys();
+
+  for (const stat of dictIterator) {
+    STAT_MEANS[stat] = player[stat];
+    STAT_VARIANCES[stat] =
+      (609 / 610) *
+      (STAT_VARIANCES[stat] + (STAT_MEANS[stat] - player[stat] ** 2) / 610);
+  }
+  const effect_fg_percent_float = parseFloat(player.effect_fg_percent);
+  STAT_MEANS.effect_fg_percent = effect_fg_percent_float;
+  STAT_VARIANCES.effect_fg_percent =
+    (609 / 610) *
+    (STAT_VARIANCES.effect_fg_percent_float +
+      (STAT_MEANS.effect_fg_percent_float -
+        player.effect_fg_percent_float ** 2) /
+        610);
 }
 
 async function createPlayer(player) {
@@ -27,7 +48,7 @@ async function createPlayer(player) {
     ? "0"
     : player.effect_fg_percent;
 
-  await prisma.player.create({
+  const newPlayer = await prisma.player.create({
     data: {
       AST: player.BLK,
       DRB: player.DRB,
@@ -60,6 +81,7 @@ async function createPlayer(player) {
       two_percent: two_percent,
     },
   });
+  return newPlayer;
 }
 
 async function changePlayerData(player, oldPlayer) {
@@ -77,7 +99,7 @@ async function changePlayerData(player, oldPlayer) {
       ? "0"
       : player.effect_fg_percent;
 
-    await prisma.player.update({
+    player = await prisma.player.update({
       where: {
         id: oldPlayer.id,
       },
@@ -113,7 +135,9 @@ async function changePlayerData(player, oldPlayer) {
         two_percent: two_percent,
       },
     });
+    return player;
   }
+  return oldPlayer;
 }
 
 function isEqual(player, oldPlayer) {
@@ -129,32 +153,6 @@ async function run() {
     "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023"
   );
 
-  STAT_MEANS = {
-    minutes_played: STAT_MEANS.minutes_played,
-    field_goals: STAT_MEANS.field_goals,
-    field_attempts: STAT_MEANS.field_attempts,
-    field_percent: field_percent,
-    three_fg: three_attempts,
-    three_attempts: fuid_name,
-    three_percent: 0,
-    two_fg: 0,
-    two_attempts: 0,
-    two_percent: 0,
-    effect_fg_percent: 0,
-    ft: 0,
-    fta: 0,
-    ft_percent: 0,
-    ORB: 0,
-    DRB: 0,
-    TRB: 0,
-    AST: 0,
-    STL: 0,
-    BLK: 0,
-    TOV: 0,
-    PF: 0,
-    PTS: 0,
-  };
-
   do {
     const response = await fetch(queryUrl);
     const data = await response.json();
@@ -162,9 +160,11 @@ async function run() {
     queryUrl = data.next;
 
     for (let i = 0; i < players.length; ++i) {
-      updatePlayer(players[i]);
+      updatePlayer(players[0]);
     }
   } while (queryUrl !== null);
+
+  return {};
 }
 
-export { run };
+export { run, updatePopulationStats };

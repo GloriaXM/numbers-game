@@ -1,8 +1,7 @@
-let STAT_MEANS = {
+let meansObject = {
   minutes_played: 0,
-  field_goals,
+  field_goals: 0,
   field_attempts: 0,
-  field_percent: 0.0,
   three_fg: 0,
   three_attempts: 0,
   three_percent: 0,
@@ -24,11 +23,10 @@ let STAT_MEANS = {
   PTS: 0,
 };
 
-let STAT_VARIANCES = {
+let variancesObject = {
   minutes_played: 0,
-  field_goals,
+  field_goals: 0,
   field_attempts: 0,
-  field_percent: 0.0,
   three_fg: 0,
   three_attempts: 0,
   three_percent: 0,
@@ -49,5 +47,8 @@ let STAT_VARIANCES = {
   PF: 0,
   PTS: 0,
 };
+
+let STAT_MEANS = new Map([...Object.entries(meansObject)]);
+let STAT_VARIANCES = new Map([...Object.entries(variancesObject)]);
 
 export { STAT_MEANS, STAT_VARIANCES };

@@ -6,12 +6,14 @@ import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
 import { calcPerformanceScores } from "./routes/scoreCalculations.js";
 import { run } from "./routes/run.js";
+import { updatePopulationStats } from "./routes/run.js";
 const prisma = new PrismaClient();
 
 import express from "express";
 const app = express();
 
 import {} from "dotenv/config";
+import { STAT_MEANS, STAT_VARIANCES } from "./routes/statDictionaries.js";
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 const FRONTEND_PORT = process.env.FRONTEND_PORT;
@@ -147,6 +149,19 @@ app.get("/teams/startingFive", async (req, res) => {
 
 app.get("/scoutOpponent", async (req, res) => {
   const userId = parseInt(req.query.userId);
+});
+
+app.get("/backdoor", async (req, res) => {
+  const playerId = 1;
+  const player = await prisma.player.findUnique({
+    where: {
+      id: playerId,
+    },
+  });
+  res.json(player);
+  run();
+  console.log(STAT_MEANS);
+  console.log(STAT_VARIANCES);
 });
 
 //POSTS
