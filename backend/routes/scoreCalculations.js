@@ -84,13 +84,7 @@ function calcReboundingScore(games, ORB, DRB) {
   return INIT_SCORE - 10 + 10 * (ORB / games) + 6 * (DRB / games);
 }
 
-async function calcPerformanceScores(playerId) {
-  let player = await prisma.player.findUnique({
-    where: {
-      id: playerId,
-    },
-  });
-
+async function calcPerformanceScores(player) {
   const outsideOffenseScore = calcOutSideOffenseScore(
     player.field_attempts,
     player.three_attempts,
