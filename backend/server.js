@@ -5,12 +5,15 @@ import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
 import { calcPerformanceScores } from "./routes/scoreCalculations.js";
+import { run } from "./routes/run.js";
+import { updatePopulationStats } from "./routes/run.js";
 const prisma = new PrismaClient();
 
 import express from "express";
 const app = express();
 
 import {} from "dotenv/config";
+import { STAT_MEANS, STAT_VARIANCES } from "./routes/statDictionaries.js";
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 const FRONTEND_PORT = process.env.FRONTEND_PORT;
@@ -120,7 +123,7 @@ app.get("/singlePlayerStats", async (req, res) => {
 
 app.get("/opponents", async (req, res) => {
   const userId = parseInt(req.query.userId);
-  const players = await prisma.opponent.findMany({
+  const players = await prisma.opponentTeamPlayer.findMany({
     where: {
       userId,
     },
@@ -144,11 +147,17 @@ app.get("/teams/startingFive", async (req, res) => {
   res.json(players);
 });
 
+app.get("/scoutOpponent", async (req, res) => {
+  const userId = parseInt(req.query.userId);
+  return {};
+});
+
 //POSTS
 app.post("/player", async (req, res) => {
   const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
+  const playerName = decodeURI(req.body.playerName);
 
   try {
     const existingPlayer = await prisma[playerType].findMany({
@@ -169,6 +178,7 @@ app.post("/player", async (req, res) => {
       data: {
         playerId,
         userId,
+        playerName,
         outsideOffenseScore: performanceScores.outsideOffenseScore,
         insideOffenseScore: performanceScores.insideOffenseScore,
         offenseDisciplineScore: performanceScores.offenseDisciplineScore,
@@ -221,146 +231,6 @@ app.delete("/teamPlayer", async (req, res) => {
   res.json(player);
 });
 
-//Define cron job
-async function updatePlayer(player) {
-  const oldPlayer = await prisma.player.findUnique({
-    where: { id: player.id },
-  });
-
-  if (oldPlayer == null) {
-    createPlayer(player);
-  } else {
-    changePlayerData(player, oldPlayer);
-  }
-}
-
-async function createPlayer(player) {
-  const field_percent =
-    player.field_attempts === 0
-      ? 0
-      : player.field_goals / player.field_attempts;
-  const ft_percent = player.fta === 0 ? 0 : player.ft / player.fta;
-  const three_percent =
-    player.three_attempts === 0 ? 0 : player.three_fg / player.three_attempts;
-  const two_percent =
-    player.two_attempts === 0 ? 0 : player.two_fg / player.two_attempts;
-  const effect_fg_percent = !player.effect_fg_percent
-    ? "0"
-    : player.effect_fg_percent;
-
-  await prisma.player.create({
-    data: {
-      AST: player.BLK,
-      DRB: player.DRB,
-      ORB: player.ORB,
-      PF: player.PF,
-      PTS: player.PTS,
-      STL: player.STL,
-      TOV: player.TOV,
-      TRB: player.TRB,
-      BLK: player.BLK,
-      age: player.age,
-      effect_fg_percent: effect_fg_percent,
-      field_attempts: player.field_attempts,
-      field_goals: player.field_goals,
-      field_percent: field_percent,
-      ft: player.ft,
-      ft_percent: ft_percent,
-      fta: player.fta,
-      games: player.games,
-      games_started: player.games_started,
-      id: player.id,
-      minutes_played: player.minutes_played,
-      player_name: player.player_name,
-      team: player.team,
-      three_attempts: player.three_attempts,
-      three_fg: player.three_fg,
-      three_percent: three_percent,
-      two_attempts: player.two_attempts,
-      two_fg: player.two_fg,
-      two_percent: two_percent,
-    },
-  });
-}
-
-async function changePlayerData(player, oldPlayer) {
-  if (!isEqual(player, oldPlayer)) {
-    const field_percent =
-      player.field_attempts === 0
-        ? 0
-        : player.field_goals / player.field_attempts;
-    const ft_percent = player.fta === 0 ? 0 : player.ft / player.fta;
-    const three_percent =
-      player.three_attempts === 0 ? 0 : player.three_fg / player.three_attempts;
-    const two_percent =
-      player.two_attempts === 0 ? 0 : player.two_fg / player.two_attempts;
-    const effect_fg_percent = !player.effect_fg_percent
-      ? "0"
-      : player.effect_fg_percent;
-
-    await prisma.player.update({
-      where: {
-        id: oldPlayer.id,
-      },
-      data: {
-        AST: player.BLK,
-        DRB: player.DRB,
-        ORB: player.ORB,
-        PF: player.PF,
-        PTS: player.PTS,
-        STL: player.STL,
-        TOV: player.TOV,
-        TRB: player.TRB,
-        BLK: player.BLK,
-        age: player.age,
-        effect_fg_percent: effect_fg_percent,
-        field_attempts: player.field_attempts,
-        field_goals: player.field_goals,
-        field_percent: field_percent,
-        ft: player.ft,
-        ft_percent: ft_percent,
-        fta: player.fta,
-        games: player.games,
-        games_started: player.games_started,
-        id: player.id,
-        minutes_played: player.minutes_played,
-        player_name: player.player_name,
-        team: player.team,
-        three_attempts: player.three_attempts,
-        three_fg: player.three_fg,
-        three_percent: three_percent,
-        two_attempts: player.two_attempts,
-        two_fg: player.two_fg,
-        two_percent: two_percent,
-      },
-    });
-  }
-}
-
-function isEqual(player, oldPlayer) {
-  return (
-    player.player_name === oldPlayer.player_name &&
-    player.age === oldPlayer.age &&
-    player.minutes_played === oldPlayer.minutes_played
-  );
-}
-
-async function run() {
-  let queryUrl = new URL(
-    "https://nba-stats-db.herokuapp.com/api/playerdata/season/2023"
-  );
-  do {
-    const response = await fetch(queryUrl);
-    const data = await response.json();
-    const players = data.results;
-    queryUrl = data.next;
-
-    for (let i = 0; i < players.length; ++i) {
-      updatePlayer(players[i]);
-    }
-  } while (queryUrl !== null);
-}
-
-cron.schedule("0 1 * * *", function () {
+cron.schedule("46 11 * * *", function () {
   run();
 });
