@@ -171,7 +171,7 @@ function isEqual(player, oldPlayer) {
   return (
     player.player_name === oldPlayer.player_name &&
     player.age === oldPlayer.age &&
-    player.minutes_played === oldPlayer.minutes_played
+    player.games === oldPlayer.games
   );
 }
 
@@ -193,6 +193,7 @@ async function run() {
 
   const allPlayers = await prisma.player.findMany();
 
+  //TODO: use two for loops to calculate population stats and calculate performance scores
   allPlayers.forEach((player) => {
     calcPerformanceScores(player);
   });

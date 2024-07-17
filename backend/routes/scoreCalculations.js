@@ -297,4 +297,21 @@ async function calcPerformanceScores(player) {
   });
 }
 
-export { calcPerformanceScores };
+function sortPlayingStyles(player) {
+  let scores = [
+    { style: "outsideOffenseScore", score: player.outsideOffenseScore },
+    { style: "insideOffenseScore", score: player.insideOffenseScore },
+    { style: "offenseDisciplineScore", score: player.offenseDisciplineScore },
+    { style: "defenseDisciplineScore", score: player.defenseDisciplineScore },
+    { style: "consistencyScore", score: player.consistencyScore },
+    { style: "reboundingScore", score: player.reboundingScore },
+  ];
+
+  scores.sort((styleA, styleB) => {
+    return styleB.score - styleA.score;
+  });
+
+  return scores;
+}
+
+export { calcPerformanceScores, sortPlayingStyles };

@@ -1,4 +1,4 @@
-let STAT_MEANS = {
+const STAT_MEANS = {
   games: 0,
   minutes_played: 0,
   field_goals: 0,
@@ -25,7 +25,7 @@ let STAT_MEANS = {
   PTS: 0,
 };
 
-let STAT_VARIANCES = {
+const STAT_VARIANCES = {
   games: 0,
   minutes_played: 0,
   field_goals: 0,
