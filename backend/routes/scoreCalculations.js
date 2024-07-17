@@ -48,27 +48,46 @@ function calcInsideOffenseScore(
   two_attempts,
   two_fg,
   two_percent,
-  games,
   ORB,
   fta,
   ft_percent
 ) {
   let insideOffenseScore = INIT_SCORE;
 
-  if (field_attempts !== 0) {
-    insideOffenseScore += (two_attempts / field_attempts) * 50;
-  }
+  const normFieldAttempts =
+    (field_attempts - STAT_MEANS.field_attempts) /
+    Math.sqrt(STAT_VARIANCES.field_attempts);
+  const normTwoAttemps =
+    (two_attempts - STAT_MEANS.two_attempts) /
+    Math.sqrt(STAT_VARIANCES.two_attempts);
+  const normTwoFG =
+    (two_fg - STAT_MEANS.two_fg) / Math.sqrt(STAT_VARIANCES.two_fg);
+  const normTwoPercent =
+    (two_percent - STAT_MEANS.two_percent) /
+    Math.sqrt(STAT_VARIANCES.two_percent);
+  const normORB = (ORB - STAT_MEANS.ORB) / Math.sqrt(STAT_VARIANCES.ORB);
+  const normFTA =
+    (fta - STAT_MEANS.fta) / Math.sqrt(STAT_VARIANCES.field_attempts);
+  const normFTPercent =
+    (ft_percent - STAT_MEANS.ft_percent) / Math.sqrt(STAT_VARIANCES.ft_percent);
 
-  insideOffenseScore += two_fg / 80;
+  const twosProportionVariance =
+    (STAT_MEANS.two_attempts / STAT_MEANS.field_attempts) ** 2 *
+    (STAT_VARIANCES.two_attempts ** 2 / STAT_MEANS.two_attempts ** 2 +
+      STAT_VARIANCES.field_attempts ** 2 / STAT_MEANS.two_attempts);
+  const twosProportion =
+    normTwoAttemps == 0
+      ? 0
+      : (normTwoAttemps / normFieldAttempts -
+          STAT_MEANS.two_attempts / STAT_MEANS.field_attempts) /
+        Math.sqrt(twosProportionVariance);
 
-  if (two_percent != 0) {
-    insideOffenseScore += (two_percent - 0.5) * 50;
-  }
-
-  if (games != 0) {
-    insideOffenseScore += ORB / games + (fta * ft_percent) / games;
-  }
-
+  insideOffenseScore += twosProportion * 10000;
+  insideOffenseScore += normTwoFG * 8;
+  insideOffenseScore += normTwoPercent * 15;
+  insideOffenseScore += normORB * 10;
+  insideOffenseScore += normFTA * 15;
+  insideOffenseScore += normFTPercent * 10;
   return insideOffenseScore;
 }
 
@@ -106,7 +125,6 @@ function calcReboundingScore(games, ORB, DRB) {
 }
 
 async function calcPerformanceScores(player) {
-  console.log(player.player_name);
   const effect_fg_percent =
     parseFloat(player.effect_fg_percent) === 0
       ? 0
@@ -123,7 +141,6 @@ async function calcPerformanceScores(player) {
     player.two_attempts,
     player.two_fg,
     player.two_percent,
-    player.games,
     player.ORB,
     player.fta,
     player.ft_percent
