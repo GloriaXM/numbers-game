@@ -23,10 +23,13 @@ function calcOutSideOffenseScore(
     (three_percent - STAT_MEANS.three_percent) /
     Math.sqrt(STAT_VARIANCES.three_percent);
 
-  const threesProportionVariance =
-    (STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) ** 2 *
-    (STAT_VARIANCES.three_attempts ** 2 / STAT_MEANS.three_attempts ** 2 +
-      STAT_VARIANCES.field_attempts ** 2 / STAT_MEANS.field_attempts);
+  const threesProportionVariance = calcRatioVariance(
+    STAT_MEANS.three_attempts,
+    STAT_VARIANCES.three_attempts,
+    STAT_MEANS.field_attempts,
+    STAT_VARIANCES.field_attempts
+  );
+
   const threesProportion =
     normThreeAttempts == 0
       ? 0
@@ -71,10 +74,13 @@ function calcInsideOffenseScore(
   const normFTPercent =
     (ft_percent - STAT_MEANS.ft_percent) / Math.sqrt(STAT_VARIANCES.ft_percent);
 
-  const twosProportionVariance =
-    (STAT_MEANS.two_attempts / STAT_MEANS.field_attempts) ** 2 *
-    (STAT_VARIANCES.two_attempts ** 2 / STAT_MEANS.two_attempts ** 2 +
-      STAT_VARIANCES.field_attempts ** 2 / STAT_MEANS.two_attempts);
+  const twosProportionVariance = calcRatioVariance(
+    STAT_MEANS.two_attempts,
+    STAT_VARIANCES.two_attempts,
+    STAT_MEANS.field_attempts,
+    STAT_VARIANCES.field_attempts
+  );
+
   const twosProportion =
     normTwoAttemps == 0
       ? 0
@@ -94,11 +100,44 @@ function calcInsideOffenseScore(
 function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
   let offenseDisciplineScore = INIT_SCORE;
 
-  offenseDisciplineScore += (effect_fg_percent - 0.53) * 100;
+  const normEffectFGPercent =
+    (effect_fg_percent - STAT_MEANS.effect_fg_percent) /
+    Math.sqrt(STAT_VARIANCES.effect_fg_percent);
 
-  if (games != 0) {
-    offenseDisciplineScore += (2 * (10 * ORB - 6 * TOV + 5 * AST)) / games;
-  }
+  const TOVPerGameVariance = calcRatioVariance(
+    STAT_MEANS.TOV,
+    STAT_VARIANCES.TOV,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const TOVPerGame =
+    (TOV / games - STAT_MEANS.TOV / STAT_MEANS.games) /
+    Math.sqrt(TOVPerGameVariance);
+
+  const ORBPerGameVariance = calcRatioVariance(
+    STAT_MEANS.ORB,
+    STAT_VARIANCES.ORB,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const ORBPerGame =
+    (ORB / games - STAT_MEANS.ORB / STAT_MEANS.games) /
+    Math.sqrt(ORBPerGameVariance);
+
+  const ASTPerGameVariance = calcRatioVariance(
+    STAT_MEANS.AST,
+    STAT_VARIANCES.AST,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const ASTPerGame =
+    (AST / games - STAT_MEANS.AST / STAT_MEANS.games) /
+    Math.sqrt(ASTPerGameVariance);
+
+  offenseDisciplineScore += normEffectFGPercent * 150;
+  offenseDisciplineScore += TOVPerGame * 1000;
+  offenseDisciplineScore += ORBPerGame * 1000;
+  offenseDisciplineScore += ASTPerGame * 1000;
 
   return offenseDisciplineScore;
 }
@@ -106,22 +145,95 @@ function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
 function calcDefenseDisciplineScore(games, DRB, STL, BLK, PF) {
   let defenseDisciplineScore = INIT_SCORE;
 
-  if (games != 0) {
-    defenseDisciplineScore += (5 * DRB + 7 * STL + 7 * BLK - 8 * PF) / games;
-  }
+  const DRBPerGameVariance = calcRatioVariance(
+    STAT_MEANS.DRB,
+    STAT_VARIANCES.DRB,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const DRBPerGame =
+    (DRB / games - STAT_MEANS.DRB / STAT_MEANS.games) /
+    Math.sqrt(DRBPerGameVariance);
+
+  const STLPerGameVariance = calcRatioVariance(
+    STAT_MEANS.STL,
+    STAT_VARIANCES.STL,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const STLPerGame =
+    (STL / games - STAT_MEANS.STL / STAT_MEANS.games) /
+    Math.sqrt(STLPerGameVariance);
+
+  const BLKPerGameVariance = calcRatioVariance(
+    STAT_MEANS.BLK,
+    STAT_VARIANCES.BLK,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const BLKPerGame =
+    (BLK / games - STAT_MEANS.BLK / STAT_MEANS.games) /
+    Math.sqrt(BLKPerGameVariance);
+
+  const PFPerGameVariance = calcRatioVariance(
+    STAT_MEANS.PF,
+    STAT_VARIANCES.PF,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const PFPerGame =
+    (PF / games - STAT_MEANS.PF / STAT_MEANS.games) /
+    Math.sqrt(PFPerGameVariance);
+
+  defenseDisciplineScore +=
+    1000 * (DRBPerGame + STLPerGame + BLKPerGame + PFPerGame);
   return defenseDisciplineScore;
 }
 
 function calcConsistencyScore(games) {
-  return INIT_SCORE + games / 2;
+  return (
+    INIT_SCORE + ((games - STAT_MEANS.games) / STAT_VARIANCES.games) * 1000
+  );
 }
 
 function calcReboundingScore(games, ORB, DRB) {
-  if (games === 0) {
-    return INIT_SCORE;
-  }
+  let reboundingScore = INIT_SCORE;
 
-  return INIT_SCORE - 10 + 10 * (ORB / games) + 6 * (DRB / games);
+  const ORBPerGameVariance = calcRatioVariance(
+    STAT_MEANS.ORB,
+    STAT_VARIANCES.ORB,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const ORBPerGame =
+    (ORB / games - STAT_MEANS.ORB / STAT_MEANS.games) /
+    Math.sqrt(ORBPerGameVariance);
+
+  const DRBPerGameVariance = calcRatioVariance(
+    STAT_MEANS.DRB,
+    STAT_VARIANCES.DRB,
+    STAT_MEANS.games,
+    STAT_VARIANCES.games
+  );
+  const DRBPerGame =
+    (DRB / games - STAT_MEANS.DRB / STAT_MEANS.games) /
+    Math.sqrt(DRBPerGameVariance);
+
+  reboundingScore += 1500 * (ORBPerGame + DRBPerGame);
+  return reboundingScore;
+}
+
+function calcRatioVariance(
+  numeratorMean,
+  numeratorVariance,
+  denominatorMean,
+  denominatorVariance
+) {
+  return (
+    (numeratorMean / denominatorMean) ** 2 *
+    (numeratorVariance ** 2 / numeratorMean ** 2 +
+      denominatorVariance ** 2 / denominatorMean)
+  );
 }
 
 async function calcPerformanceScores(player) {
