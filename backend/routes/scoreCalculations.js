@@ -85,6 +85,10 @@ function calcReboundingScore(games, ORB, DRB) {
 }
 
 async function calcPerformanceScores(player) {
+  const effect_fg_percent =
+    player.effect_fg_percent === null
+      ? 0
+      : parseFloat(player.effect_fg_percent);
   const outsideOffenseScore = calcOutSideOffenseScore(
     player.field_attempts,
     player.three_attempts,
@@ -105,7 +109,7 @@ async function calcPerformanceScores(player) {
 
   const offenseDisciplineScore = calcOffenseDisciplineScore(
     player.games,
-    parseFloat(player.effect_fg_percent),
+    effect_fg_percent,
     player.TOV,
     player.ORB,
     player.AST
