@@ -5,8 +5,8 @@ import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
 import { calcPerformanceScores } from "./routes/scoreCalculations.js";
-import { run } from "./routes/run.js";
-import { updatePopulationStats } from "./routes/run.js";
+import { run } from "./routes/cronJob.js";
+import { updatePopulationStats } from "./routes/cronJob.js";
 const prisma = new PrismaClient();
 
 import express from "express";

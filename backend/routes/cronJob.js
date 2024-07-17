@@ -1,3 +1,5 @@
+//This file holds the functions run during the daily cron job to update the database
+
 import { PrismaClient } from "@prisma/client";
 import {
   STAT_MEANS,
