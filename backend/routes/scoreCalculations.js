@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
 const prisma = new PrismaClient();
 
 const INIT_SCORE = 40;
@@ -10,14 +11,34 @@ function calcOutSideOffenseScore(
   three_percent
 ) {
   let outsideOffenseScore = INIT_SCORE;
+  const normFieldAttempts =
+    (field_attempts - STAT_MEANS.field_attempts) /
+    Math.sqrt(STAT_VARIANCES.field_attempts);
+  const normThreeAttempts =
+    (three_attempts - STAT_MEANS.three_attempts) /
+    Math.sqrt(STAT_VARIANCES.three_attempts);
+  const normThreeFG =
+    (three_fg - STAT_MEANS.three_fg) / Math.sqrt(STAT_VARIANCES.three_fg);
+  const normThreePercent =
+    (three_percent - STAT_MEANS.three_percent) /
+    Math.sqrt(STAT_VARIANCES.three_percent);
 
-  if (field_attempts !== 0) {
-    outsideOffenseScore = (three_attempts / field_attempts) * 50;
-  }
+  const threesProportionVariance =
+    (STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) ** 2 *
+    (STAT_VARIANCES.three_attempts ** 2 / STAT_MEANS.three_attempts ** 2 +
+      STAT_VARIANCES.field_attempts ** 2 / STAT_MEANS.field_attempts);
+  const threesProportion =
+    normThreeAttempts == 0
+      ? 0
+      : (normThreeAttempts / normFieldAttempts -
+          STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) /
+        Math.sqrt(threesProportionVariance);
 
-  outsideOffenseScore += (three_percent - 0.33) * 1000;
+  outsideOffenseScore += threesProportion * 1000;
 
-  outsideOffenseScore += three_fg / 50;
+  outsideOffenseScore += normThreeFG * 10;
+
+  outsideOffenseScore += normThreePercent * 10;
 
   return outsideOffenseScore;
 }
@@ -85,6 +106,7 @@ function calcReboundingScore(games, ORB, DRB) {
 }
 
 async function calcPerformanceScores(player) {
+  console.log(player.player_name);
   const effect_fg_percent =
     parseFloat(player.effect_fg_percent) === 0
       ? 0
