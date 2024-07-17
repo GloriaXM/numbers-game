@@ -86,7 +86,7 @@ function calcReboundingScore(games, ORB, DRB) {
 
 async function calcPerformanceScores(player) {
   const effect_fg_percent =
-    player.effect_fg_percent === null
+    parseFloat(player.effect_fg_percent) === 0
       ? 0
       : parseFloat(player.effect_fg_percent);
   const outsideOffenseScore = calcOutSideOffenseScore(
@@ -131,14 +131,19 @@ async function calcPerformanceScores(player) {
     player.DRB
   );
 
-  return {
-    outsideOffenseScore: outsideOffenseScore,
-    insideOffenseScore: insideOffenseScore,
-    offenseDisciplineScore: offenseDisciplineScore,
-    defenseDisciplineScore: defenseDisciplineScore,
-    consistencyScore: consistencyScore,
-    reboundingScore: reboundingScore,
-  };
+  const curr = await prisma.player.update({
+    where: {
+      id: player.id,
+    },
+    data: {
+      outsideOffenseScore: outsideOffenseScore,
+      insideOffenseScore: insideOffenseScore,
+      offenseDisciplineScore: offenseDisciplineScore,
+      defenseDisciplineScore: defenseDisciplineScore,
+      consistencyScore: consistencyScore,
+      reboundingScore: reboundingScore,
+    },
+  });
 }
 
 export { calcPerformanceScores };

@@ -75,14 +75,6 @@ async function createPlayer(player) {
     ? "0"
     : player.effect_fg_percent;
 
-  const performanceScores = await calcPerformanceScores(player);
-  player.outsideOffenseScore = performanceScores.outsideOffenseScore;
-  player.insideOffenseScore = performanceScores.insideOffenseScore;
-  player.offenseDisciplineScore = performanceScores.offenseDisciplineScore;
-  player.defenseDisciplineScore = performanceScores.defenseDisciplineScore;
-  player.consistencyScore = performanceScores.consistencyScore;
-  player.reboundingScore = performanceScores.reboundingScore;
-
   const newPlayer = await prisma.player.create({
     data: {
       AST: player.BLK,
@@ -114,12 +106,6 @@ async function createPlayer(player) {
       two_attempts: player.two_attempts,
       two_fg: player.two_fg,
       two_percent: two_percent,
-      outsideOffenseScore: player.outsideOffenseScore,
-      insideOffenseScore: player.insideOffenseScore,
-      offenseDisciplineScore: player.offenseDisciplineScore,
-      defenseDisciplineScore: player.defenseDisciplineScore,
-      consistencyScore: player.consistencyScore,
-      reboundingScore: player.reboundingScore,
     },
   });
   return newPlayer;
@@ -201,9 +187,15 @@ async function run() {
     queryUrl = data.next;
 
     for (let i = 0; i < players.length; ++i) {
-      updatePlayer(players[0]);
+      updatePlayer(players[i]);
     }
   } while (queryUrl !== null);
+
+  const allPlayers = await prisma.player.findMany();
+
+  allPlayers.forEach((player) => {
+    calcPerformanceScores(player);
+  });
 }
 
 export { run, updatePopulationStats };
