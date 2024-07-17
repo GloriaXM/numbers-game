@@ -1,4 +1,5 @@
 let STAT_MEANS = {
+  games: 0,
   minutes_played: 0,
   field_goals: 0,
   field_attempts: 0,
@@ -25,6 +26,7 @@ let STAT_MEANS = {
 };
 
 let STAT_VARIANCES = {
+  games: 0,
   minutes_played: 0,
   field_goals: 0,
   field_attempts: 0,
