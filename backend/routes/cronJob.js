@@ -83,7 +83,6 @@ async function createPlayer(player) {
   player.consistencyScore = performanceScores.consistencyScore;
   player.reboundingScore = performanceScores.reboundingScore;
 
-  console.log(player);
   const newPlayer = await prisma.player.create({
     data: {
       AST: player.BLK,
