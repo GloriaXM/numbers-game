@@ -15,74 +15,50 @@ datasource db {
 
 // All Player stats are totals over the entire season
 model Player {
-  id                Int                  @id @default(autoincrement())
-  player_name       String
-  age               Int
-  games             Int
-  games_started     Int
-  minutes_played    Int
-  field_goals       Int
-  field_attempts    Int
-  field_percent     Float
-  three_fg          Int
-  three_attempts    Int
-  three_percent     Float
-  two_fg            Int
-  two_attempts      Int
-  two_percent       Float
-  effect_fg_percent String
-  ft                Int
-  fta               Int
-  ft_percent        Float
-  ORB               Int // Offensive Rebound
-  DRB               Int // Defensive Rebound
-  TRB               Int // Total Rebounds
-  AST               Int // Assists
-  STL               Int // Steals
-  BLK               Int // Blocks
-  TOV               Int // Turnovers
-  PF                Int // Personal Fouls
-  PTS               Int // Points
-  team              String
-  createdAt         DateTime             @default(now())
-  teamPlayer        MyTeamPlayer[]
-  opponent          OpponentTeamPlayer[]
-}
-
-model MyTeamPlayer {
-  id                     Int    @id @default(autoincrement())
-  player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  playerId               Int
-  playerName             String @default("")
-  user                   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                 Int
-  outsideOffenseScore    Int    @default(0)
-  insideOffenseScore     Int    @default(0)
-  offenseDisciplineScore Int    @default(0)
-  defenseDisciplineScore Int    @default(0)
-  consistencyScore       Int    @default(0)
-  reboundingScore        Int    @default(0)
+  id                     Int      @id @default(autoincrement())
+  player_name            String
+  age                    Int
+  games                  Int
+  games_started          Int
+  minutes_played         Int
+  field_goals            Int
+  field_attempts         Int
+  field_percent          Float
+  three_fg               Int
+  three_attempts         Int
+  three_percent          Float
+  two_fg                 Int
+  two_attempts           Int
+  two_percent            Float
+  effect_fg_percent      String
+  ft                     Int
+  fta                    Int
+  ft_percent             Float
+  ORB                    Int // Offensive Rebound
+  DRB                    Int // Defensive Rebound
+  TRB                    Int // Total Rebounds
+  AST                    Int // Assists
+  STL                    Int // Steals
+  BLK                    Int // Blocks
+  TOV                    Int // Turnovers
+  PF                     Int // Personal Fouls
+  PTS                    Int // Points
+  team                   String
+  createdAt              DateTime @default(now())
+  outsideOffenseScore    Int      @default(0)
+  insideOffenseScore     Int      @default(0)
+  offenseDisciplineScore Int      @default(0)
+  defenseDisciplineScore Int      @default(0)
+  consistencyScore       Int      @default(0)
+  reboundingScore        Int      @default(0)
+  myTeams                User[]   @relation("myTeamPlayers")
+  opponentTeams          User[]   @relation("opponents")
 }
 
 model User {
-  id            Int                  @id @default(autoincrement())
-  username      String               @unique
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
   password      String
-  myTeamPlayers MyTeamPlayer[]
-  opponents     OpponentTeamPlayer[]
-}
-
-model OpponentTeamPlayer {
-  id                     Int    @id @default(autoincrement())
-  player                 Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  playerId               Int
-  user                   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                 Int
-  playerName             String @default("")
-  outsideOffenseScore    Int    @default(0)
-  insideOffenseScore     Int    @default(0)
-  offenseDisciplineScore Int    @default(0)
-  defenseDisciplineScore Int    @default(0)
-  consistencyScore       Int    @default(0)
-  reboundingScore        Int    @default(0)
+  myTeamPlayers Player[] @relation("myTeamPlayers")
+  opponents     Player[] @relation("opponents")
 }
