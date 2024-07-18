@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
+import BarGraph from "../models/BarGraph.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -78,6 +79,7 @@ function MyTeamView() {
           recommendations={recommendations.response}
         />
       )}
+      <BarGraph />
       <StatsTable playersList={myTeamPlayers} />
     </div>
   );
