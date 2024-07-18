@@ -95,14 +95,14 @@ async function run() {
   });
   const popSize = allPlayers.length;
   Object.keys(STAT_MEANS).forEach(function (stat) {
-    STAT_MEANS[stat] / popSize;
+    STAT_MEANS[stat] /= popSize;
   });
 
   allPlayers.forEach((player) => {
     calcVariance(player);
   });
   Object.keys(STAT_VARIANCES).forEach(function (stat) {
-    STAT_VARIANCES[stat] / popSize;
+    STAT_VARIANCES[stat] /= popSize;
   });
 
   allPlayers.forEach((player) => {

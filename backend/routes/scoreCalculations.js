@@ -42,11 +42,11 @@ function calcOutSideOffenseScore(
           STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) /
         Math.sqrt(threesProportionVariance);
 
-  outsideOffenseScore += threesProportion * 1000;
+  outsideOffenseScore += threesProportion * 5000;
 
-  outsideOffenseScore += normThreeFG * 10;
+  outsideOffenseScore += normThreeFG * 15;
 
-  outsideOffenseScore += normThreePercent * 10;
+  outsideOffenseScore += normThreePercent * 25;
 
   return outsideOffenseScore;
 }
@@ -139,9 +139,13 @@ function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
     (AST / games - STAT_MEANS.AST / STAT_MEANS.games) /
     Math.sqrt(ASTPerGameVariance);
 
+  console.log("HERE");
   offenseDisciplineScore += normEffectFGPercent * 150;
+  console.log(normEffectFGPercent);
   offenseDisciplineScore += TOVPerGame * 1000;
+  console.log(ORBPerGame);
   offenseDisciplineScore += ORBPerGame * 1000;
+  console.log(ASTPerGame);
   offenseDisciplineScore += ASTPerGame * 1000;
 
   return offenseDisciplineScore;
