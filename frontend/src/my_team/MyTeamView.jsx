@@ -53,6 +53,7 @@ function MyTeamView() {
               player={player}
               setMyTeamPlayers={setMyTeamPlayers}
               myTeamPlayers={myTeamPlayers}
+              userId={userContext.user.id}
             />
           );
         })}

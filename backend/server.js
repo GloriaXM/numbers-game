@@ -222,18 +222,23 @@ app.patch("/myTeamPlayer/performance", async (req, res) => {
 });
 
 //DELETES
-app.delete("/teamPlayer", async (req, res) => {
+app.delete("/player", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
   const teamType = req.body.teamType;
+  const userId = req.body.userId;
 
-  const player = await prisma[teamType].delete({
-    where: {
-      id: playerId,
-    },
-  });
+  try {
+    const player = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: { [teamType]: { disconnect: { id: playerId } } },
+    });
 
-  //TODO: add error handling here
-  res.json(player);
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ error: "Could not remove the player" });
+  }
 });
 
 cron.schedule("46 11 * * *", function () {
