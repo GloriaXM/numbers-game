@@ -52,10 +52,67 @@ const STAT_VARIANCES = {
   PTS: 0,
 };
 
+const OPPONENT_STYLE_TO_MYTEAM_STYLE = {
+  outsideOffenseScore: [
+    "outsideOffenseScore",
+    "defenseDisciplineScore",
+    "reboundingScore",
+    "offenseDisciplineScore",
+    "consistencyScore",
+    "insideOffenseScore",
+  ],
+  insideOffenseScore: [
+    "defenseDisciplineScore",
+    "outsideOffenseScore",
+    "insideOffenseScore",
+    "offenseDisciplineScore",
+    "reboundingScore",
+    "consistencyScore",
+  ],
+  offenseDisciplineScore: [
+    "outsideOffenseScore",
+    "insideOffenseScore",
+    "consistencyScore",
+    "offenseDisciplineScore",
+    "defenseDisciplineScore",
+    "reboundingScore",
+  ],
+  defenseDisciplineScore: [
+    "outsideOffenseScore",
+    "offenseDisciplineScore",
+    "reboundingScore",
+    "defenseDisciplineScore",
+    "consistencyScore",
+    "insideOffenseScore",
+  ],
+  consistencyScore: [
+    "offenseDisciplineScore",
+    "insideOffenseScore",
+    "consistencyScore",
+    "reboundingScore",
+    "outsideOffenseScore",
+    "defenseDisciplineScore",
+  ],
+  reboundingScore: [
+    "reboundingScore",
+    "offenseDisciplineScore",
+    "outsideOffenseScore",
+    "insideOffenseScore",
+    "consistencyScore",
+    "defenseDisciplineScore",
+  ],
+};
+
 let POP_SIZE = 0;
 
 function incrementPopSize() {
   ++POP_SIZE;
 }
 
-export { STAT_MEANS, STAT_VARIANCES, POP_SIZE, incrementPopSize };
+export {
+  STAT_MEANS,
+  STAT_VARIANCES,
+  POP_SIZE,
+  incrementPopSize,
+  OPPONENT_STYLE_TO_MYTEAM_STYLE,
+};

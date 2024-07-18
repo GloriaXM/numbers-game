@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
+import {
+  STAT_MEANS,
+  STAT_VARIANCES,
+  OPPONENT_STYLE_TO_MYTEAM_STYLE,
+} from "./statDictionaries.js";
 const prisma = new PrismaClient();
 
 const INIT_SCORE = 40;
@@ -333,19 +337,17 @@ function calcTeamPlayingStyles(team) {
     teamScores.reboundingScore += player.reboundingScore;
   });
 
+  //TODO: divide to get normalized team score
+
   const sortedScores = sortPlayingStyles(teamScores);
   return sortedScores;
 }
 
-function calcMostFittingStyle(idealStyles, myTeam) {
+function calcMostFittingStyle(idealStyle, myTeamStyles) {
   //TODO: compare the aggregate team performance for every style, pick the best aggregate
-  console.log(idealStyles);
-  console.log(myTeam);
-  const myTeamStyleScores = calcTeamPlayingStyles(myTeam);
 
-  scores.sort((styleA, styleB) => {
-    return styleB.score - styleA.score;
-  });
+  const idealStyles = OPPONENT_STYLE_TO_MYTEAM_STYLE[idealStyle.style];
+  const maxCompatibleStyle = "";
 }
 
 function calcBestPlayers(bestFitStyle) {
