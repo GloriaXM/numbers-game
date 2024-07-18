@@ -1,12 +1,7 @@
 //This file holds the functions run during the daily cron job to update the database
 
 import { PrismaClient } from "@prisma/client";
-import {
-  STAT_MEANS,
-  STAT_VARIANCES,
-  POP_SIZE,
-  incrementPopSize,
-} from "./statDictionaries.js";
+import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
 import { calcPerformanceScores } from "./scoreCalculations.js";
 const prisma = new PrismaClient();
 
@@ -33,27 +28,25 @@ async function updatePlayer(player) {
   if (!isEqual(player, oldPlayer)) {
     player = await createOrUpdate(player);
   }
-  updatePopulationStats(player);
 }
 
-function updatePopulationStats(player) {
-  if (POP_SIZE === 0) {
-    Object.keys(STAT_MEANS).forEach(function (stat) {
-      STAT_MEANS[stat] = player[stat];
-    });
-  } else {
-    Object.keys(STAT_MEANS).forEach(function (stat) {
-      STAT_MEANS[stat] =
-        (STAT_MEANS[stat] * POP_SIZE + player[stat]) / (POP_SIZE + 1);
+function resetPopulationStats() {
+  Object.keys(STAT_MEANS).forEach(function (stat) {
+    STAT_MEANS[stat] = 0;
+    STAT_VARIANCES[stat] = 0;
+  });
+}
 
-      STAT_VARIANCES[stat] =
-        (POP_SIZE / (POP_SIZE + 1)) *
-        (STAT_VARIANCES[stat] +
-          (player[stat] - STAT_MEANS[stat]) ** 2 / (POP_SIZE + 1));
-    });
-  }
+function updatePopulationTotal(player) {
+  Object.keys(STAT_MEANS).forEach(function (stat) {
+    STAT_MEANS[stat] += player[stat];
+  });
+}
 
-  incrementPopSize();
+function calcVariance(player) {
+  Object.keys(STAT_VARIANCES).forEach(function (stat) {
+    STAT_VARIANCES[stat] += (player[stat] - STAT_MEANS[stat]) ** 2;
+  });
 }
 
 async function createOrUpdate(player) {
@@ -96,10 +89,25 @@ async function run() {
 
   const allPlayers = await prisma.player.findMany();
 
-  //TODO: use two for loops to calculate population stats and calculate performance scores
+  resetPopulationStats();
+  allPlayers.forEach((player) => {
+    updatePopulationTotal(player);
+  });
+  const popSize = allPlayers.length;
+  Object.keys(STAT_MEANS).forEach(function (stat) {
+    STAT_MEANS[stat] / popSize;
+  });
+
+  allPlayers.forEach((player) => {
+    calcVariance(player);
+  });
+  Object.keys(STAT_VARIANCES).forEach(function (stat) {
+    STAT_VARIANCES[stat] / popSize;
+  });
+
   allPlayers.forEach((player) => {
     calcPerformanceScores(player);
   });
 }
 
-export { run, updatePopulationStats };
+export { run };
