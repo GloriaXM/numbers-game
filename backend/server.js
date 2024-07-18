@@ -4,7 +4,7 @@ import morgan from "morgan";
 import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
-import { calcPerformanceScores } from "./routes/scoreCalculations.js";
+import { generateRecommendations } from "./routes/scoreCalculations.js";
 import { run } from "./routes/cronJob.js";
 const prisma = new PrismaClient();
 
@@ -171,7 +171,12 @@ app.get("/teams/startingFive", async (req, res) => {
 
 app.get("/scoutOpponent", async (req, res) => {
   const userId = parseInt(req.query.userId);
-  return {};
+  try {
+    const result = await generateRecommendations(userId);
+    return res.json(result);
+  } catch {
+    res.status(500).json({ error: "Unable to generate recommendations." });
+  }
 });
 
 //UPDATES

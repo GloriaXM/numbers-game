@@ -314,4 +314,53 @@ function sortPlayingStyles(player) {
   return scores;
 }
 
-export { calcPerformanceScores, sortPlayingStyles };
+function calcTeamPlayingStyles(team) {
+  //TODO: sum up the players' stats
+  //TODO: call sortPlayingStyles on the aggregate stats to find playing style
+}
+
+function calcTeamIdealStyles(opponentStyles) {
+  //TODO: rank the playing styles for MyTeam that would best combat the first element of opponentStyle
+}
+
+function calcMostFittingStyle(idealStyles) {
+  //TODO: compare the aggregate team performance for every style, pick the best aggregate
+}
+
+function calcBestPlayers(bestFitStyle) {
+  //TODO: sort to find the players with the highest scores
+}
+
+function generateFeedback(bestFitStyle) {
+  //TODO: check a dictionary of preset messages for each playing style and return the messages
+}
+
+async function generateRecommendations(userId) {
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        opponents: true,
+      },
+    });
+
+    const team = result.opponents;
+
+    if (team.length !== 5) {
+      return { error: "Opponent team must have exactly five players" };
+    }
+
+    const opponentStyles = calcTeamPlayingStyles(team);
+    const idealStyles = calcTeamIdealStyles(opponentStyles);
+    const bestFitStyle = calcMostFittingStyle(idealStyles);
+    const bestPlayers = calcBestPlayers(bestFitStyle);
+    const response = generateFeedback(bestFitStyle);
+    return { response, bestPlayers };
+  } catch (error) {
+    return { error: error };
+  }
+}
+
+export { calcPerformanceScores, sortPlayingStyles, generateRecommendations };
