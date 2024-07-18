@@ -131,12 +131,16 @@ app.get("/myTeamPlayers", async (req, res) => {
 
 app.get("/singlePlayerStats", async (req, res) => {
   const playerId = parseInt(req.query.playerId);
-  const player = await prisma.player.findUnique({
-    where: {
-      id: playerId,
-    },
-  });
-  res.json(player);
+  try {
+    const player = await prisma.player.findUnique({
+      where: {
+        id: playerId,
+      },
+    });
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 });
 
 app.get("/opponents", async (req, res) => {

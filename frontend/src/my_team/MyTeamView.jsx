@@ -8,7 +8,6 @@ import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
-  const [myTeamStats, setMyTeamStats] = useState([]);
   const [displayScout, setDisplayScout] = useState(false);
   const [opponents, setOpponents] = useState([]);
   const userContext = useContext(UserContext);
@@ -27,36 +26,13 @@ function MyTeamView() {
     }
   }
 
-  async function fetchSinglePlayer(playerId) {
-    const queryUrl = new URL(`${PORT}/singlePlayerStats`);
-    queryUrl.searchParams.append("playerId", playerId);
-    const response = await fetch(queryUrl);
-    let player = await response.json();
-
-    return player;
-  }
-
-  async function fetchPlayersStats() {
-    let newPlayersStats = await Promise.all(
-      myTeamPlayers.map(async (player) => {
-        try {
-          let result = await fetchSinglePlayer(player.playerId);
-          result.myTeamId = player.id;
-          return result;
-        } catch (error) {
-          //handle errors
-        }
-      })
-    );
-    setMyTeamStats(newPlayersStats);
-  }
-
   async function handleScoutClick() {
     setDisplayScout(true);
     const queryUrl = new URL(`${PORT}/scoutOpponent`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     const response = await fetch(queryUrl);
     const results = await response.json();
+    //TODO: add recomendation logic
   }
 
   useEffect(() => {
@@ -64,17 +40,13 @@ function MyTeamView() {
     fetchTeamPlayers("opponents");
   }, []);
 
-  useEffect(() => {
-    fetchPlayersStats();
-  }, [myTeamPlayers]);
-
   return (
     <div className="view myTeamView">
       <Header />
       <div className="playerCardList">
         {/* TODO: Add scrolling styling or move to separate div if more team stats added */}
 
-        {myTeamStats.map((player) => {
+        {myTeamPlayers.map((player) => {
           return (
             <PlayerCard
               key={player.id}
@@ -95,7 +67,7 @@ function MyTeamView() {
           />
         )}
       </div>
-      <StatsTable playersList={myTeamStats} />
+      <StatsTable playersList={myTeamPlayers} />
     </div>
   );
 }
