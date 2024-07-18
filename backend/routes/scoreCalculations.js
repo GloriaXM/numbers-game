@@ -3,6 +3,7 @@ import {
   STAT_MEANS,
   STAT_VARIANCES,
   OPPONENT_STYLE_TO_MYTEAM_STYLE,
+  FEEDBACK_OPTIONS,
 } from "./statDictionaries.js";
 const prisma = new PrismaClient();
 
@@ -371,8 +372,11 @@ function calcBestPlayers(bestFitStyle, teamPlayers) {
   return teamPlayers;
 }
 
-function generateFeedback(bestFitStyle) {
-  //TODO: check a dictionary of preset messages for each playing style and return the messages
+function generateFeedback(bestFitStyles) {
+  const keyPoints = FEEDBACK_OPTIONS[bestFitStyles[0].style];
+  const areasOfImprovement =
+    FEEDBACK_OPTIONS[bestFitStyles[bestFitStyles.length - 1].style];
+  return { keyPoints, areasOfImprovement };
 }
 
 async function getTeam(userId, teamType) {
