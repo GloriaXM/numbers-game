@@ -362,8 +362,13 @@ function calcMostFittingStyles(idealStyle, myTeamStyles) {
   return myTeamStyles;
 }
 
-function calcBestPlayers(bestFitStyle) {
-  //TODO: sort to find the players with the highest scores
+function calcBestPlayers(bestFitStyle, teamPlayers) {
+  teamPlayers.sort((playerA, playerB) => {
+    const scoreA = playerA[bestFitStyle.style];
+    const scoreB = playerB[bestFitStyle.style];
+    return scoreB - scoreA;
+  });
+  return teamPlayers;
 }
 
 function generateFeedback(bestFitStyle) {
@@ -402,8 +407,8 @@ async function generateRecommendations(userId) {
       opponentStyles[0],
       myTeamStyles
     );
-    const bestPlayers = calcBestPlayers(bestFitStyles);
-    const response = generateFeedback(bestFitStyle);
+    const bestPlayers = calcBestPlayers(bestFitStyles[0], myTeamPlayers);
+    const response = generateFeedback(bestFitStyles);
     return { response, bestPlayers };
   } catch (error) {
     return { error: "Cannot generate recommendations" };
