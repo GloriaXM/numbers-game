@@ -1,16 +1,28 @@
-import OpponentCard from "./OpponentCard";
+import PlayerCard from "../my_team/PlayerCard";
+import { UserContext } from "../UserContext.js";
+import { useEffect, useState, useContext } from "react";
 
-function ScoutOpponent({ setDisplay, opponents }) {
+function ScoutOpponent({ setDisplay, setTeamPlayers, teamPlayers }) {
+  const userContext = useContext(UserContext);
   function closeScout() {
     setDisplay(false);
   }
 
   return (
     <div>
-      <button onClick={closeScout}> X</button>
       <h1> Scout opponent</h1>
-      {opponents.map((player) => {
-        return <OpponentCard player={player} />;
+      <button onClick={closeScout}> X </button>
+      {teamPlayers.map((player) => {
+        return (
+          <PlayerCard
+            key={"opponent " + player.id}
+            player={player}
+            setTeamPlayers={setTeamPlayers}
+            teamPlayers={teamPlayers}
+            userId={userContext.user.id}
+            teamType="opponents"
+          />
+        );
       })}
     </div>
   );

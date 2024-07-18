@@ -51,9 +51,10 @@ function MyTeamView() {
             <PlayerCard
               key={player.id}
               player={player}
-              setMyTeamPlayers={setMyTeamPlayers}
-              myTeamPlayers={myTeamPlayers}
+              setTeamPlayers={setMyTeamPlayers}
+              teamPlayers={myTeamPlayers}
               userId={userContext.user.id}
+              teamType="myTeamPlayers"
             />
           );
         })}
@@ -62,9 +63,9 @@ function MyTeamView() {
         <button onClick={handleScoutClick}> Scout Opponent</button>
         {displayScout && (
           <ScoutOpponent
-            display={displayScout}
             setDisplay={setDisplayScout}
-            opponents={opponents}
+            teamPlayers={opponents}
+            setTeamPlayers={setOpponents}
           />
         )}
       </div>

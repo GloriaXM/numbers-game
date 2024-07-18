@@ -1,7 +1,7 @@
 import "./PlayerCard.css";
 import { useState } from "react";
 
-function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers, userId }) {
+function PlayerCard({ player, setTeamPlayers, teamPlayers, userId, teamType }) {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [flipCard, setFlipCard] = useState(false);
 
@@ -19,7 +19,7 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers, userId }) {
       method: "DELETE",
       body: JSON.stringify({
         playerId: player.id,
-        teamType: "myTeamPlayers",
+        teamType: teamType,
         userId,
       }),
       headers: {
@@ -27,8 +27,8 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers, userId }) {
       },
     });
 
-    setMyTeamPlayers(
-      myTeamPlayers.filter(function (existingPlayer) {
+    setTeamPlayers(
+      teamPlayers.filter(function (existingPlayer) {
         return existingPlayer.id != player.id;
       })
     );
