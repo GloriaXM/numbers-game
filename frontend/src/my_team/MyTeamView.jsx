@@ -14,15 +14,16 @@ function MyTeamView() {
   const userContext = useContext(UserContext);
 
   async function fetchTeamPlayers(teamType) {
-    const queryUrl = new URL(`${PORT}/${teamType}`);
+    const queryUrl = new URL(`${PORT}/teamPlayers`);
     queryUrl.searchParams.append("userId", userContext.user.id);
+    queryUrl.searchParams.append("teamType", teamType);
     const response = await fetch(queryUrl);
 
     const data = await response.json();
     if (teamType === "myTeamPlayers") {
-      setMyTeamPlayers(data);
+      setMyTeamPlayers(data[teamType]);
     } else {
-      setOpponents(data);
+      setOpponents(data[teamType]);
     }
   }
 

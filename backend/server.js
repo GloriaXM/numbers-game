@@ -100,6 +100,25 @@ app.get("/searchPlayers", async (req, res) => {
   res.json(players);
 });
 
+app.get("/teamPlayers", async (req, res) => {
+  const userId = parseInt(req.query.userId);
+  const teamType = req.query.teamType;
+  try {
+    const players = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        [teamType]: true,
+      },
+    });
+
+    res.json(players);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
 app.get("/myTeamPlayers", async (req, res) => {
   const userId = parseInt(req.query.userId);
   const players = await prisma.myTeamPlayer.findMany({
