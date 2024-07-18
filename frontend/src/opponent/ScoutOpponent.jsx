@@ -1,8 +1,13 @@
 import PlayerCard from "../my_team/PlayerCard";
 import { UserContext } from "../UserContext.js";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 
-function ScoutOpponent({ setDisplay, setTeamPlayers, teamPlayers }) {
+function ScoutOpponent({
+  setDisplay,
+  setTeamPlayers,
+  teamPlayers,
+  recommendations,
+}) {
   const userContext = useContext(UserContext);
   function closeScout() {
     setDisplay(false);
@@ -24,6 +29,18 @@ function ScoutOpponent({ setDisplay, setTeamPlayers, teamPlayers }) {
           />
         );
       })}
+      <div className="keyPoints">
+        <h3> Recommendations:</h3>
+        {recommendations.keyPoints.map((point) => {
+          return <p>{point}</p>;
+        })}
+      </div>
+      <div className="areasOfImprovement">
+        <h3> Areas Of Improvement:</h3>
+        {recommendations.areasOfImprovement.map((point) => {
+          return <p>{point}</p>;
+        })}
+      </div>
     </div>
   );
 }

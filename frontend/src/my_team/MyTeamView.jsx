@@ -10,6 +10,10 @@ function MyTeamView() {
   const [myTeamPlayers, setMyTeamPlayers] = useState([]);
   const [displayScout, setDisplayScout] = useState(false);
   const [opponents, setOpponents] = useState([]);
+  const [recommendations, setRecommendations] = useState({
+    bestPlayers: [],
+    response: { keyPoints: [], areasOfImprovement: [] },
+  });
   const userContext = useContext(UserContext);
 
   async function fetchTeamPlayers(teamType) {
@@ -32,13 +36,17 @@ function MyTeamView() {
     queryUrl.searchParams.append("userId", userContext.user.id);
     const response = await fetch(queryUrl);
     const results = await response.json();
-    //TODO: add recomendation logic
+    setRecommendations(results);
   }
 
   useEffect(() => {
     fetchTeamPlayers("myTeamPlayers");
     fetchTeamPlayers("opponents");
   }, []);
+
+  useEffect(() => {
+    setMyTeamPlayers(recommendations.bestPlayers);
+  }, [recommendations]);
 
   return (
     <div className="view myTeamView">
@@ -59,13 +67,14 @@ function MyTeamView() {
           );
         })}
       </div>
-      <div>
-        <button onClick={handleScoutClick}> Scout Opponent</button>
+      <button onClick={handleScoutClick}> Scout Opponent</button>
+      <div className="playerCardList">
         {displayScout && (
           <ScoutOpponent
             setDisplay={setDisplayScout}
             teamPlayers={opponents}
             setTeamPlayers={setOpponents}
+            recommendations={recommendations.response}
           />
         )}
       </div>
