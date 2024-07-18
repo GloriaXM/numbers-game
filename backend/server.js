@@ -151,49 +151,32 @@ app.get("/scoutOpponent", async (req, res) => {
   return {};
 });
 
-//POSTS
-app.post("/player", async (req, res) => {
+//UPDATES
+app.patch("/player", async (req, res) => {
   const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
-  const playerName = decodeURI(req.body.playerName);
 
   try {
-    const existingPlayer = await prisma[playerType].findMany({
+    const updateUser = await prisma.user.update({
       where: {
-        playerId,
-        userId,
+        id: userId,
       },
-    });
-    if (existingPlayer.length != 0) {
-      return res
-        .status(400)
-        .json({ error: "Player has already been added to MyTeam" });
-    }
-
-    const performanceScores = await calcPerformanceScores(playerId);
-
-    const newPlayer = await prisma[playerType].create({
       data: {
-        playerId,
-        userId,
-        playerName,
-        outsideOffenseScore: performanceScores.outsideOffenseScore,
-        insideOffenseScore: performanceScores.insideOffenseScore,
-        offenseDisciplineScore: performanceScores.offenseDisciplineScore,
-        defenseDisciplineScore: performanceScores.defenseDisciplineScore,
-        consistencyScore: performanceScores.consistencyScore,
-        reboundingScore: performanceScores.reboundingScore,
+        [playerType]: {
+          connect: {
+            id: playerId,
+          },
+        },
       },
     });
 
-    res.json({ player: newPlayer });
+    res.json({ updateUser });
   } catch (error) {
     res.status(500).json({ error: error });
   }
 });
 
-//UPDATES
 app.patch("/myTeamPlayer/performance", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
   const performance = parseFloat(req.body.performance);
