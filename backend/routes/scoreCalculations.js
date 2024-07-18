@@ -315,12 +315,26 @@ function sortPlayingStyles(player) {
 }
 
 function calcTeamPlayingStyles(team) {
-  //TODO: sum up the players' stats
-  //TODO: call sortPlayingStyles on the aggregate stats to find playing style
-}
+  const teamScores = {
+    outsideOffenseScore: 0,
+    insideOffenseScore: 0,
+    offenseDisciplineScore: 0,
+    defenseDisciplineScore: 0,
+    consistencyScore: 0,
+    reboundingScore: 0,
+  };
 
-function calcTeamIdealStyles(opponentStyles) {
-  //TODO: rank the playing styles for MyTeam that would best combat the first element of opponentStyle
+  team.forEach((player) => {
+    teamScores.outsideOffenseScore += player.outsideOffenseScore;
+    teamScores.insideOffenseScore += player.insideOffenseScore;
+    teamScores.offenseDisciplineScore += player.offenseDisciplineScore;
+    teamScores.defenseDisciplineScore += player.defenseDisciplineScore;
+    teamScores.consistencyScore += player.consistencyScore;
+    teamScores.reboundingScore += player.reboundingScore;
+  });
+
+  const sortedScores = sortPlayingStyles(teamScores);
+  return sortedScores;
 }
 
 function calcMostFittingStyle(idealStyles) {
