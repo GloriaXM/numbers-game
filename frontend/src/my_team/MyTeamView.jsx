@@ -67,17 +67,17 @@ function MyTeamView() {
           );
         })}
       </div>
-      <button onClick={handleScoutClick}> Scout Opponent</button>
-      <div className="playerCardList">
-        {displayScout && (
-          <ScoutOpponent
-            setDisplay={setDisplayScout}
-            teamPlayers={opponents}
-            setTeamPlayers={setOpponents}
-            recommendations={recommendations.response}
-          />
-        )}
-      </div>
+      {!displayScout && (
+        <button onClick={handleScoutClick}> Scout Opponent</button>
+      )}
+      {displayScout && (
+        <ScoutOpponent
+          setDisplay={setDisplayScout}
+          teamPlayers={opponents}
+          setTeamPlayers={setOpponents}
+          recommendations={recommendations.response}
+        />
+      )}
       <StatsTable playersList={myTeamPlayers} />
     </div>
   );
