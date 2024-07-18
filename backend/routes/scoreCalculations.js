@@ -337,8 +337,15 @@ function calcTeamPlayingStyles(team) {
   return sortedScores;
 }
 
-function calcMostFittingStyle(idealStyles) {
+function calcMostFittingStyle(idealStyles, myTeam) {
   //TODO: compare the aggregate team performance for every style, pick the best aggregate
+  console.log(idealStyles);
+  console.log(myTeam);
+  const myTeamStyleScores = calcTeamPlayingStyles(myTeam);
+
+  scores.sort((styleA, styleB) => {
+    return styleB.score - styleA.score;
+  });
 }
 
 function calcBestPlayers(bestFitStyle) {
@@ -349,31 +356,40 @@ function generateFeedback(bestFitStyle) {
   //TODO: check a dictionary of preset messages for each playing style and return the messages
 }
 
-async function generateRecommendations(userId) {
+async function getTeam(userId, teamType) {
   try {
     const result = await prisma.user.findUnique({
       where: {
         id: userId,
       },
       select: {
-        opponents: true,
+        [teamType]: true,
       },
     });
+    const team = result[teamType];
+    return team;
+  } catch {
+    return { error: "could not get team players" };
+  }
+}
 
-    const team = result.opponents;
-
-    if (team.length !== 5) {
+async function generateRecommendations(userId) {
+  try {
+    const opponentPlayers = await getTeam(userId, "opponents");
+    if (opponentPlayers.length !== 5) {
       return { error: "Opponent team must have exactly five players" };
     }
 
-    const opponentStyles = calcTeamPlayingStyles(team);
-    const idealStyles = calcTeamIdealStyles(opponentStyles);
-    const bestFitStyle = calcMostFittingStyle(idealStyles);
+    const myTeamPlayers = await getTeam(userId, "myTeamPlayers");
+
+    const opponentStyles = calcTeamPlayingStyles(opponentPlayers);
+    const myTeamStyles = calcTeamPlayingStyles(myTeamPlayers);
+    const bestFitStyle = calcMostFittingStyle(opponentStyles[0], myTeamStyles);
     const bestPlayers = calcBestPlayers(bestFitStyle);
     const response = generateFeedback(bestFitStyle);
     return { response, bestPlayers };
   } catch (error) {
-    return { error: error };
+    return { error: "Cannot generate recommendations" };
   }
 }
 
