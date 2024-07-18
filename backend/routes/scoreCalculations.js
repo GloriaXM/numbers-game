@@ -343,11 +343,23 @@ function calcTeamPlayingStyles(team) {
   return sortedScores;
 }
 
-function calcMostFittingStyle(idealStyle, myTeamStyles) {
-  //TODO: compare the aggregate team performance for every style, pick the best aggregate
-
+function calcMostFittingStyles(idealStyle, myTeamStyles) {
   const idealStyles = OPPONENT_STYLE_TO_MYTEAM_STYLE[idealStyle.style];
-  const maxCompatibleStyle = "";
+  const NORMALIZING_CONST = 10;
+
+  myTeamStyles.sort((styleA, styleB) => {
+    const styleACompatibility =
+      styleA.score +
+      (NORMALIZING_CONST - idealStyles.indexOf(styleA.style)) *
+        NORMALIZING_CONST;
+    const styleBCompatibility =
+      styleB.score +
+      (NORMALIZING_CONST - idealStyles.indexOf(styleB.style)) *
+        NORMALIZING_CONST;
+    return styleBCompatibility - styleACompatibility;
+  });
+
+  return myTeamStyles;
 }
 
 function calcBestPlayers(bestFitStyle) {
@@ -386,8 +398,11 @@ async function generateRecommendations(userId) {
 
     const opponentStyles = calcTeamPlayingStyles(opponentPlayers);
     const myTeamStyles = calcTeamPlayingStyles(myTeamPlayers);
-    const bestFitStyle = calcMostFittingStyle(opponentStyles[0], myTeamStyles);
-    const bestPlayers = calcBestPlayers(bestFitStyle);
+    const bestFitStyles = calcMostFittingStyles(
+      opponentStyles[0],
+      myTeamStyles
+    );
+    const bestPlayers = calcBestPlayers(bestFitStyles);
     const response = generateFeedback(bestFitStyle);
     return { response, bestPlayers };
   } catch (error) {
