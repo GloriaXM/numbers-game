@@ -76,13 +76,17 @@ function StatsTable({ playersList }) {
                     ? (player.two_percent * 100).toFixed(2)
                     : player.two_percent}
                 </TableCell>
-                <TableCell align="right">{player.effect_fg_percent}</TableCell>
-                <TableCell align="right">{player.ft}</TableCell>
-                <TableCell align="right">{player.fta}</TableCell>
                 <TableCell align="right">
                   {typeof player.effect_fg_percent === "number"
                     ? (player.effect_fg_percent * 100).toFixed(2)
                     : player.effect_fg_percent}
+                </TableCell>
+                <TableCell align="right">{player.ft}</TableCell>
+                <TableCell align="right">{player.fta}</TableCell>
+                <TableCell align="right">
+                  {typeof player.ft_percent === "number"
+                    ? (player.ft_percent * 100).toFixed(2)
+                    : player.ft_percent}
                 </TableCell>
                 <TableCell align="right">{player.ORB}</TableCell>
                 <TableCell align="right">{player.DRB}</TableCell>

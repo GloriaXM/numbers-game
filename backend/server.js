@@ -179,11 +179,6 @@ app.get("/scoutOpponent", async (req, res) => {
   }
 });
 
-app.get("/backdoor", async (req, res) => {
-  run();
-  return {};
-});
-
 //UPDATES
 app.patch("/player", async (req, res) => {
   const playerType = req.body.playerType;

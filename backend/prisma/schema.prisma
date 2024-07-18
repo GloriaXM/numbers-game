@@ -30,7 +30,7 @@ model Player {
   two_fg                 Int
   two_attempts           Int
   two_percent            Float
-  effect_fg_percent      String
+  effect_fg_percent      Float    @default(0)
   ft                     Int
   fta                    Int
   ft_percent             Float

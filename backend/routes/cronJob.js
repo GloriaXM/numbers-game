@@ -25,8 +25,8 @@ async function updatePlayer(player) {
   player.two_percent =
     player.two_attempts === 0 ? 0 : player.two_fg / player.two_attempts;
   player.effect_fg_percent = !player.effect_fg_percent
-    ? "0"
-    : player.effect_fg_percent;
+    ? 0
+    : parseFloat(player.effect_fg_percent);
 
   delete player.season;
 
@@ -39,36 +39,18 @@ async function updatePlayer(player) {
 function updatePopulationStats(player) {
   if (POP_SIZE === 0) {
     Object.keys(STAT_MEANS).forEach(function (stat) {
-      if (stat !== "effect_fg_percent") {
-        STAT_MEANS[stat] = player[stat];
-      }
+      STAT_MEANS[stat] = player[stat];
     });
-
-    STAT_MEANS.effect_fg_percent = parseFloat(player.effect_fg_percent);
   } else {
     Object.keys(STAT_MEANS).forEach(function (stat) {
-      if (stat !== "effect_fg_percent") {
-        STAT_MEANS[stat] =
-          (STAT_MEANS[stat] * POP_SIZE + player[stat]) / (POP_SIZE + 1);
+      STAT_MEANS[stat] =
+        (STAT_MEANS[stat] * POP_SIZE + player[stat]) / (POP_SIZE + 1);
 
-        STAT_VARIANCES[stat] =
-          (POP_SIZE / (POP_SIZE + 1)) *
-          (STAT_VARIANCES[stat] +
-            (player[stat] - STAT_MEANS[stat]) ** 2 / (POP_SIZE + 1));
-      }
+      STAT_VARIANCES[stat] =
+        (POP_SIZE / (POP_SIZE + 1)) *
+        (STAT_VARIANCES[stat] +
+          (player[stat] - STAT_MEANS[stat]) ** 2 / (POP_SIZE + 1));
     });
-
-    const effect_fg_percent_float = parseFloat(player.effect_fg_percent);
-    STAT_MEANS.effect_fg_percent =
-      (STAT_MEANS.effect_fg_percent * POP_SIZE + effect_fg_percent_float) /
-      (POP_SIZE + 1);
-
-    STAT_VARIANCES.effect_fg_percent =
-      (POP_SIZE / (POP_SIZE + 1)) *
-      (STAT_VARIANCES.effect_fg_percent +
-        (effect_fg_percent_float -
-          (STAT_MEANS.effect_fg_percent / POP_SIZE) ** 2) /
-          (POP_SIZE + 1));
   }
 
   incrementPopSize();
