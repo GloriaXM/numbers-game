@@ -139,13 +139,9 @@ function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
     (AST / games - STAT_MEANS.AST / STAT_MEANS.games) /
     Math.sqrt(ASTPerGameVariance);
 
-  console.log("HERE");
   offenseDisciplineScore += normEffectFGPercent * 150;
-  console.log(normEffectFGPercent);
   offenseDisciplineScore += TOVPerGame * 1000;
-  console.log(ORBPerGame);
   offenseDisciplineScore += ORBPerGame * 1000;
-  console.log(ASTPerGame);
   offenseDisciplineScore += ASTPerGame * 1000;
 
   return offenseDisciplineScore;
@@ -291,7 +287,7 @@ async function calcPerformanceScores(player) {
     player.DRB
   );
 
-  const curr = await prisma.player.update({
+  await prisma.player.update({
     where: {
       id: player.id,
     },
@@ -341,8 +337,6 @@ function calcTeamPlayingStyles(team) {
     teamScores.consistencyScore += player.consistencyScore;
     teamScores.reboundingScore += player.reboundingScore;
   });
-
-  //TODO: divide to get normalized team score
 
   const sortedScores = sortPlayingStyles(teamScores);
   return sortedScores;
@@ -396,16 +390,13 @@ async function getTeam(userId, teamType) {
     const team = result[teamType];
     return team;
   } catch {
-    return { error: "could not get team players" };
+    return { error: "Could not get team players" };
   }
 }
 
 async function generateRecommendations(userId) {
   try {
     const opponentPlayers = await getTeam(userId, "opponents");
-    if (opponentPlayers.length !== 5) {
-      return { error: "Opponent team must have exactly five players" };
-    }
 
     const myTeamPlayers = await getTeam(userId, "myTeamPlayers");
 
