@@ -17,7 +17,7 @@ function ScoutOpponent({
   const compareScores = useMemo(() => {
     const myTeamScores = calcTeamScores(myTeamPlayers);
     const opponentScores = calcTeamScores(opponentPlayers);
-    const data = [];
+    let data = [];
 
     Object.keys(myTeamScores).forEach(function (score) {
       data.push({
@@ -26,6 +26,8 @@ function ScoutOpponent({
         opponentScore: opponentScores[score],
       });
     });
+
+    normalizeComparedScores(data);
 
     return data;
   }, [myTeamPlayers, opponentPlayers]);
@@ -58,6 +60,14 @@ function ScoutOpponent({
     });
 
     return teamScores;
+  }
+
+  function normalizeComparedScores(data) {
+    data.forEach((score) => {
+      const normalizingFactor = (score.myTeamScore + score.opponentScore) / 100;
+      score.myTeamScore /= normalizingFactor;
+      score.opponentScore /= normalizingFactor;
+    });
   }
 
   return (
