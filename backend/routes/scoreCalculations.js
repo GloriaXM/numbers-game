@@ -139,13 +139,9 @@ function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
     (AST / games - STAT_MEANS.AST / STAT_MEANS.games) /
     Math.sqrt(ASTPerGameVariance);
 
-  console.log("HERE");
   offenseDisciplineScore += normEffectFGPercent * 150;
-  console.log(normEffectFGPercent);
   offenseDisciplineScore += TOVPerGame * 1000;
-  console.log(ORBPerGame);
   offenseDisciplineScore += ORBPerGame * 1000;
-  console.log(ASTPerGame);
   offenseDisciplineScore += ASTPerGame * 1000;
 
   return offenseDisciplineScore;
