@@ -15,30 +15,30 @@ function PlayersView() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const SORT_OPTIONS = Object.freeze({
-    no_sort: "no_sort",
-    id: "id",
-    player_name: "player_name",
-    PTS: "PTS",
-    field_percent: "field_percent",
-    three_percent: "three_percent",
-    two_percent: "two_percent",
-    effect_fg_percent: "effect_fg_percent",
-    ft_percent: "ft_percent",
-    ORB: "ORB",
-    DRB: "DRB",
-    TRB: "TRB",
-    AST: "AST",
-    STL: "STL",
-    BLK: "BLK",
-    TOV: "TOV",
-    PF: "PF",
+    no_sort: "Sort Players",
+    id: "ID",
+    player_name: "Player Name",
+    PTS: "Points",
+    field_percent: "Field Percent",
+    three_percent: "Three Percent",
+    two_percent: "Two Percent",
+    effect_fg_percent: "Effective FG Percent",
+    ft_percent: "Free Throw Percent",
+    ORB: "Offensive Rebounds",
+    DRB: "Defensive Rebounds",
+    TRB: "Total Rebounds",
+    AST: "Assists",
+    STL: "Steals",
+    BLK: "Blocks",
+    TOV: "Turnovers",
+    PF: "Personal Fouls",
   });
-  const [sortType, setSortType] = useState(SORT_OPTIONS.no_sort);
+  const [sortType, setSortType] = useState("no_sort");
 
   const SORT_DIRECTIONS = Object.freeze({
-    no_direction: "no_direction",
-    asc: "asc",
-    desc: "desc",
+    no_direction: "No Direction",
+    asc: "Ascending",
+    desc: "Descending",
   });
 
   const [sortDirection, setSortDirection] = useState("no_direction");
@@ -110,7 +110,7 @@ function PlayersView() {
           setOption={setSortType}
           anchorEl={optionsAnchorEl}
           setAnchorEl={setOptionsAnchorEl}
-          optionsList={Object.values(SORT_OPTIONS)}
+          options={SORT_OPTIONS}
         />
         <SortBar
           isOpen={directionIsOpen}
@@ -118,7 +118,7 @@ function PlayersView() {
           setOption={setSortDirection}
           anchorEl={directionAnchorEl}
           setAnchorEl={setDirectionAnchorEl}
-          optionsList={Object.values(SORT_DIRECTIONS)}
+          options={SORT_DIRECTIONS}
         />
         <SearchBar setSearchQuery={setSearchQuery} />
       </div>

@@ -53,7 +53,9 @@ function StatsTable({ playersList }) {
                     </Link>
                   </div>
                 </TableCell>
-                <TableCell align="right">{2023}</TableCell>
+                <TableCell align="right">
+                  {player.season == null ? 2023 : player.season}
+                </TableCell>
                 <TableCell align="right">{player.minutes_played}</TableCell>
                 <TableCell align="right">{player.field_goals}</TableCell>
                 <TableCell align="right">{player.field_attempts}</TableCell>
@@ -79,7 +81,7 @@ function StatsTable({ playersList }) {
                 <TableCell align="right">
                   {typeof player.effect_fg_percent === "number"
                     ? (player.effect_fg_percent * 100).toFixed(2)
-                    : player.effect_fg_percent}
+                    : (parseFloat(player.effect_fg_percent) * 100).toFixed(2)}
                 </TableCell>
                 <TableCell align="right">{player.ft}</TableCell>
                 <TableCell align="right">{player.fta}</TableCell>

@@ -18,13 +18,32 @@ function ModelView({ careerData }) {
   const menuIsOpen = menuOpen == null ? false : true;
 
   const STAT_OPTIONS = Object.freeze({
-    PTS: "PTS",
-    three_fg: "three_fg",
-    three_percent: "three_percent",
-    TRB: "TRB",
-    effect_fg_percent: "effect_fg_percent",
+    AST: "Assists (AST)",
+    BLK: "Blocks (BLK)",
+    DRB: "Defensive Rebounds (DRB)",
+    PF: "Personal Fouls (PF)",
+    PTS: "Points (PTS)",
+    STL: "Steals (STL)",
+    TOV: "Turnovers (TOV)",
+    TRB: "Total Rebounds",
+    effect_fg_percent: "Effective FG Percent",
+    field_attempts: "Field attempts",
+    field_goals: "Field Goals (FG)",
+    field_percent: "Field Percent",
+    ft: "Free Throws",
+    ft_percent: "Free Throw Percent",
+    fta: "Free Throw Attempts (FTA)",
+    games: "Games Played",
+    games_started: "Games Started",
+    minutes_played: "Minutes",
+    three_attempts: "Three attempts",
+    three_fg: "Three Makes",
+    three_percent: "Three Percent",
+    two_attempts: "Two attempts",
+    two_fg: "Two Makes",
+    two_percent: "Two Percent",
   });
-  const [displayedStat, setDisplayedStat] = useState(STAT_OPTIONS.PTS);
+  const [displayedStat, setDisplayedStat] = useState("PTS");
 
   let newValues = [];
 
@@ -37,7 +56,16 @@ function ModelView({ careerData }) {
 
   return (
     <div className="modelView">
+      <SortBar
+        isOpen={menuIsOpen}
+        option={displayedStat}
+        setOption={setDisplayedStat}
+        anchorEl={menuOpen}
+        setAnchorEl={setMenuOpen}
+        options={STAT_OPTIONS}
+      />
       <LineChart
+        className="statsChart"
         xAxis={[
           {
             data: seasonsXAxis,
@@ -56,19 +84,6 @@ function ModelView({ careerData }) {
         width={700}
         height={500}
       />
-      <SortBar
-        isOpen={menuIsOpen}
-        option={displayedStat}
-        setOption={setDisplayedStat}
-        anchorEl={menuOpen}
-        setAnchorEl={setMenuOpen}
-        optionsList={Object.values(STAT_OPTIONS)}
-      />
-      <div className="viewOptions">
-        <button> Stat1</button>
-        <button> Stat2</button>
-        <button> Stat3</button>
-      </div>
     </div>
   );
 }
