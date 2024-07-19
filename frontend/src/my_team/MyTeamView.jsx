@@ -4,7 +4,6 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
-import BarGraph from "../models/BarGraph.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -53,8 +52,6 @@ function MyTeamView() {
     <div className="view myTeamView">
       <Header />
       <div className="playerCardList">
-        {/* TODO: Add scrolling styling or move to separate div if more team stats added */}
-
         {myTeamPlayers.map((player) => {
           return (
             <PlayerCard
@@ -68,18 +65,21 @@ function MyTeamView() {
           );
         })}
       </div>
+
       {!displayScout && (
         <button onClick={handleScoutClick}> Scout Opponent</button>
       )}
+
       {displayScout && (
         <ScoutOpponent
           setDisplay={setDisplayScout}
-          teamPlayers={opponents}
-          setTeamPlayers={setOpponents}
+          myTeamPlayers={myTeamPlayers}
+          opponentPlayers={opponents}
+          setOpponentPlayers={setOpponents}
           recommendations={recommendations.response}
         />
       )}
-      <BarGraph />
+
       <StatsTable playersList={myTeamPlayers} />
     </div>
   );
