@@ -6,16 +6,14 @@ import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
 import { generateRecommendations } from "./routes/scoreCalculations.js";
 import { run } from "./routes/cronJob.js";
-const prisma = new PrismaClient();
-
 import express from "express";
-const app = express();
+import "dotenv/config";
 
-import {} from "dotenv/config";
-import { STAT_MEANS, STAT_VARIANCES } from "./routes/statDictionaries.js";
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
 const FRONTEND_PORT = process.env.FRONTEND_PORT;
+const prisma = new PrismaClient();
+const app = express();
 
 app.use(
   cors({
@@ -119,16 +117,6 @@ app.get("/teamPlayers", async (req, res) => {
   }
 });
 
-app.get("/myTeamPlayers", async (req, res) => {
-  const userId = parseInt(req.query.userId);
-  const players = await prisma.myTeamPlayer.findMany({
-    where: {
-      userId,
-    },
-  });
-  res.json(players);
-});
-
 app.get("/singlePlayerStats", async (req, res) => {
   const playerId = parseInt(req.query.playerId);
   try {
@@ -141,32 +129,6 @@ app.get("/singlePlayerStats", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error });
   }
-});
-
-app.get("/opponents", async (req, res) => {
-  const userId = parseInt(req.query.userId);
-  const players = await prisma.opponentTeamPlayer.findMany({
-    where: {
-      userId,
-    },
-  });
-  res.json(players);
-});
-
-app.get("/teams/startingFive", async (req, res) => {
-  const playingStyle = req.query.playingStyle;
-  const userId = parseInt(req.query.userId);
-  const teamType = req.query.teamType;
-
-  const players = await prisma[teamType].findMany({
-    where: { userId },
-    orderBy: [
-      {
-        [playingStyle]: "desc",
-      },
-    ],
-  });
-  res.json(players);
 });
 
 app.get("/scoutOpponent", async (req, res) => {
@@ -205,27 +167,6 @@ app.patch("/player", async (req, res) => {
   }
 });
 
-app.patch("/myTeamPlayer/performance", async (req, res) => {
-  const playerId = parseInt(req.body.playerId);
-  const performance = parseFloat(req.body.performance);
-
-  try {
-    //TODO: define algorithm to calculate initial performance score
-    const newMyTeamPlayer = await prisma.myTeamPlayer.update({
-      where: {
-        id: playerId,
-      },
-      data: {
-        performanceScore: performance,
-      },
-    });
-
-    res.json({ player: newMyTeamPlayer });
-  } catch (error) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
 //DELETES
 app.delete("/player", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
@@ -246,6 +187,6 @@ app.delete("/player", async (req, res) => {
   }
 });
 
-cron.schedule("46 11 * * *", function () {
+cron.schedule("0 0 * * *", function () {
   run();
 });
