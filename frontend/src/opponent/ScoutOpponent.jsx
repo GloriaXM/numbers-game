@@ -89,6 +89,7 @@ function ScoutOpponent({
           );
         })}
       </div>
+      <BarGraph compareScores={compareScores} />
       <div className="recommendations">
         <div className="keyPoints">
           <h3> Recommendations:</h3>
@@ -102,7 +103,6 @@ function ScoutOpponent({
             return <p>{point}</p>;
           })}
         </div>
-        <BarGraph compareScores={compareScores} />
       </div>
     </div>
   );
