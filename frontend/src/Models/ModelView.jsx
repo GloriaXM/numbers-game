@@ -2,6 +2,7 @@ import "./ModelView.css";
 import { useState, useEffect, useMemo } from "react";
 import SortBar from "../table_components/SortBar";
 import { LineChart } from "@mui/x-charts/LineChart";
+import { regressionLog } from "d3-regression";
 
 function ModelView({ careerData }) {
   const seasonsXAxis = useMemo(() => {
@@ -11,6 +12,7 @@ function ModelView({ careerData }) {
     seasons = seasons.reverse();
     return seasons;
   }, [careerData]);
+  const [regressionPoints, setRegressionPoints] = useState([]);
   const valueFormatter = (value) => `${value}`;
 
   const [values, setValues] = useState([]);
@@ -47,11 +49,31 @@ function ModelView({ careerData }) {
 
   let newValues = [];
 
+  function calcRegressionPoints(yValues) {
+    const data = seasonsXAxis.map((season, index) => {
+      return { season: season, value: yValues[index] };
+    });
+
+    const regressionGenerator = regressionLog()
+      .x((data) => data.season)
+      .y((data) => data.value)
+      .domain([seasonsXAxis[0], seasonsXAxis[seasonsXAxis.length - 1] + 1])(
+      data
+    );
+
+    const regressionDiscretized = seasonsXAxis.map((season) => {
+      return regressionGenerator.a * Math.log(season) + regressionGenerator.b;
+    });
+
+    setRegressionPoints(regressionDiscretized);
+  }
+
   useEffect(() => {
     for (var i = careerData.length - 1; i >= 0; i--) {
       newValues.push(careerData[i][displayedStat]);
     }
     setValues(newValues);
+    calcRegressionPoints(newValues);
   }, [careerData, displayedStat]);
 
   return (
@@ -78,6 +100,9 @@ function ModelView({ careerData }) {
           {
             data: values,
             valueFormatter,
+          },
+          {
+            data: regressionPoints,
           },
         ]}
         valueFormatter
