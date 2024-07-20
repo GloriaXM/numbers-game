@@ -10,6 +10,7 @@ function ModelView({ careerData }) {
       return season.season;
     });
     seasons = seasons.reverse();
+    seasons.push(seasons[seasons.length - 1] + 1);
     return seasons;
   }, [careerData]);
   const [regressionPoints, setRegressionPoints] = useState([]);
@@ -57,9 +58,7 @@ function ModelView({ careerData }) {
     const regressionGenerator = regressionLog()
       .x((data) => data.season)
       .y((data) => data.value)
-      .domain([seasonsXAxis[0], seasonsXAxis[seasonsXAxis.length - 1] + 1])(
-      data
-    );
+      .domain([1e-6, seasonsXAxis[seasonsXAxis.length - 1] + 1])(data);
 
     const regressionDiscretized = seasonsXAxis.map((season) => {
       return regressionGenerator.a * Math.log(season) + regressionGenerator.b;
@@ -98,11 +97,15 @@ function ModelView({ careerData }) {
         yAxis={[{ min: 0 }]}
         series={[
           {
-            data: values,
-            valueFormatter,
+            data: regressionPoints,
+            color: "#dcdcdc",
+            label: "Expected",
+            valueFormatter: (value) => `${value.toFixed(0)}`,
           },
           {
-            data: regressionPoints,
+            data: values,
+            valueFormatter,
+            label: "Actual",
           },
         ]}
         valueFormatter
