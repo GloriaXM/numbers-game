@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { UserContext } from "../UserContext.js";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
+import ShotChart from "./ShotChart.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -20,6 +21,18 @@ function SinglePlayerView() {
   });
   const [byAggregateStats, setByAggregateStats] = useState([]);
   const userContext = useContext(UserContext);
+  const shotChartData = useQuery({
+    queryKey: ["shotChartData"],
+    queryFn: async () => {
+      const data = await fetchShotChart();
+      if (data.count === 0) {
+        return null;
+      }
+      const shotCoordinates = extractShotCoordinates(data.results);
+
+      return shotCoordinates;
+    },
+  });
 
   async function fetchPlayerDetails() {
     const response = await fetch(
@@ -45,6 +58,14 @@ function SinglePlayerView() {
         "Content-type": "application/json; charset=UTF-8",
       },
     }).then((response) => response.json());
+  }
+
+  function extractShotCoordinates(shotsData) {
+    const shotCoordinates = shotsData.map((shot) => {
+      return { top: shot.top, left: shot.left, result: shot.result };
+    });
+
+    return shotCoordinates;
   }
 
   useEffect(() => {
@@ -74,10 +95,20 @@ function SinglePlayerView() {
     setByAggregateStats(aggregateStats);
   }
 
+  async function fetchShotChart() {
+    try {
+      const response = await fetch(
+        `https://nba-stats-db.herokuapp.com/api/shot_chart_data/${playerName}/2023/`
+      );
+      const data = await response.json();
+      return data;
+    } catch {}
+  }
+
   return (
     <div className="view singlePlayerView">
       <Header />
-      {bySeasonStats.isPending && <AppLoader />}
+      {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
       {bySeasonStats.data && (
         <div>
           <PlayerBanner player={byAggregateStats} />
@@ -90,9 +121,14 @@ function SinglePlayerView() {
             Add to Opponents
           </Button>
           <ModelView careerData={bySeasonStats.data} />
-          <StatsTable playersList={bySeasonStats.data} />
         </div>
       )}
+      {shotChartData.data == null ? (
+        <h3> Shot chart not available for this player</h3>
+      ) : (
+        <ShotChart shotChartData={shotChartData.data} />
+      )}
+      {bySeasonStats.data && <StatsTable playersList={bySeasonStats.data} />}
     </div>
   );
 }
