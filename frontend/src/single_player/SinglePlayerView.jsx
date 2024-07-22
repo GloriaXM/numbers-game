@@ -21,6 +21,8 @@ function SinglePlayerView() {
   });
   const [byAggregateStats, setByAggregateStats] = useState([]);
   const userContext = useContext(UserContext);
+  const SHOT_CHART_ROWS = 8;
+  const SHOT_CHART_COLS = 10;
   const shotChartData = useQuery({
     queryKey: ["shotChartData"],
     queryFn: async () => {
@@ -29,8 +31,9 @@ function SinglePlayerView() {
         return null;
       }
       const shotCoordinates = extractShotCoordinates(data.results);
+      const heatMapData = convertCoordinatesToHeat(shotCoordinates);
 
-      return shotCoordinates;
+      return heatMapData;
     },
   });
 
@@ -95,6 +98,26 @@ function SinglePlayerView() {
     setByAggregateStats(aggregateStats);
   }
 
+  function convertCoordinatesToHeat(shotCoordinates) {
+    let shotMatrix = Array(SHOT_CHART_ROWS)
+      .fill()
+      .map(() => Array(SHOT_CHART_COLS).fill(0));
+
+    shotCoordinates.forEach((coord) => {
+      const row = Math.floor(coord.top / 50);
+      const col = Math.floor(coord.left / 50);
+      shotMatrix[row][col] += 1;
+    });
+
+    const resultHeatMap = [];
+    shotMatrix.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+        resultHeatMap.push({ top: rowIndex, left: colIndex, value: cell });
+      });
+    });
+    return resultHeatMap;
+  }
+
   async function fetchShotChart() {
     try {
       const response = await fetch(
@@ -123,9 +146,10 @@ function SinglePlayerView() {
           <ModelView careerData={bySeasonStats.data} />
         </div>
       )}
-      {shotChartData.data == null ? (
+      {shotChartData.data == null && !shotChartData.isPending && (
         <h3> Shot chart not available for this player</h3>
-      ) : (
+      )}
+      {shotChartData.isFetched && (
         <ShotChart shotChartData={shotChartData.data} />
       )}
       {bySeasonStats.data && <StatsTable playersList={bySeasonStats.data} />}
