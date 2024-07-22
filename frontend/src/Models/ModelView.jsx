@@ -48,8 +48,6 @@ function ModelView({ careerData }) {
   });
   const [displayedStat, setDisplayedStat] = useState("PTS");
 
-  let newValues = [];
-
   function calcRegressionPoints(yValues) {
     const data = seasonsXAxis.map((season, index) => {
       return { season: season, value: yValues[index] };
@@ -68,6 +66,7 @@ function ModelView({ careerData }) {
   }
 
   useEffect(() => {
+    const newValues = [];
     for (var i = careerData.length - 1; i >= 0; i--) {
       newValues.push(careerData[i][displayedStat]);
     }

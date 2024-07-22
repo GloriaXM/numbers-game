@@ -5,12 +5,19 @@ import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 import { UserContext } from "../UserContext.js";
+import { useQuery } from "@tanstack/react-query";
+import { AppLoader } from "../suspense/AppLoader.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const currWindowPath = window.location.pathname;
   const playerName = currWindowPath.substring(8);
-  const [bySeasonStats, setBySeasonStats] = useState([]);
+  const bySeasonStats = useQuery({
+    queryKey: ["bySeasonStats"],
+    queryFn: async () => {
+      return await fetchPlayerDetails();
+    },
+  });
   const [byAggregateStats, setByAggregateStats] = useState([]);
   const userContext = useContext(UserContext);
 
@@ -19,8 +26,8 @@ function SinglePlayerView() {
       `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
     );
     const data = await response.json();
-    setBySeasonStats(data.results);
     generateSummaryStats(data.results);
+    return data.results;
   }
 
   async function handleAddPlayer(event) {
@@ -70,17 +77,22 @@ function SinglePlayerView() {
   return (
     <div className="view singlePlayerView">
       <Header />
-      <PlayerBanner player={byAggregateStats} />
-      <Button id="myTeamPlayers" onClick={handleAddPlayer}>
-        {" "}
-        Add to MyTeam
-      </Button>
-      <Button id="opponents" onClick={handleAddPlayer}>
-        {" "}
-        Add to Opponents
-      </Button>
-      <ModelView careerData={bySeasonStats} />
-      <StatsTable playersList={bySeasonStats} />
+      {bySeasonStats.isPending && <AppLoader />}
+      {bySeasonStats.data && (
+        <div>
+          <PlayerBanner player={byAggregateStats} />
+          <Button id="myTeamPlayers" onClick={handleAddPlayer}>
+            {" "}
+            Add to MyTeam
+          </Button>
+          <Button id="opponents" onClick={handleAddPlayer}>
+            {" "}
+            Add to Opponents
+          </Button>
+          <ModelView careerData={bySeasonStats.data} />
+          <StatsTable playersList={bySeasonStats.data} />
+        </div>
+      )}
     </div>
   );
 }
