@@ -38,7 +38,7 @@ function SinglePlayerView() {
       method: "PATCH",
       body: JSON.stringify({
         playerType: playerType,
-        playerId: bySeasonStats[0].id,
+        playerId: bySeasonStats.data[0].id,
         userId: userContext.user.id,
       }),
       headers: {
