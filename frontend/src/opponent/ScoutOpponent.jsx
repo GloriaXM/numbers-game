@@ -10,6 +10,7 @@ function ScoutOpponent({
   setOpponentPlayers,
   opponentPlayers,
   recommendations,
+  refetchPlayers,
 }) {
   const userContext = useContext(UserContext);
 
@@ -85,6 +86,7 @@ function ScoutOpponent({
               teamPlayers={opponentPlayers}
               userId={userContext.user.id}
               teamType="opponents"
+              refetchPlayers={refetchPlayers}
             />
           );
         })}

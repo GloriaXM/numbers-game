@@ -2,11 +2,12 @@ import StatsTable from "../table_components/StatsTable";
 import Header from "../header/Header";
 import SearchBar from "../table_components/SearchBar";
 import SortBar from "../table_components/SortBar";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
+import { AppLoader } from "../suspense/AppLoader";
 
 function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -91,7 +92,7 @@ function PlayersView() {
   return (
     <div className="view playersView">
       <Header />
-      {playersList.isPending && <span>Loading...</span>}
+      {playersList.isPending && <AppLoader />}
       {playersList.data && (
         <div>
           <div className="sortMenu">

@@ -1,7 +1,14 @@
 import "./PlayerCard.css";
 import { useState } from "react";
 
-function PlayerCard({ player, setTeamPlayers, teamPlayers, userId, teamType }) {
+function PlayerCard({
+  player,
+  setTeamPlayers,
+  teamPlayers,
+  userId,
+  teamType,
+  refetchPlayers,
+}) {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [flipCard, setFlipCard] = useState(false);
 
@@ -26,12 +33,7 @@ function PlayerCard({ player, setTeamPlayers, teamPlayers, userId, teamType }) {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
-
-    setTeamPlayers(
-      teamPlayers.filter(function (existingPlayer) {
-        return existingPlayer.id != player.id;
-      })
-    );
+    refetchPlayers();
   }
 
   function handleFlipCard() {
