@@ -1,7 +1,7 @@
 import "./PlayerCard.css";
 import { useState } from "react";
 
-function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
+function PlayerCard({ player, setTeamPlayers, teamPlayers, userId, teamType }) {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [flipCard, setFlipCard] = useState(false);
 
@@ -14,20 +14,22 @@ function PlayerCard({ player, setMyTeamPlayers, myTeamPlayers }) {
     event.stopPropagation();
     setDisplayDeleteModal(false);
 
-    const queryUrl = new URL(`${PORT}/myTeamPlayer`);
+    const queryUrl = new URL(`${PORT}/player`);
     await fetch(queryUrl, {
       method: "DELETE",
       body: JSON.stringify({
-        playerId: player.myTeamId,
+        playerId: player.id,
+        teamType: teamType,
+        userId,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
 
-    setMyTeamPlayers(
-      myTeamPlayers.filter(function (existingPlayer) {
-        return existingPlayer.id != player.myTeamId;
+    setTeamPlayers(
+      teamPlayers.filter(function (existingPlayer) {
+        return existingPlayer.id != player.id;
       })
     );
   }

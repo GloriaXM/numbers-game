@@ -1,0 +1,18 @@
+.scoutOpponent {
+  display: flex;
+  flex-direction: column;
+}
+
+.closeScout {
+  position: sticky;
+  left: 0;
+  width: 300px;
+  align-self: center;
+}
+
+.recommendations {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-evenly;
+}

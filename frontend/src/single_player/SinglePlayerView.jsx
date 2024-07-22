@@ -28,12 +28,11 @@ function SinglePlayerView() {
     const queryUrl = new URL(`${PORT}/player`);
 
     fetch(queryUrl, {
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify({
         playerType: playerType,
         playerId: bySeasonStats[0].id,
         userId: userContext.user.id,
-        playerName: playerName,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -72,11 +71,11 @@ function SinglePlayerView() {
     <div className="view singlePlayerView">
       <Header />
       <PlayerBanner player={byAggregateStats} />
-      <Button id="myTeamPlayer" onClick={handleAddPlayer}>
+      <Button id="myTeamPlayers" onClick={handleAddPlayer}>
         {" "}
         Add to MyTeam
       </Button>
-      <Button id="opponentTeamPlayer" onClick={handleAddPlayer}>
+      <Button id="opponents" onClick={handleAddPlayer}>
         {" "}
         Add to Opponents
       </Button>

@@ -4,9 +4,8 @@ import morgan from "morgan";
 import userRoutes from "./routes/users.js";
 import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
-import { calcPerformanceScores } from "./routes/scoreCalculations.js";
+import { generateRecommendations } from "./routes/scoreCalculations.js";
 import { run } from "./routes/cronJob.js";
-import { updatePopulationStats } from "./routes/cronJob.js";
 const prisma = new PrismaClient();
 
 import express from "express";
@@ -101,6 +100,25 @@ app.get("/searchPlayers", async (req, res) => {
   res.json(players);
 });
 
+app.get("/teamPlayers", async (req, res) => {
+  const userId = parseInt(req.query.userId);
+  const teamType = req.query.teamType;
+  try {
+    const players = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        [teamType]: true,
+      },
+    });
+
+    res.json(players);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
 app.get("/myTeamPlayers", async (req, res) => {
   const userId = parseInt(req.query.userId);
   const players = await prisma.myTeamPlayer.findMany({
@@ -113,12 +131,16 @@ app.get("/myTeamPlayers", async (req, res) => {
 
 app.get("/singlePlayerStats", async (req, res) => {
   const playerId = parseInt(req.query.playerId);
-  const player = await prisma.player.findUnique({
-    where: {
-      id: playerId,
-    },
-  });
-  res.json(player);
+  try {
+    const player = await prisma.player.findUnique({
+      where: {
+        id: playerId,
+      },
+    });
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 });
 
 app.get("/opponents", async (req, res) => {
@@ -149,52 +171,40 @@ app.get("/teams/startingFive", async (req, res) => {
 
 app.get("/scoutOpponent", async (req, res) => {
   const userId = parseInt(req.query.userId);
-  return {};
+  try {
+    const result = await generateRecommendations(userId);
+    return res.json(result);
+  } catch {
+    res.status(500).json({ error: "Unable to generate recommendations." });
+  }
 });
 
-//POSTS
-app.post("/player", async (req, res) => {
+//UPDATES
+app.patch("/player", async (req, res) => {
   const playerType = req.body.playerType;
   const playerId = parseInt(req.body.playerId);
   const userId = parseInt(req.body.userId);
-  const playerName = decodeURI(req.body.playerName);
 
   try {
-    const existingPlayer = await prisma[playerType].findMany({
+    const updateUser = await prisma.user.update({
       where: {
-        playerId,
-        userId,
+        id: userId,
       },
-    });
-    if (existingPlayer.length != 0) {
-      return res
-        .status(400)
-        .json({ error: "Player has already been added to MyTeam" });
-    }
-
-    const performanceScores = await calcPerformanceScores(playerId);
-
-    const newPlayer = await prisma[playerType].create({
       data: {
-        playerId,
-        userId,
-        playerName,
-        outsideOffenseScore: performanceScores.outsideOffenseScore,
-        insideOffenseScore: performanceScores.insideOffenseScore,
-        offenseDisciplineScore: performanceScores.offenseDisciplineScore,
-        defenseDisciplineScore: performanceScores.defenseDisciplineScore,
-        consistencyScore: performanceScores.consistencyScore,
-        reboundingScore: performanceScores.reboundingScore,
+        [playerType]: {
+          connect: {
+            id: playerId,
+          },
+        },
       },
     });
 
-    res.json({ player: newPlayer });
+    res.json({ updateUser });
   } catch (error) {
     res.status(500).json({ error: error });
   }
 });
 
-//UPDATES
 app.patch("/myTeamPlayer/performance", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
   const performance = parseFloat(req.body.performance);
@@ -217,18 +227,23 @@ app.patch("/myTeamPlayer/performance", async (req, res) => {
 });
 
 //DELETES
-app.delete("/teamPlayer", async (req, res) => {
+app.delete("/player", async (req, res) => {
   const playerId = parseInt(req.body.playerId);
   const teamType = req.body.teamType;
+  const userId = req.body.userId;
 
-  const player = await prisma[teamType].delete({
-    where: {
-      id: playerId,
-    },
-  });
+  try {
+    const player = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: { [teamType]: { disconnect: { id: playerId } } },
+    });
 
-  //TODO: add error handling here
-  res.json(player);
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ error: "Could not remove the player" });
+  }
 });
 
 cron.schedule("46 11 * * *", function () {
