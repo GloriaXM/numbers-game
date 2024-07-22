@@ -136,17 +136,9 @@ const FEEDBACK_OPTIONS = {
   ],
 };
 
-let POP_SIZE = 0;
-
-function incrementPopSize() {
-  ++POP_SIZE;
-}
-
 export {
   STAT_MEANS,
   STAT_VARIANCES,
-  POP_SIZE,
-  incrementPopSize,
   OPPONENT_STYLE_TO_MYTEAM_STYLE,
   FEEDBACK_OPTIONS,
 };

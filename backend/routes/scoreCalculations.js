@@ -42,11 +42,11 @@ function calcOutSideOffenseScore(
           STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) /
         Math.sqrt(threesProportionVariance);
 
-  outsideOffenseScore += threesProportion * 1000;
+  outsideOffenseScore += threesProportion * 5000;
 
-  outsideOffenseScore += normThreeFG * 10;
+  outsideOffenseScore += normThreeFG * 15;
 
-  outsideOffenseScore += normThreePercent * 10;
+  outsideOffenseScore += normThreePercent * 25;
 
   return outsideOffenseScore;
 }
