@@ -2,7 +2,7 @@ import StatsTable from "../table_components/StatsTable";
 import Header from "../header/Header";
 import SearchBar from "../table_components/SearchBar";
 import SortBar from "../table_components/SortBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
 import Typography from "@mui/material/Typography";
