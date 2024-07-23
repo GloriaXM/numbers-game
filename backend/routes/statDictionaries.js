@@ -1,57 +1,10 @@
-const STAT_MEANS = {
-  games: 0,
-  minutes_played: 0,
-  field_goals: 0,
-  field_attempts: 0,
-  field_percent: 0,
-  three_fg: 0,
-  three_attempts: 0,
-  three_percent: 0,
-  two_fg: 0,
-  two_attempts: 0,
-  two_percent: 0,
-  effect_fg_percent: 0,
-  ft: 0,
-  fta: 0,
-  ft_percent: 0,
-  ORB: 0,
-  DRB: 0,
-  TRB: 0,
-  AST: 0,
-  STL: 0,
-  BLK: 0,
-  TOV: 0,
-  PF: 0,
-  PTS: 0,
-};
+import { PlayerStats } from "../../frontend/src/single_player/PlayerStats.js";
 
-const STAT_VARIANCES = {
-  games: 0,
-  minutes_played: 0,
-  field_goals: 0,
-  field_attempts: 0,
-  field_percent: 0,
-  three_fg: 0,
-  three_attempts: 0,
-  three_percent: 0,
-  two_fg: 0,
-  two_attempts: 0,
-  two_percent: 0,
-  effect_fg_percent: 0,
-  ft: 0,
-  fta: 0,
-  ft_percent: 0,
-  ORB: 0,
-  DRB: 0,
-  TRB: 0,
-  AST: 0,
-  STL: 0,
-  BLK: 0,
-  TOV: 0,
-  PF: 0,
-  PTS: 0,
-};
+const STAT_MEANS = new PlayerStats();
 
+const STAT_VARIANCES = new PlayerStats();
+
+//Maps the oponent's best playing style score to a list of playing styles ordered by ability to win against opponent
 const OPPONENT_STYLE_TO_MYTEAM_STYLE = {
   outsideOffenseScore: [
     "outsideOffenseScore",
@@ -103,7 +56,8 @@ const OPPONENT_STYLE_TO_MYTEAM_STYLE = {
   ],
 };
 
-const FEEDBACK_OPTIONS = {
+//Maps the styles to actions that the user should take to improve said style score
+const STYLE_FEEDBACK = {
   outsideOffenseScore: [
     "Key task: focus on strong outside scoring",
     "Spend extra time in the lead up to this match on form shooting and shooring drills",
@@ -140,5 +94,5 @@ export {
   STAT_MEANS,
   STAT_VARIANCES,
   OPPONENT_STYLE_TO_MYTEAM_STYLE,
-  FEEDBACK_OPTIONS,
+  STYLE_FEEDBACK,
 };
