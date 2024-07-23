@@ -1,3 +1,6 @@
+//Handles performance score calculations for cron job and recommendations
+//Main methods are calcPerformanceStyles and generateRecommendations
+
 import { PrismaClient } from "@prisma/client";
 import {
   STAT_MEANS,

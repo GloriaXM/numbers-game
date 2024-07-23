@@ -36,7 +36,7 @@ app.use(
     cookie: {
       sameSite: false,
       secure: false,
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), //One month expiration in milliseconds
     },
   })
 );
@@ -83,21 +83,6 @@ app.get("/players", async (req, res) => {
   }
 });
 
-app.get("/searchPlayers", async (req, res) => {
-  const { playerName } = req.query;
-
-  const players = await prisma.player.findMany({
-    where: {
-      player_name: {
-        contains: playerName,
-        mode: "insensitive",
-      },
-    },
-  });
-
-  res.json(players);
-});
-
 app.get("/teamPlayers", async (req, res) => {
   const userId = parseInt(req.query.userId);
   const teamType = req.query.teamType;
@@ -112,20 +97,6 @@ app.get("/teamPlayers", async (req, res) => {
     });
 
     res.json(players);
-  } catch (error) {
-    res.status(500).json({ error: error });
-  }
-});
-
-app.get("/singlePlayerStats", async (req, res) => {
-  const playerId = parseInt(req.query.playerId);
-  try {
-    const player = await prisma.player.findUnique({
-      where: {
-        id: playerId,
-      },
-    });
-    res.json(player);
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -187,6 +158,7 @@ app.delete("/player", async (req, res) => {
   }
 });
 
+//Run the cron job every day at midnight
 cron.schedule("0 0 * * *", function () {
   run();
 });
