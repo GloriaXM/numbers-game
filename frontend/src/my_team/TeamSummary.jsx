@@ -5,11 +5,14 @@ function TeamSummary({ playersStats }) {
 
   useEffect(() => {
     let currAverage = 0;
+
     playersStats.map((player) => {
       currAverage += player.performanceScore / playersStats.length;
     });
+
     setTeamAverage(currAverage);
   }, [playersStats]);
+
   return (
     <div className="teamSummary">
       <h2> Team Performance:</h2>

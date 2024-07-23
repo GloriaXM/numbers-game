@@ -31,32 +31,36 @@ function App() {
             path="/"
             element={user ? <PlayersView /> : <LoginSignup loginForm={true} />}
           />
+
           <Route
             exact
             path="/login"
             element={<LoginSignup loginForm={true} />}
-          ></Route>
+          />
+
           <Route
             exact
             path="/signup"
             element={<LoginSignup loginForm={false} />}
-          ></Route>
+          />
+
           <Route
             exact
             path="/Players"
             element={user ? <PlayersView /> : <LoginSignup loginForm={true} />}
-          ></Route>
+          />
+
           <Route
             exact
             path="/MyTeam"
             element={user ? <MyTeamView /> : <LoginSignup loginForm={true} />}
-          ></Route>
+          />
           <Route
             path="/player/:id"
             element={
               user ? <SinglePlayerView /> : <LoginSignup loginForm={true} />
             }
-          ></Route>
+          />
         </Routes>
       </UserContext.Provider>
     </div>

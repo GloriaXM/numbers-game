@@ -1,14 +1,7 @@
 import "./PlayerCard.css";
 import { useState } from "react";
 
-function PlayerCard({
-  player,
-  setTeamPlayers,
-  teamPlayers,
-  userId,
-  teamType,
-  refetchPlayers,
-}) {
+function PlayerCard({ player, userId, teamType, refetchPlayers }) {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [flipCard, setFlipCard] = useState(false);
 

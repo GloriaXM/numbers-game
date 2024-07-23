@@ -40,6 +40,7 @@ function StatsTable({ playersList }) {
               <TableCell align="right">BLK</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {playersList.map((player) => (
               <TableRow

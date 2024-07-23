@@ -3,7 +3,6 @@ import { useRef, useMemo } from "react";
 import "./ShotChart.css";
 
 function ShotChart({ shotChartData, height, width }) {
-  const shotChartRef = useRef();
   const MARGIN = { top: 10, right: 10, bottom: 30, left: 30 };
   const boundsWidth = 1000 - MARGIN.right - MARGIN.left;
   const boundsHeight = 800 - MARGIN.top - MARGIN.bottom;

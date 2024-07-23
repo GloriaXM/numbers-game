@@ -25,14 +25,18 @@ function calcOutSideOffenseScore(
   const normalizedFieldAttempts =
     (field_attempts - STAT_MEANS.field_attempts) /
     Math.sqrt(STAT_VARIANCES.field_attempts);
+
   const normalizedThreeAttempts =
     (three_attempts - STAT_MEANS.three_attempts) /
     Math.sqrt(STAT_VARIANCES.three_attempts);
+
   const normalizedThreeFG =
     (three_fg - STAT_MEANS.three_fg) / Math.sqrt(STAT_VARIANCES.three_fg);
+
   const normalizedThreePercent =
     (three_percent - STAT_MEANS.three_percent) /
     Math.sqrt(STAT_VARIANCES.three_percent);
+
   const threesProportionVariance = calcRatioVariance(
     STAT_MEANS.three_attempts,
     STAT_VARIANCES.three_attempts,
@@ -69,17 +73,23 @@ function calcInsideOffenseScore(
   const normalizedFieldAttempts =
     (field_attempts - STAT_MEANS.field_attempts) /
     Math.sqrt(STAT_VARIANCES.field_attempts);
+
   const normalizedTwoAttempts =
     (two_attempts - STAT_MEANS.two_attempts) /
     Math.sqrt(STAT_VARIANCES.two_attempts);
+
   const normalizedTwoFG =
     (two_fg - STAT_MEANS.two_fg) / Math.sqrt(STAT_VARIANCES.two_fg);
+
   const normalizedTwoPercent =
     (two_percent - STAT_MEANS.two_percent) /
     Math.sqrt(STAT_VARIANCES.two_percent);
+
   const normalizedORB = (ORB - STAT_MEANS.ORB) / Math.sqrt(STAT_VARIANCES.ORB);
+
   const normalizedFTA =
     (fta - STAT_MEANS.fta) / Math.sqrt(STAT_VARIANCES.field_attempts);
+
   const normalizedFTPercent =
     (ft_percent - STAT_MEANS.ft_percent) / Math.sqrt(STAT_VARIANCES.ft_percent);
 

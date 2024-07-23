@@ -15,8 +15,8 @@ function ModelView({ careerData }) {
   }, [careerData]);
   const [regressionPoints, setRegressionPoints] = useState([]);
   const valueFormatter = (value) => `${value}`;
-
   const [values, setValues] = useState([]);
+
   const [menuOpen, setMenuOpen] = useState(null);
   const menuIsOpen = menuOpen == null ? false : true;
 

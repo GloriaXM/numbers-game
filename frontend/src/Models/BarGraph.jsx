@@ -1,11 +1,11 @@
 import { BarChart } from "@mui/x-charts/BarChart";
 
-function BarGraph({ compareScores }) {
+function BarGraph({ comparedScores }) {
   return (
     <div className="barGraph">
       <h2> Compare Playing Styles</h2>
       <BarChart
-        dataset={compareScores}
+        dataset={comparedScores}
         xAxis={[{ scaleType: "band", dataKey: "style" }]}
         yAxis={[{ scaleType: "linear", min: 0, max: 100 }]}
         series={[

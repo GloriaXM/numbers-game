@@ -11,8 +11,9 @@ import ShotChart from "./ShotChart.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
-  const currWindowPath = window.location.pathname;
-  const playerName = currWindowPath.substring(8);
+  const userContext = useContext(UserContext);
+  const playerName = window.location.pathname.substring(8);
+
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],
     queryFn: async () => {
@@ -20,7 +21,6 @@ function SinglePlayerView() {
     },
   });
   const [byAggregateStats, setByAggregateStats] = useState([]);
-  const userContext = useContext(UserContext);
 
   const SHOT_CHART_ROWS = 20;
   const SHOT_CHART_COLS = 20;
@@ -151,6 +151,7 @@ function SinglePlayerView() {
     <div className="view singlePlayerView">
       <Header />
       {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
+
       {bySeasonStats.data && (
         <div>
           <PlayerBanner player={byAggregateStats} />
@@ -165,9 +166,12 @@ function SinglePlayerView() {
           <ModelView careerData={bySeasonStats.data} />
         </div>
       )}
+
+      {/* TODO: use exception handling to check if shot chart data is available */}
       {shotChartData.data == null && !shotChartData.isPending && (
         <h3> Shot chart not available for this player</h3>
       )}
+
       {shotChartData.isFetched && (
         <ShotChart
           shotChartData={shotChartData.data}
@@ -175,6 +179,7 @@ function SinglePlayerView() {
           width={1000}
         />
       )}
+
       {bySeasonStats.data && <StatsTable playersList={bySeasonStats.data} />}
     </div>
   );

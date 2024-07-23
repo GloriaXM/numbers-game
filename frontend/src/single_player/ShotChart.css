@@ -1,6 +1,8 @@
+/* Taken from https://stackoverflow.com/questions/43806515/position-svg-elements-over-an-image */
+
 .img-overlay-wrap {
   position: relative;
-  display: inline-block; /* <= shrinks container to image size */
+  display: inline-block;
   transition: transform 150ms ease-in-out;
   width: 1000px;
   height: 800px;
@@ -8,7 +10,6 @@
 }
 
 .img-overlay-wrap img {
-  /* <= optional, for responsiveness */
   display: block;
   max-width: 100%;
   height: auto;

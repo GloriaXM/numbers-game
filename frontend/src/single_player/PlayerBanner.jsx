@@ -1,6 +1,7 @@
 import "./PlayerBanner.css";
 
 function PlayerBanner({ player }) {
+  //TODO: use a different data structure to hold stats (dictionary)
   const playedGames = player[1];
 
   return (
