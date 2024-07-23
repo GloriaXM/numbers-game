@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import { useEffect, useRef, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useRef, useMemo } from "react";
+import "./ShotChart.css";
 
-function ShotChart({ shotChartData }) {
+function ShotChart({ shotChartData, height, width }) {
   const shotChartRef = useRef();
   const MARGIN = { top: 10, right: 10, bottom: 30, left: 30 };
   const boundsWidth = 1000 - MARGIN.right - MARGIN.left;
@@ -88,21 +88,23 @@ function ShotChart({ shotChartData }) {
   });
 
   return (
-    <div className="shotChart">
-      <div>
-        <h1> Shot Chart</h1>
-        <svg width={1000} height={800}>
-          <g
-            width={boundsWidth}
-            height={boundsHeight}
-            transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
-          >
-            {chartRegions}
-            {xLabels}
-            {yLabels}
-          </g>
-        </svg>
-      </div>
+    <div className="shotChart img-overlay-wrap">
+      <img
+        className="courtOverlay"
+        src="https://cdn.ssref.net/req/1/images/bbr/nbahalfcourt.png"
+        alt="court image overlay"
+      />
+      <svg className="heatMap" width={width} height={height}>
+        <g
+          width={boundsWidth}
+          height={boundsHeight}
+          transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
+        >
+          {chartRegions}
+          {xLabels}
+          {yLabels}
+        </g>
+      </svg>
     </div>
   );
 }

@@ -21,8 +21,11 @@ function SinglePlayerView() {
   });
   const [byAggregateStats, setByAggregateStats] = useState([]);
   const userContext = useContext(UserContext);
-  const SHOT_CHART_ROWS = 8;
-  const SHOT_CHART_COLS = 10;
+
+  const SHOT_CHART_ROWS = 20;
+  const SHOT_CHART_COLS = 20;
+  const PIXEL_TO_REGION_SCALING_FACTOR = 500;
+
   const shotChartData = useQuery({
     queryKey: ["shotChartData"],
     queryFn: async () => {
@@ -30,7 +33,8 @@ function SinglePlayerView() {
       if (data.count === 0) {
         return null;
       }
-      const shotCoordinates = extractShotCoordinates(data.results);
+
+      const shotCoordinates = extractShotCoordinates(data);
       const heatMapData = convertCoordinatesToHeat(shotCoordinates);
 
       return heatMapData;
@@ -104,8 +108,12 @@ function SinglePlayerView() {
       .map(() => Array(SHOT_CHART_COLS).fill(0));
 
     shotCoordinates.forEach((coord) => {
-      const row = Math.floor(coord.top / 50);
-      const col = Math.floor(coord.left / 50);
+      const row = Math.floor(
+        coord.top / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_COLS)
+      );
+      const col = Math.floor(
+        coord.left / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_ROWS)
+      );
       shotMatrix[row][col] += 1;
     });
 
@@ -119,12 +127,23 @@ function SinglePlayerView() {
   }
 
   async function fetchShotChart() {
+    let queryUrl = new URL(
+      `https://nba-stats-db.herokuapp.com/api/shot_chart_data/${playerName}/2023/`
+    );
     try {
-      const response = await fetch(
-        `https://nba-stats-db.herokuapp.com/api/shot_chart_data/${playerName}/2023/`
-      );
-      const data = await response.json();
-      return data;
+      const aggregateShotData = { results: [] };
+
+      do {
+        const response = await fetch(queryUrl);
+        const data = await response.json();
+        queryUrl = data.next;
+
+        data.results.forEach((shot) => {
+          aggregateShotData.results.push(shot);
+        });
+      } while (queryUrl !== null);
+
+      return aggregateShotData.results;
     } catch {}
   }
 
@@ -150,7 +169,11 @@ function SinglePlayerView() {
         <h3> Shot chart not available for this player</h3>
       )}
       {shotChartData.isFetched && (
-        <ShotChart shotChartData={shotChartData.data} />
+        <ShotChart
+          shotChartData={shotChartData.data}
+          height={800}
+          width={1000}
+        />
       )}
       {bySeasonStats.data && <StatsTable playersList={bySeasonStats.data} />}
     </div>
