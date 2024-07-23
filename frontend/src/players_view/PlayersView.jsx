@@ -6,39 +6,47 @@ import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { AppLoader } from "../suspense/AppLoader";
 
 function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
-  const [playersList, setPlayersList] = useState([]);
   const [playersDisplayed, setPlayersDisplayed] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const SORT_OPTIONS = Object.freeze({
-    no_sort: "no_sort",
-    id: "id",
-    player_name: "player_name",
-    PTS: "PTS",
-    field_percent: "field_percent",
-    three_percent: "three_percent",
-    two_percent: "two_percent",
-    effect_fg_percent: "effect_fg_percent",
-    ft_percent: "ft_percent",
-    ORB: "ORB",
-    DRB: "DRB",
-    TRB: "TRB",
-    AST: "AST",
-    STL: "STL",
-    BLK: "BLK",
-    TOV: "TOV",
-    PF: "PF",
+  const playersList = useQuery({
+    queryKey: ["playersList"],
+    queryFn: async () => {
+      return await loadPlayers();
+    },
   });
-  const [sortType, setSortType] = useState(SORT_OPTIONS.no_sort);
+
+  const SORT_OPTIONS = Object.freeze({
+    no_sort: "Sort Players",
+    id: "ID",
+    player_name: "Player Name",
+    PTS: "Points",
+    field_percent: "Field Percent",
+    three_percent: "Three Percent",
+    two_percent: "Two Percent",
+    effect_fg_percent: "Effective FG Percent",
+    ft_percent: "Free Throw Percent",
+    ORB: "Offensive Rebounds",
+    DRB: "Defensive Rebounds",
+    TRB: "Total Rebounds",
+    AST: "Assists",
+    STL: "Steals",
+    BLK: "Blocks",
+    TOV: "Turnovers",
+    PF: "Personal Fouls",
+  });
+  const [sortType, setSortType] = useState("no_sort");
 
   const SORT_DIRECTIONS = Object.freeze({
-    no_direction: "no_direction",
-    asc: "asc",
-    desc: "desc",
+    no_direction: "No Direction",
+    asc: "Ascending",
+    desc: "Descending",
   });
 
   const [sortDirection, setSortDirection] = useState("no_direction");
@@ -66,71 +74,60 @@ function PlayersView() {
     queryUrl.searchParams.append("playerName", searchQuery);
     const response = await fetch(queryUrl);
     const players = await response.json();
-    setPlayersList(players);
-  }
-
-  async function searchPlayer(playerName) {
-    if (playerName === "") {
-      return;
-    }
-
-    let queryUrl = new URL(`${PORT}/searchPlayers`);
-    queryUrl.searchParams.append("playerName", playerName);
-    const response = await fetch(queryUrl);
-    const players = await response.json();
-    setPlayersList(players);
+    return players;
   }
 
   useEffect(() => {
     const start = page * rowsPerPage;
     const end = start + rowsPerPage;
-    setPlayersDisplayed(playersList.slice(start, end));
-  }, [page, rowsPerPage]);
+    setPlayersDisplayed(
+      playersList.data ? playersList.data.slice(start, end) : []
+    );
+  }, [page, rowsPerPage, playersList.data]);
 
   useEffect(() => {
-    loadPlayers();
+    playersList.refetch();
   }, [sortType, sortDirection, searchQuery]);
-
-  useEffect(() => {
-    setPlayersDisplayed(playersList.slice(0, rowsPerPage));
-    setPage(0);
-  }, [playersList]);
 
   return (
     <div className="view playersView">
       <Header />
-
-      <div className="sortMenu">
-        <Typography variant="h6" component="h3">
-          Sort Players:
-        </Typography>
-        <SortBar
-          isOpen={optionsIsOpen}
-          option={sortType}
-          setOption={setSortType}
-          anchorEl={optionsAnchorEl}
-          setAnchorEl={setOptionsAnchorEl}
-          optionsList={Object.values(SORT_OPTIONS)}
-        />
-        <SortBar
-          isOpen={directionIsOpen}
-          option={sortDirection}
-          setOption={setSortDirection}
-          anchorEl={directionAnchorEl}
-          setAnchorEl={setDirectionAnchorEl}
-          optionsList={Object.values(SORT_DIRECTIONS)}
-        />
-        <SearchBar setSearchQuery={setSearchQuery} />
-      </div>
-      <StatsTable playersList={playersDisplayed} />
-      <TablePagination
-        component="div"
-        count={playersList.length}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {playersList.isPending && <AppLoader />}
+      {playersList.data && (
+        <div>
+          <div className="sortMenu">
+            <Typography variant="h6" component="h3">
+              Sort Players:
+            </Typography>
+            <SortBar
+              isOpen={optionsIsOpen}
+              option={sortType}
+              setOption={setSortType}
+              anchorEl={optionsAnchorEl}
+              setAnchorEl={setOptionsAnchorEl}
+              options={SORT_OPTIONS}
+            />
+            <SortBar
+              isOpen={directionIsOpen}
+              option={sortDirection}
+              setOption={setSortDirection}
+              anchorEl={directionAnchorEl}
+              setAnchorEl={setDirectionAnchorEl}
+              options={SORT_DIRECTIONS}
+            />
+            <SearchBar setSearchQuery={setSearchQuery} />
+          </div>
+          <StatsTable playersList={playersDisplayed} />
+          <TablePagination
+            component="div"
+            count={playersList.data.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

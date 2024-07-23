@@ -7,7 +7,7 @@ function SortBar({
   setOption,
   anchorEl,
   setAnchorEl,
-  optionsList,
+  options,
 }) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -29,7 +29,7 @@ function SortBar({
         aria-expanded={isOpen ? "true" : undefined}
         onClick={handleClick}
       >
-        {option}
+        {options[option]}
       </Button>
       <Menu
         id="sortMenu"
@@ -40,16 +40,18 @@ function SortBar({
           "aria-labelledby": "basic-button",
         }}
       >
-        {optionsList.map((option) => (
-          <MenuItem
-            key={option}
-            id={option}
-            className="sort sortOptions"
-            onClick={handleClose}
-          >
-            {option}
-          </MenuItem>
-        ))}
+        {Object.keys(options).map(function (option) {
+          return (
+            <MenuItem
+              key={option}
+              id={option}
+              className="sort sortOptions"
+              onClick={handleClose}
+            >
+              {options[option]}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );

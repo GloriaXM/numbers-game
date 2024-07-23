@@ -1,19 +1,30 @@
 import Header from "../header/Header.jsx";
 import StatsTable from "../table_components/StatsTable.jsx";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
-import BarGraph from "../models/BarGraph.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { AppLoader } from "../suspense/AppLoader.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
-  const [myTeamPlayers, setMyTeamPlayers] = useState([]);
   const [displayScout, setDisplayScout] = useState(false);
-  const [opponents, setOpponents] = useState([]);
   const [recommendations, setRecommendations] = useState({
     bestPlayers: [],
     response: { keyPoints: [], areasOfImprovement: [] },
+  });
+  const myTeamPlayers = useQuery({
+    queryKey: ["myTeamPlayers"],
+    queryFn: async () => {
+      return await fetchTeamPlayers("myTeamPlayers");
+    },
+  });
+  const opponents = useQuery({
+    queryKey: ["opponents"],
+    queryFn: async () => {
+      return await fetchTeamPlayers("opponents");
+    },
   });
   const userContext = useContext(UserContext);
 
@@ -24,11 +35,7 @@ function MyTeamView() {
     const response = await fetch(queryUrl);
 
     const data = await response.json();
-    if (teamType === "myTeamPlayers") {
-      setMyTeamPlayers(data[teamType]);
-    } else {
-      setOpponents(data[teamType]);
-    }
+    return data[teamType];
   }
 
   async function handleScoutClick() {
@@ -40,47 +47,43 @@ function MyTeamView() {
     setRecommendations(results);
   }
 
-  useEffect(() => {
-    fetchTeamPlayers("myTeamPlayers");
-    fetchTeamPlayers("opponents");
-  }, []);
-
-  useEffect(() => {
-    setMyTeamPlayers(recommendations.bestPlayers);
-  }, [recommendations]);
+  //TODO: implement better UI feedback on recommending ideal players
 
   return (
     <div className="view myTeamView">
       <Header />
-      <div className="playerCardList">
-        {/* TODO: Add scrolling styling or move to separate div if more team stats added */}
+      {myTeamPlayers.isPending && <AppLoader />}
+      {myTeamPlayers.data && (
+        <div className="playerCardList">
+          {myTeamPlayers.data.map((player) => {
+            return (
+              <PlayerCard
+                key={player.id}
+                player={player}
+                teamPlayers={myTeamPlayers.data}
+                userId={userContext.user.id}
+                teamType="myTeamPlayers"
+                refetchPlayers={myTeamPlayers.refetch}
+              />
+            );
+          })}
+        </div>
+      )}
 
-        {myTeamPlayers.map((player) => {
-          return (
-            <PlayerCard
-              key={player.id}
-              player={player}
-              setTeamPlayers={setMyTeamPlayers}
-              teamPlayers={myTeamPlayers}
-              userId={userContext.user.id}
-              teamType="myTeamPlayers"
-            />
-          );
-        })}
-      </div>
       {!displayScout && (
         <button onClick={handleScoutClick}> Scout Opponent</button>
       )}
+
       {displayScout && (
         <ScoutOpponent
           setDisplay={setDisplayScout}
-          teamPlayers={opponents}
-          setTeamPlayers={setOpponents}
+          myTeamPlayers={myTeamPlayers.data}
+          opponentPlayers={opponents.data}
           recommendations={recommendations.response}
+          refetchPlayers={opponents.refetch}
         />
       )}
-      <BarGraph />
-      <StatsTable playersList={myTeamPlayers} />
+      {myTeamPlayers.data && <StatsTable playersList={myTeamPlayers.data} />}
     </div>
   );
 }

@@ -10,6 +10,10 @@
   align-self: center;
 }
 
+.barGraph {
+  align-self: center;
+}
+
 .recommendations {
   display: flex;
   flex-direction: row;
