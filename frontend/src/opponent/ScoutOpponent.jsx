@@ -3,6 +3,7 @@ import BarGraph from "../models/BarGraph.jsx";
 import { UserContext } from "../UserContext.js";
 import { useContext, useMemo } from "react";
 import "./ScoutOpponent.css";
+import RecommendationFeedback from "./RecommendationFeedback.jsx";
 
 function ScoutOpponent({
   setDisplay,
@@ -95,15 +96,13 @@ function ScoutOpponent({
       <div className="recommendations">
         <div className="keyPoints">
           <h3> Recommendations:</h3>
-          {recommendations.keyPoints.map((point) => {
-            return <p>{point}</p>;
-          })}
+          <RecommendationFeedback recommendations={recommendations.keyPoints} />
         </div>
         <div className="areasOfImprovement">
           <h3> Areas Of Improvement:</h3>
-          {recommendations.areasOfImprovement.map((point) => {
-            return <p>{point}</p>;
-          })}
+          <RecommendationFeedback
+            recommendations={recommendations.areasOfImprovement}
+          />
         </div>
       </div>
     </div>
