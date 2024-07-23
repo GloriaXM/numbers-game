@@ -1,9 +1,15 @@
 .modelView {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .modelImg {
   width: 800px;
   height: 800px;
+}
+
+.statsChart.css-1p5r3f-MuiResponsiveChart-container {
+  flex-grow: 0;
+  align-self: center;
 }

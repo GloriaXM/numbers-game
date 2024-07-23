@@ -1,32 +1,18 @@
 import { BarChart } from "@mui/x-charts/BarChart";
 
-function BarGraph() {
-  const performanceScores = [
-    { style: "Outside Offense", score: 32 },
-    { style: "Inside Offense", score: 32 },
-    { style: "Offense Discipline", score: 32 },
-    { style: "Defense Discipline", score: 32 },
-    { style: "Consistency", score: 32 },
-    { style: "Rebounding", score: 32 },
-  ];
+function BarGraph({ compareScores }) {
   return (
-    <div>
-      <h1> Bar Graph</h1>
+    <div className="barGraph">
+      <h2> Compare Playing Styles</h2>
       <BarChart
-        xAxis={[
-          {
-            id: "barCategories",
-            data: ["bar A", "bar B", "bar C"],
-            scaleType: "band",
-          },
-        ]}
+        dataset={compareScores}
+        xAxis={[{ scaleType: "band", dataKey: "style" }]}
+        yAxis={[{ scaleType: "linear", min: 0, max: 100 }]}
         series={[
-          {
-            data: [2, 5, 3],
-          },
+          { dataKey: "myTeamScore", label: "My Team", stack: "A" },
+          { dataKey: "opponentScore", label: "Opponent", stack: "A" },
         ]}
-        dataset={performanceScores}
-        width={600}
+        width={900}
         height={400}
       />
     </div>
