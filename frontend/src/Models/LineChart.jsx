@@ -4,7 +4,7 @@ import SortBar from "../table_components/SortBar";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { regressionLog } from "d3-regression";
 
-function ModelView({ careerData }) {
+function LineGraph({ careerData }) {
   const seasonsXAxis = useMemo(() => {
     let seasons = careerData.map((season) => {
       return season.season;
@@ -115,4 +115,4 @@ function ModelView({ careerData }) {
   );
 }
 
-export default ModelView;
+export default LineGraph;

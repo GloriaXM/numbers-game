@@ -1,6 +1,6 @@
 import Header from "../header/Header.jsx";
 import PlayerBanner from "./PlayerBanner";
-import ModelView from "../models/ModelView.jsx";
+import LineGraph from "../models/LineChart.jsx";
 import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
@@ -158,7 +158,7 @@ function SinglePlayerView() {
             {" "}
             Add to Opponents
           </Button>
-          <ModelView careerData={bySeasonStats.data} />
+          <LineGraph careerData={bySeasonStats.data} />
         </div>
       )}
 
