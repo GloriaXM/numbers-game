@@ -31,6 +31,7 @@ function SortBar({
       >
         {options[option]}
       </Button>
+
       <Menu
         id="sortMenu"
         anchorEl={anchorEl}

@@ -1,4 +1,5 @@
-//This file holds the functions run during the daily cron job to update the database
+//This file handles the daily cron job
+//The main method of this file is run(), which is called in server.js
 
 import { PrismaClient } from "@prisma/client";
 import { STAT_MEANS, STAT_VARIANCES } from "./statDictionaries.js";
@@ -10,6 +11,7 @@ async function updatePlayer(player) {
     where: { id: player.id },
   });
 
+  //Check for safe division and calculate percentages
   player.field_percent =
     player.field_attempts === 0
       ? 0
@@ -25,6 +27,7 @@ async function updatePlayer(player) {
 
   delete player.season;
 
+  //If a player has not played in a game since the last daily update, we can skip them
   if (!isEqual(player, oldPlayer)) {
     player = await createOrUpdate(player);
   }
@@ -37,13 +40,13 @@ function resetPopulationStats() {
   });
 }
 
-function updatePopulationTotal(player) {
+function incrementPopulationTotal(player) {
   Object.keys(STAT_MEANS).forEach(function (stat) {
     STAT_MEANS[stat] += player[stat];
   });
 }
 
-function calcVariance(player) {
+function incrementVariance(player) {
   Object.keys(STAT_VARIANCES).forEach(function (stat) {
     STAT_VARIANCES[stat] += (player[stat] - STAT_MEANS[stat]) ** 2;
   });
@@ -91,7 +94,7 @@ async function run() {
 
   resetPopulationStats();
   allPlayers.forEach((player) => {
-    updatePopulationTotal(player);
+    incrementPopulationTotal(player);
   });
   const popSize = allPlayers.length;
   Object.keys(STAT_MEANS).forEach(function (stat) {
@@ -99,7 +102,7 @@ async function run() {
   });
 
   allPlayers.forEach((player) => {
-    calcVariance(player);
+    incrementVariance(player);
   });
   Object.keys(STAT_VARIANCES).forEach(function (stat) {
     STAT_VARIANCES[stat] /= popSize;

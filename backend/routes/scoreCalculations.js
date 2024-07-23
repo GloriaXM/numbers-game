@@ -1,3 +1,6 @@
+//Handles performance score calculations for cron job and recommendations
+//Main methods are calcPerformanceStyles and generateRecommendations
+
 import { PrismaClient } from "@prisma/client";
 import {
   STAT_MEANS,
@@ -16,15 +19,21 @@ function calcOutSideOffenseScore(
   three_percent
 ) {
   let outsideOffenseScore = INIT_SCORE;
-  const normFieldAttempts =
+
+  //Normalize raw stats to population
+  //TODO: pull calculating normalized stats up one level to avoid duplicate calculations
+  const normalizedFieldAttempts =
     (field_attempts - STAT_MEANS.field_attempts) /
     Math.sqrt(STAT_VARIANCES.field_attempts);
-  const normThreeAttempts =
+
+  const normalizedThreeAttempts =
     (three_attempts - STAT_MEANS.three_attempts) /
     Math.sqrt(STAT_VARIANCES.three_attempts);
-  const normThreeFG =
+
+  const normalizedThreeFG =
     (three_fg - STAT_MEANS.three_fg) / Math.sqrt(STAT_VARIANCES.three_fg);
-  const normThreePercent =
+
+  const normalizedThreePercent =
     (three_percent - STAT_MEANS.three_percent) /
     Math.sqrt(STAT_VARIANCES.three_percent);
 
@@ -35,18 +44,17 @@ function calcOutSideOffenseScore(
     STAT_VARIANCES.field_attempts
   );
 
+  //Normalized proportion of 3 point shots taken relative to all shots taken
   const threesProportion =
-    normThreeAttempts == 0
+    normalizedThreeAttempts == 0
       ? 0
-      : (normThreeAttempts / normFieldAttempts -
+      : (normalizedThreeAttempts / normalizedFieldAttempts -
           STAT_MEANS.three_attempts / STAT_MEANS.field_attempts) /
         Math.sqrt(threesProportionVariance);
 
   outsideOffenseScore += threesProportion * 5000;
-
-  outsideOffenseScore += normThreeFG * 15;
-
-  outsideOffenseScore += normThreePercent * 25;
+  outsideOffenseScore += normalizedThreeFG * 15;
+  outsideOffenseScore += normalizedThreePercent * 25;
 
   return outsideOffenseScore;
 }
@@ -62,21 +70,27 @@ function calcInsideOffenseScore(
 ) {
   let insideOffenseScore = INIT_SCORE;
 
-  const normFieldAttempts =
+  const normalizedFieldAttempts =
     (field_attempts - STAT_MEANS.field_attempts) /
     Math.sqrt(STAT_VARIANCES.field_attempts);
-  const normTwoAttemps =
+
+  const normalizedTwoAttempts =
     (two_attempts - STAT_MEANS.two_attempts) /
     Math.sqrt(STAT_VARIANCES.two_attempts);
-  const normTwoFG =
+
+  const normalizedTwoFG =
     (two_fg - STAT_MEANS.two_fg) / Math.sqrt(STAT_VARIANCES.two_fg);
-  const normTwoPercent =
+
+  const normalizedTwoPercent =
     (two_percent - STAT_MEANS.two_percent) /
     Math.sqrt(STAT_VARIANCES.two_percent);
-  const normORB = (ORB - STAT_MEANS.ORB) / Math.sqrt(STAT_VARIANCES.ORB);
-  const normFTA =
+
+  const normalizedORB = (ORB - STAT_MEANS.ORB) / Math.sqrt(STAT_VARIANCES.ORB);
+
+  const normalizedFTA =
     (fta - STAT_MEANS.fta) / Math.sqrt(STAT_VARIANCES.field_attempts);
-  const normFTPercent =
+
+  const normalizedFTPercent =
     (ft_percent - STAT_MEANS.ft_percent) / Math.sqrt(STAT_VARIANCES.ft_percent);
 
   const twosProportionVariance = calcRatioVariance(
@@ -87,25 +101,25 @@ function calcInsideOffenseScore(
   );
 
   const twosProportion =
-    normTwoAttemps == 0
+    normalizedTwoAttempts == 0
       ? 0
-      : (normTwoAttemps / normFieldAttempts -
+      : (normalizedTwoAttempts / normalizedFieldAttempts -
           STAT_MEANS.two_attempts / STAT_MEANS.field_attempts) /
         Math.sqrt(twosProportionVariance);
 
   insideOffenseScore += twosProportion * 10000;
-  insideOffenseScore += normTwoFG * 8;
-  insideOffenseScore += normTwoPercent * 15;
-  insideOffenseScore += normORB * 10;
-  insideOffenseScore += normFTA * 15;
-  insideOffenseScore += normFTPercent * 10;
+  insideOffenseScore += normalizedTwoFG * 8;
+  insideOffenseScore += normalizedTwoPercent * 15;
+  insideOffenseScore += normalizedORB * 10;
+  insideOffenseScore += normalizedFTA * 15;
+  insideOffenseScore += normalizedFTPercent * 10;
   return insideOffenseScore;
 }
 
 function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
   let offenseDisciplineScore = INIT_SCORE;
 
-  const normEffectFGPercent =
+  const normalizedEffectFGPercent =
     (effect_fg_percent - STAT_MEANS.effect_fg_percent) /
     Math.sqrt(STAT_VARIANCES.effect_fg_percent);
 
@@ -139,7 +153,7 @@ function calcOffenseDisciplineScore(games, effect_fg_percent, TOV, ORB, AST) {
     (AST / games - STAT_MEANS.AST / STAT_MEANS.games) /
     Math.sqrt(ASTPerGameVariance);
 
-  offenseDisciplineScore += normEffectFGPercent * 150;
+  offenseDisciplineScore += normalizedEffectFGPercent * 150;
   offenseDisciplineScore += TOVPerGame * 1000;
   offenseDisciplineScore += ORBPerGame * 1000;
   offenseDisciplineScore += ASTPerGame * 1000;
@@ -397,7 +411,6 @@ async function getTeam(userId, teamType) {
 async function generateRecommendations(userId) {
   try {
     const opponentPlayers = await getTeam(userId, "opponents");
-
     const myTeamPlayers = await getTeam(userId, "myTeamPlayers");
 
     const opponentStyles = calcTeamPlayingStyles(opponentPlayers);
@@ -406,6 +419,7 @@ async function generateRecommendations(userId) {
       opponentStyles[0],
       myTeamStyles
     );
+
     const bestPlayers = calcBestPlayers(bestFitStyles[0], myTeamPlayers);
     const response = generateFeedback(bestFitStyles);
     return { response, bestPlayers };
@@ -414,4 +428,4 @@ async function generateRecommendations(userId) {
   }
 }
 
-export { calcPerformanceScores, sortPlayingStyles, generateRecommendations };
+export { calcPerformanceScores, generateRecommendations };

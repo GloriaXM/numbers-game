@@ -1,4 +1,4 @@
-//Code taken from https://mui.com/material-ui/react-app-bar/
+//Header skeleton taken from https://mui.com/material-ui/react-app-bar/
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -39,7 +39,6 @@ function TestHeader() {
   };
 
   const handleLogout = () => {
-    // TODO: Perform logout logic here
     updateUser(null);
     navigate("/login");
   };

@@ -72,9 +72,15 @@ function PlayersView() {
     queryUrl.searchParams.append("sortType", sortType);
     queryUrl.searchParams.append("sortDirection", sortDirection);
     queryUrl.searchParams.append("playerName", searchQuery);
-    const response = await fetch(queryUrl);
-    const players = await response.json();
-    return players;
+    try {
+      const response = await fetch(queryUrl);
+      const players = await response.json();
+      return players;
+    } catch {
+      //TODO: add error handling
+      console.log("EROR");
+      return [];
+    }
   }
 
   useEffect(() => {

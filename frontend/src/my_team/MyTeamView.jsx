@@ -9,11 +9,14 @@ import { AppLoader } from "../suspense/AppLoader.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
+  const userContext = useContext(UserContext);
+
   const [displayScout, setDisplayScout] = useState(false);
   const [recommendations, setRecommendations] = useState({
     bestPlayers: [],
     response: { keyPoints: [], areasOfImprovement: [] },
   });
+
   const myTeamPlayers = useQuery({
     queryKey: ["myTeamPlayers"],
     queryFn: async () => {
@@ -26,7 +29,6 @@ function MyTeamView() {
       return await fetchTeamPlayers("opponents");
     },
   });
-  const userContext = useContext(UserContext);
 
   async function fetchTeamPlayers(teamType) {
     const queryUrl = new URL(`${PORT}/teamPlayers`);
@@ -60,7 +62,6 @@ function MyTeamView() {
               <PlayerCard
                 key={player.id}
                 player={player}
-                teamPlayers={myTeamPlayers.data}
                 userId={userContext.user.id}
                 teamType="myTeamPlayers"
                 refetchPlayers={myTeamPlayers.refetch}

@@ -15,7 +15,7 @@ function ScoutOpponent({
   const userContext = useContext(UserContext);
 
   //TODO: use useMemo in MyTeamView
-  const compareScores = useMemo(() => {
+  const comparedScores = useMemo(() => {
     const myTeamScores = calcTeamScores(myTeamPlayers);
     const opponentScores = calcTeamScores(opponentPlayers);
     let data = [];
@@ -91,7 +91,7 @@ function ScoutOpponent({
           );
         })}
       </div>
-      <BarGraph compareScores={compareScores} />
+      <BarGraph comparedScores={comparedScores} />
       <div className="recommendations">
         <div className="keyPoints">
           <h3> Recommendations:</h3>
