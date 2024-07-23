@@ -8,6 +8,7 @@ import { UserContext } from "../UserContext.js";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ShotChart from "./ShotChart.jsx";
+import { PlayerStats } from "./PlayerStats.js";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -80,23 +81,17 @@ function SinglePlayerView() {
   }, []);
 
   function generateSummaryStats(statsBySeason) {
-    let aggregateStats = ["", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0];
-    aggregateStats[0] = statsBySeason[0].player_name;
-    aggregateStats[12] = statsBySeason[0].age;
-    aggregateStats[13] = statsBySeason[0].team;
+    const aggregateStats = new PlayerStats();
+    aggregateStats.player_name = statsBySeason[0].player_name;
+    aggregateStats.age = statsBySeason[0].age;
+    aggregateStats.team = statsBySeason[0].team;
 
     statsBySeason.map((season) => {
-      aggregateStats[1] += season.games;
-      aggregateStats[2] += season.PTS;
-      aggregateStats[3] += season.games_started;
-      aggregateStats[4] += season.minutes_played;
-      aggregateStats[5] += season.field_goals;
-      aggregateStats[6] += season.field_attempts;
-      aggregateStats[7] += season.ft;
-      aggregateStats[8] += season.fta;
-      aggregateStats[9] += season.TRB;
-      aggregateStats[10] += season.TOV;
-      aggregateStats[11] += season.PF;
+      Object.keys(season).forEach(function (stat) {
+        if (stat != "player_name" && stat !== "age" && stat !== "team") {
+          aggregateStats[stat] += season[stat];
+        }
+      });
     });
 
     setByAggregateStats(aggregateStats);
@@ -154,7 +149,7 @@ function SinglePlayerView() {
 
       {bySeasonStats.data && (
         <div>
-          <PlayerBanner player={byAggregateStats} />
+          <PlayerBanner aggregateStats={byAggregateStats} />
           <Button id="myTeamPlayers" onClick={handleAddPlayer}>
             {" "}
             Add to MyTeam
