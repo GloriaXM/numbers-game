@@ -10,7 +10,6 @@ import { AppLoader } from "../suspense/AppLoader.jsx";
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
-  const queryClient = useQueryClient();
 
   const [displayScout, setDisplayScout] = useState(false);
 
@@ -25,7 +24,7 @@ function MyTeamView() {
     },
   });
 
-  const [style, setStyle] = useState("outsideOffenseScore");
+  const [style, setStyle] = useState("");
   const myTeamPlayers = useQuery({
     queryKey: ["myTeamPlayers", style],
     queryFn: async () => {
@@ -44,7 +43,12 @@ function MyTeamView() {
     const queryUrl = new URL(`${PORT}/teamPlayers`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     queryUrl.searchParams.append("teamType", teamType);
-    queryUrl.searchParams.append("playingStyle", style);
+
+    const sortStyle =
+      style === ""
+        ? recommendations.data.response.recommendedStyle.style
+        : style;
+    queryUrl.searchParams.append("playingStyle", sortStyle);
     const response = await fetch(queryUrl);
 
     const data = await response.json();
@@ -87,7 +91,11 @@ function MyTeamView() {
           recommendations={recommendations.data.response}
           refetchPlayers={opponents.refetch}
           refetchMyTeam={myTeamPlayers.refetch}
-          myTeamStyle={style}
+          myTeamStyle={
+            style === ""
+              ? recommendations.data.response.recommendedStyle.style
+              : style
+          }
           setMyTeamStyle={setStyle}
         />
       )}
