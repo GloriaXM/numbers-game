@@ -14,19 +14,23 @@ function PlayerCard({ player, userId, teamType, refetchPlayers }) {
     event.stopPropagation();
     setDisplayDeleteModal(false);
 
-    const queryUrl = new URL(`${PORT}/player`);
-    const newTeam = await fetch(queryUrl, {
-      method: "DELETE",
-      body: JSON.stringify({
-        playerId: player.id,
-        teamType: teamType,
-        userId,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-    refetchPlayers(newTeam);
+    try {
+      const queryUrl = new URL(`${PORT}/player`);
+      const newTeam = await fetch(queryUrl, {
+        method: "DELETE",
+        body: JSON.stringify({
+          playerId: player.id,
+          teamType: teamType,
+          userId,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      refetchPlayers(newTeam);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function handleFlipCard() {

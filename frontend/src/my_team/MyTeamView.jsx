@@ -13,7 +13,7 @@ function MyTeamView() {
   const userContext = useContext(UserContext);
 
   const [displayScout, setDisplayScout] = useState(false);
-  const [showServerError, setShowServerError] = useState(false);
+  const [displayServerError, setDisplayServerError] = useState(false);
 
   const recommendations = useQuery({
     queryKey: ["recommendations"],
@@ -25,7 +25,7 @@ function MyTeamView() {
         const results = await response.json();
         return results;
       } catch (error) {
-        setShowServerError(true);
+        setDisplayServerError(true);
         console.error(error);
       }
     },
@@ -56,10 +56,17 @@ function MyTeamView() {
         ? recommendations.data.response.recommendedStyle.style
         : style;
     queryUrl.searchParams.append("playingStyle", sortStyle);
-    const response = await fetch(queryUrl);
 
-    const data = await response.json();
-    return data[teamType];
+    try {
+      const response = await fetch(queryUrl);
+
+      const data = await response.json();
+      return data[teamType];
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+      return [];
+    }
   }
 
   async function handleScoutClick() {
@@ -71,8 +78,8 @@ function MyTeamView() {
       <Header />
 
       <ErrorAlert
-        displayError={showServerError}
-        setDisplayError={setShowServerError}
+        displayError={displayServerError}
+        setDisplayError={setDisplayServerError}
       />
 
       {myTeamPlayers.isPending && <AppLoader />}
