@@ -14,7 +14,7 @@ function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
-  const [displayServerError, setDisplayServerError] = useState(false);
+  const [setDisplayServerError] = useState(false);
 
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],

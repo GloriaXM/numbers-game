@@ -107,7 +107,7 @@ app.get("/teamPlayers", async (req, res) => {
 
     res.json(players);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: error });
   }
 });

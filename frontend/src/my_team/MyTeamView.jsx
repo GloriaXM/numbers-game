@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ErrorAlert from "../suspense/ErrorAlert.jsx";
 
@@ -99,7 +99,7 @@ function MyTeamView() {
         </div>
       )}
 
-      {!displayScout && (
+      {!displayScout && recommendations.data && (
         <button onClick={handleScoutClick}> Scout Opponent</button>
       )}
 
