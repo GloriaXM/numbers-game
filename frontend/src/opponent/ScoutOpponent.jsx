@@ -100,7 +100,7 @@ function ScoutOpponent({
       <button className="closeScout" onClick={closeScout}>
         Close Scouting View
       </button>
-      <Typography> Generate Rosters: </Typography>
+      <Typography> Recommended Roster: </Typography>
       <SortBar
         isOpen={stylesMenuIsOpen}
         option={myTeamStyle}
