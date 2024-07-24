@@ -6,21 +6,28 @@ import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
+import ErrorAlert from "../suspense/ErrorAlert.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
 
   const [displayScout, setDisplayScout] = useState(false);
+  const [showServerError, setShowServerError] = useState(false);
 
   const recommendations = useQuery({
     queryKey: ["recommendations"],
     queryFn: async () => {
       const queryUrl = new URL(`${PORT}/scoutOpponent`);
       queryUrl.searchParams.append("userId", userContext.user.id);
-      const response = await fetch(queryUrl);
-      const results = await response.json();
-      return results;
+      try {
+        const response = await fetch(queryUrl);
+        const results = await response.json();
+        return results;
+      } catch (error) {
+        setShowServerError(true);
+        console.error(error);
+      }
     },
   });
 
@@ -62,6 +69,12 @@ function MyTeamView() {
   return (
     <div className="view myTeamView">
       <Header />
+
+      <ErrorAlert
+        displayError={showServerError}
+        setDisplayError={setShowServerError}
+      />
+
       {myTeamPlayers.isPending && <AppLoader />}
       {myTeamPlayers.data && (
         <div className="playerCardList">
