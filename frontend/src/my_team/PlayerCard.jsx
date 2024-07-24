@@ -15,7 +15,7 @@ function PlayerCard({ player, userId, teamType, refetchPlayers }) {
     setDisplayDeleteModal(false);
 
     const queryUrl = new URL(`${PORT}/player`);
-    await fetch(queryUrl, {
+    const newTeam = await fetch(queryUrl, {
       method: "DELETE",
       body: JSON.stringify({
         playerId: player.id,
@@ -26,7 +26,7 @@ function PlayerCard({ player, userId, teamType, refetchPlayers }) {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
-    refetchPlayers();
+    refetchPlayers(newTeam);
   }
 
   function handleFlipCard() {

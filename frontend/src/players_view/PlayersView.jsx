@@ -48,8 +48,8 @@ function PlayersView() {
     asc: "Ascending",
     desc: "Descending",
   });
-
   const [sortDirection, setSortDirection] = useState("no_direction");
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
@@ -78,7 +78,6 @@ function PlayersView() {
       return players;
     } catch {
       //TODO: add error handling
-      console.log("EROR");
       return [];
     }
   }

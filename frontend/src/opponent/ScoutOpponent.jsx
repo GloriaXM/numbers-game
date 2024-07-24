@@ -1,9 +1,11 @@
 import PlayerCard from "../my_team/PlayerCard";
 import BarGraph from "../models/BarGraph.jsx";
 import { UserContext } from "../UserContext.js";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import "./ScoutOpponent.css";
 import RecommendationFeedback from "./RecommendationFeedback.jsx";
+import SortBar from "../table_components/SortBar.jsx";
+import { Typography } from "@mui/material";
 
 function ScoutOpponent({
   setDisplay,
@@ -12,7 +14,11 @@ function ScoutOpponent({
   opponentPlayers,
   recommendations,
   refetchPlayers,
+  refetchMyTeam,
+  myTeamStyle,
+  setMyTeamStyle,
 }) {
+  const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
 
   //TODO: use useMemo in MyTeamView
@@ -33,6 +39,19 @@ function ScoutOpponent({
 
     return data;
   }, [myTeamPlayers, opponentPlayers]);
+
+  const STYLES = Object.freeze({
+    recommended: "Recommended Roster",
+    outsideOffenseScore: "Outside Offense",
+    insideOffenseScore: "Inside Offense",
+    offenseDisciplineScore: "Offensive Discipline",
+    defenseDisciplineScore: "Defensive Discipline",
+    consistencyScore: "Consistency",
+    reboundingScore: "Rebounding",
+  });
+
+  const [stylesAnchorEl, setStylesAnchorEl] = useState(null);
+  const stylesMenuIsOpen = stylesAnchorEl == null ? false : true;
 
   function closeScout() {
     setDisplay(false);
@@ -72,11 +91,24 @@ function ScoutOpponent({
     });
   }
 
+  useEffect(() => {
+    refetchMyTeam();
+  }, [myTeamStyle]);
+
   return (
     <div className="scoutOpponent">
       <button className="closeScout" onClick={closeScout}>
         Close Scouting View
       </button>
+      <Typography> Generate Rosters: </Typography>
+      <SortBar
+        isOpen={stylesMenuIsOpen}
+        option={myTeamStyle}
+        setOption={setMyTeamStyle}
+        anchorEl={stylesAnchorEl}
+        setAnchorEl={setStylesAnchorEl}
+        options={STYLES}
+      />
       <div className="playerCardList">
         {opponentPlayers.map((player) => {
           return (

@@ -86,18 +86,28 @@ app.get("/players", async (req, res) => {
 app.get("/teamPlayers", async (req, res) => {
   const userId = parseInt(req.query.userId);
   const teamType = req.query.teamType;
+  const playingStyle =
+    req.query.playingStyle == null
+      ? "outsideOffenseScore"
+      : req.query.playingStyle;
+
   try {
     const players = await prisma.user.findUnique({
       where: {
         id: userId,
       },
       select: {
-        [teamType]: true,
+        [teamType]: {
+          orderBy: {
+            [playingStyle]: "desc",
+          },
+        },
       },
     });
 
     res.json(players);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error });
   }
 });
