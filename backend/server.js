@@ -69,7 +69,6 @@ app.get("/players", async (req, res) => {
       res.json(players);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
     }
   } else {
     try {
@@ -88,7 +87,6 @@ app.get("/players", async (req, res) => {
       res.json(players);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
     }
   }
 });
@@ -118,7 +116,6 @@ app.get("/teamPlayers", async (req, res) => {
     res.json(players);
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
   }
 });
 
@@ -129,7 +126,6 @@ app.get("/scoutOpponent", async (req, res) => {
     return res.json(result);
   } catch {
     console.error(error);
-    res.status(500).json(error);
   }
 });
 
@@ -156,7 +152,6 @@ app.patch("/player", async (req, res) => {
     res.json({ updateUser });
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
   }
 });
 
@@ -177,7 +172,6 @@ app.delete("/player", async (req, res) => {
     res.json(player);
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
   }
 });
 
