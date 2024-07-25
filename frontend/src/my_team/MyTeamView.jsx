@@ -1,4 +1,4 @@
-import Header from "../header/Header.jsx";
+import Header from "../header/Header";
 import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useContext } from "react";
 import { UserContext } from "../UserContext.js";
