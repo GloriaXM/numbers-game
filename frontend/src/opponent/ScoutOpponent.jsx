@@ -41,7 +41,6 @@ function ScoutOpponent({
   }, [myTeamPlayers, opponentPlayers]);
 
   const STYLES = Object.freeze({
-    recommended: "Recommended Roster",
     outsideOffenseScore: "Outside Offense",
     insideOffenseScore: "Inside Offense",
     offenseDisciplineScore: "Offensive Discipline",
