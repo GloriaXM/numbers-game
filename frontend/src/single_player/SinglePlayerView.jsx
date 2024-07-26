@@ -32,7 +32,8 @@ function SinglePlayerView() {
     queryKey: ["shotChartData"],
     queryFn: async () => {
       const data = await fetchShotChart();
-      if (data.count === 0) {
+
+      if (data.length === 0) {
         return null;
       }
 
@@ -174,7 +175,7 @@ function SinglePlayerView() {
         <h3> Shot chart not available for this player</h3>
       )}
 
-      {shotChartData.isFetched && (
+      {shotChartData.data != null && (
         <ShotChart
           shotChartData={shotChartData.data}
           height={800}
