@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useRef, useMemo } from "react";
+import { useMemo } from "react";
 import "./ShotChart.css";
 
 function ShotChart({ shotChartData, height, width }) {

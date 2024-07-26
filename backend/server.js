@@ -17,7 +17,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: `${FRONTEND_PORT}`,
+    origin: `http://localhost:${FRONTEND_PORT}`,
     credentials: true,
   })
 );
