@@ -2,6 +2,8 @@
   display: flex;
   background-color: #c5c6c7;
   min-width: 500px;
+  display: flex;
+  justify-content: space-around;
 }
 
 .details {
@@ -14,6 +16,12 @@
 .row {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.summaryStat {
+  margin: 20px;
 }
 
 .playerBannerName {
