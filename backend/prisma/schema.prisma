@@ -14,7 +14,7 @@ datasource db {
 }
 
 // All Player stats are totals over the entire season
-model Player {
+model player {
   id                     Int      @id @default(autoincrement())
   player_name            String
   age                    Int
@@ -51,14 +51,14 @@ model Player {
   defenseDisciplineScore Int      @default(0)
   consistencyScore       Int      @default(0)
   reboundingScore        Int      @default(0)
-  myTeams                User[]   @relation("myTeamPlayers")
-  opponentTeams          User[]   @relation("opponents")
+  myTeams                user[]   @relation("myTeamPlayers")
+  opponentTeams          user[]   @relation("opponents")
 }
 
-model User {
+model user {
   id            Int      @id @default(autoincrement())
   username      String   @unique
   password      String
-  myTeamPlayers Player[] @relation("myTeamPlayers")
-  opponents     Player[] @relation("opponents")
+  myTeamPlayers player[] @relation("myTeamPlayers")
+  opponents     player[] @relation("opponents")
 }
