@@ -2,8 +2,8 @@
 
 ## Description
 
-This is an application for tracking the performance of basketball players. This target users for this application are basketball coaches, who 
-would like to track their players on MyTeam, and get recommendations on scouting adivce that their team can use to prepare for games against 
+This is an application for tracking the performance of basketball players. The target users for this application are basketball coaches, who 
+would like to track their players on MyTeam and get recommendations on scouting adivce that their team can use to prepare for games against 
 opponent teams. The current use-case is the NBA, simply because of easy data availability, but future steps for this project would be to 
 populate the database with players from multiple different leagues.
 
