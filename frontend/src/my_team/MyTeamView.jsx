@@ -6,23 +6,39 @@ import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
+import ErrorAlert from "../suspense/ErrorAlert.jsx";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
 
   const [displayScout, setDisplayScout] = useState(false);
-  const [recommendations, setRecommendations] = useState({
-    bestPlayers: [],
-    response: { keyPoints: [], areasOfImprovement: [] },
+  const [displayServerError, setDisplayServerError] = useState(false);
+
+  const recommendations = useQuery({
+    queryKey: ["recommendations"],
+    queryFn: async () => {
+      const queryUrl = new URL(`${PORT}/scoutOpponent`);
+      queryUrl.searchParams.append("userId", userContext.user.id);
+      try {
+        const response = await fetch(queryUrl);
+        const results = await response.json();
+        return results;
+      } catch (error) {
+        setDisplayServerError(true);
+        console.error(error);
+      }
+    },
   });
 
+  const [style, setStyle] = useState("");
   const myTeamPlayers = useQuery({
-    queryKey: ["myTeamPlayers"],
+    queryKey: ["myTeamPlayers", style],
     queryFn: async () => {
       return await fetchTeamPlayers("myTeamPlayers");
     },
   });
+
   const opponents = useQuery({
     queryKey: ["opponents"],
     queryFn: async () => {
@@ -34,26 +50,38 @@ function MyTeamView() {
     const queryUrl = new URL(`${PORT}/teamPlayers`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     queryUrl.searchParams.append("teamType", teamType);
-    const response = await fetch(queryUrl);
 
-    const data = await response.json();
-    return data[teamType];
+    const sortStyle =
+      style === ""
+        ? recommendations.data.response.recommendedStyle.style
+        : style;
+    queryUrl.searchParams.append("playingStyle", sortStyle);
+
+    try {
+      const response = await fetch(queryUrl);
+
+      const data = await response.json();
+      return data[teamType];
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+      return [];
+    }
   }
 
   async function handleScoutClick() {
     setDisplayScout(true);
-    const queryUrl = new URL(`${PORT}/scoutOpponent`);
-    queryUrl.searchParams.append("userId", userContext.user.id);
-    const response = await fetch(queryUrl);
-    const results = await response.json();
-    setRecommendations(results);
   }
-
-  //TODO: implement better UI feedback on recommending ideal players
 
   return (
     <div className="view myTeamView">
       <Header />
+
+      <ErrorAlert
+        displayError={displayServerError}
+        setDisplayError={setDisplayServerError}
+      />
+
       {myTeamPlayers.isPending && <AppLoader />}
       {myTeamPlayers.data && (
         <div className="playerCardList">
@@ -71,17 +99,24 @@ function MyTeamView() {
         </div>
       )}
 
-      {!displayScout && (
+      {!displayScout && recommendations.data && (
         <button onClick={handleScoutClick}> Scout Opponent</button>
       )}
 
-      {displayScout && (
+      {displayScout && recommendations.data && myTeamPlayers.isFetched && (
         <ScoutOpponent
           setDisplay={setDisplayScout}
           myTeamPlayers={myTeamPlayers.data}
           opponentPlayers={opponents.data}
-          recommendations={recommendations.response}
+          recommendations={recommendations.data.response}
           refetchPlayers={opponents.refetch}
+          refetchMyTeam={myTeamPlayers.refetch}
+          myTeamStyle={
+            style === ""
+              ? recommendations.data.response.recommendedStyle.style
+              : style
+          }
+          setMyTeamStyle={setStyle}
         />
       )}
       {myTeamPlayers.data && <StatsTable playersList={myTeamPlayers.data} />}

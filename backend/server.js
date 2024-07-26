@@ -48,57 +48,74 @@ app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
 
   if (sortType != "no_sort" && sortDirection != "no_direction") {
-    const players = await prisma.player.findMany({
-      where: {
-        ...(playerName !== ""
-          ? {
-              player_name: {
-                contains: playerName,
-                mode: "insensitive",
-              },
-            }
-          : {}),
-      },
-      orderBy: [
-        {
-          [sortType]: sortDirection,
+    try {
+      const players = await prisma.player.findMany({
+        where: {
+          ...(playerName !== ""
+            ? {
+                player_name: {
+                  contains: playerName,
+                  mode: "insensitive",
+                },
+              }
+            : {}),
         },
-      ],
-    });
-    res.json(players);
+        orderBy: [
+          {
+            [sortType]: sortDirection,
+          },
+        ],
+      });
+      res.json(players);
+    } catch (error) {
+      console.error(error);
+    }
   } else {
-    const players = await prisma.player.findMany({
-      where: {
-        ...(playerName !== ""
-          ? {
-              player_name: {
-                contains: playerName,
-                mode: "insensitive",
-              },
-            }
-          : {}),
-      },
-    });
-    res.json(players);
+    try {
+      const players = await prisma.player.findMany({
+        where: {
+          ...(playerName !== ""
+            ? {
+                player_name: {
+                  contains: playerName,
+                  mode: "insensitive",
+                },
+              }
+            : {}),
+        },
+      });
+      res.json(players);
+    } catch (error) {
+      console.error(error);
+    }
   }
 });
 
 app.get("/teamPlayers", async (req, res) => {
   const userId = parseInt(req.query.userId);
   const teamType = req.query.teamType;
+  const playingStyle =
+    req.query.playingStyle == null
+      ? "outsideOffenseScore"
+      : req.query.playingStyle;
+
   try {
     const players = await prisma.user.findUnique({
       where: {
         id: userId,
       },
       select: {
-        [teamType]: true,
+        [teamType]: {
+          orderBy: {
+            [playingStyle]: "desc",
+          },
+        },
       },
     });
 
     res.json(players);
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
   }
 });
 
@@ -108,7 +125,7 @@ app.get("/scoutOpponent", async (req, res) => {
     const result = await generateRecommendations(userId);
     return res.json(result);
   } catch {
-    res.status(500).json({ error: "Unable to generate recommendations." });
+    console.error(error);
   }
 });
 
@@ -134,7 +151,7 @@ app.patch("/player", async (req, res) => {
 
     res.json({ updateUser });
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
   }
 });
 
@@ -154,7 +171,7 @@ app.delete("/player", async (req, res) => {
 
     res.json(player);
   } catch (error) {
-    res.status(500).json({ error: "Could not remove the player" });
+    console.error(error);
   }
 });
 

@@ -1,4 +1,5 @@
 import { BarChart } from "@mui/x-charts/BarChart";
+import { ChartsReferenceLine } from "@mui/x-charts/ChartsReferenceLine";
 
 function BarGraph({ comparedScores }) {
   return (
@@ -14,7 +15,9 @@ function BarGraph({ comparedScores }) {
         ]}
         width={900}
         height={400}
-      />
+      >
+        <ChartsReferenceLine y={50} labelAlign="end" />
+      </BarChart>
     </div>
   );
 }

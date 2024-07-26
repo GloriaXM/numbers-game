@@ -14,19 +14,23 @@ function PlayerCard({ player, userId, teamType, refetchPlayers }) {
     event.stopPropagation();
     setDisplayDeleteModal(false);
 
-    const queryUrl = new URL(`${PORT}/player`);
-    await fetch(queryUrl, {
-      method: "DELETE",
-      body: JSON.stringify({
-        playerId: player.id,
-        teamType: teamType,
-        userId,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-    refetchPlayers();
+    try {
+      const queryUrl = new URL(`${PORT}/player`);
+      const newTeam = await fetch(queryUrl, {
+        method: "DELETE",
+        body: JSON.stringify({
+          playerId: player.id,
+          teamType: teamType,
+          userId,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      refetchPlayers(newTeam);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function handleFlipCard() {
@@ -45,58 +49,65 @@ function PlayerCard({ player, userId, teamType, refetchPlayers }) {
         <div className="card__face card__face--front">
           <h2 className="playerCardName"> {player.player_name}</h2>
         </div>
+
         <div className="card__face card__face--back">
-          <div className="summaryStatsBar">
-            <h3 className="stat gamesPlayed">Games Played: {player.games}</h3>
-            <h3 className="stat pointsPerGame">
+          <div className="statRow">
+            <h3 className="stat">Games Played: {player.games}</h3>
+            <h3 className="stat">
               PPG:{" "}
               {player.games === 0 ? 0 : (player.PTS / player.games).toFixed(2)}
             </h3>
-            <h3 className="stat fieldPercent">
-              Effect FG %: {(100 * parseFloat(player.field_percent)).toFixed(2)}
+          </div>
+
+          <div className="statRow">
+            <h3 className="stat">
+              Three %: {(100 * player.three_percent).toFixed(2)}
+            </h3>
+            <h3 className="stat">
+              Two %: {(100 * player.two_percent).toFixed(2)}
             </h3>
           </div>
-          <div className="secondStatsRow">
-            <div className="statRow">
-              <h3 className="stat fieldPercent">
-                Field %: {(100 * player.three_percent).toFixed(2)}
-              </h3>
-              <h3 className="stat threePercent">
-                Three %: {(100 * player.three_percent).toFixed(2)}
-              </h3>
-              <h3 className="stat twoPercent">
-                Two %: {(100 * player.two_percent).toFixed(2)}
-              </h3>
-              <h3 className="stat ftPercent">
-                FT %: {(100 * player.ft_percent).toFixed(2)}
-              </h3>
-            </div>
 
-            <button className="delete button" onClick={onDeleteClick}>
-              Delete
-            </button>
-            <div
-              className="deleteCard"
-              style={{ display: displayDeleteModal ? "block" : "none" }}
-            >
-              <div className="deleteCardContent">
-                <h2> Confirm Delete</h2>
-                <button
-                  className="button cancelDelete"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setDisplayDeleteModal(false);
-                  }}
-                >
-                  No, Cancel
-                </button>
-                <button
-                  className="delete button confirmDelete"
-                  onClick={handleDeleteCard}
-                >
-                  Yes, Delete
-                </button>
-              </div>
+          <div className="statRow">
+            <h3 className="stat">
+              Field %: {(100 * player.field_percent).toFixed(2)}
+            </h3>
+            <h3 className="stat">
+              FT %: {(100 * player.ft_percent).toFixed(2)}
+            </h3>
+          </div>
+
+          <div className="statRow">
+            <h3>
+              Effect FG %:{" "}
+              {(100 * parseFloat(player.effect_fg_percent)).toFixed(2)}
+            </h3>
+          </div>
+
+          <button className="delete button" onClick={onDeleteClick}>
+            Delete
+          </button>
+          <div
+            className="deleteCard"
+            style={{ display: displayDeleteModal ? "block" : "none" }}
+          >
+            <div className="deleteCardContent">
+              <h2> Confirm Delete</h2>
+              <button
+                className="button cancelDelete"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setDisplayDeleteModal(false);
+                }}
+              >
+                No, Cancel
+              </button>
+              <button
+                className="delete button confirmDelete"
+                onClick={handleDeleteCard}
+              >
+                Yes, Delete
+              </button>
             </div>
           </div>
         </div>
