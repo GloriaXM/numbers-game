@@ -183,9 +183,12 @@ function SinglePlayerView() {
         </div>
       )}
 
-      {/* TODO: use exception handling to check if shot chart data is available */}
       {shotChartData.data == null && !shotChartData.isPending && (
-        <h3> Shot chart not available for this player</h3>
+        <h3>
+          {" "}
+          Shot chart not available for this player. Check Stephen Curry for an
+          example
+        </h3>
       )}
 
       {shotChartData.data != null && (
