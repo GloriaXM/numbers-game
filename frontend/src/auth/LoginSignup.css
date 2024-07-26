@@ -1,4 +1,12 @@
+.loginSignup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .loginSignupForm {
   max-width: 500px;
   min-width: 200px;
+  justify-self: center;
+  margin: 50px;
 }

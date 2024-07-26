@@ -9,12 +9,13 @@ import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ShotChart from "./ShotChart.jsx";
 import { PlayerStats } from "./PlayerStats.js";
+import ErrorAlert from "../suspense/ErrorAlert.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
-  const [setDisplayServerError] = useState(false);
+  const [displayServerError, setDisplayServerError] = useState(false);
 
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],
@@ -63,17 +64,22 @@ function SinglePlayerView() {
     const playerType = event.target.id;
     const queryUrl = new URL(`${PORT}/player`);
 
-    fetch(queryUrl, {
-      method: "PATCH",
-      body: JSON.stringify({
-        playerType: playerType,
-        playerId: bySeasonStats.data[0].id,
-        userId: userContext.user.id,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    }).then((response) => response.json());
+    try {
+      fetch(queryUrl, {
+        method: "PATCH",
+        body: JSON.stringify({
+          playerType: playerType,
+          playerId: bySeasonStats.data[0].id,
+          userId: userContext.user.id,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => response.json());
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+    }
   }
 
   function extractShotCoordinates(shotsData) {
@@ -147,13 +153,20 @@ function SinglePlayerView() {
       } while (queryUrl !== null);
 
       return aggregateShotData.results;
-    } catch {}
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+    }
   }
 
   return (
     <div className="view singlePlayerView">
       <Header />
       {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
+      <ErrorAlert
+        displayError={displayServerError}
+        setDisplayError={setDisplayServerError}
+      />
 
       {bySeasonStats.data && (
         <div>
