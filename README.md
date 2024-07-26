@@ -35,7 +35,7 @@ populate the database with players from multiple different leagues.
 
 ## Resources
 Project Plan Template
-https://docs.google.com/document/d/1XMbMFwffzl_6LVnV6zjWeBsCPwuEpOKleVwxlnbizTM/edit?usp=sharing
+[https://docs.google.com/document/d/1XMbMFwffzl_6LVnV6zjWeBsCPwuEpOKleVwxlnbizTM/edit?usp=sharing](https://docs.google.com/document/d/16y3ZlRJjm6KY-pi3pcrfdeah80_WC_AVzv7Rzc3-2pc/edit?usp=sharing)
 
 Weekly Problem Solving Journal
 https://docs.google.com/document/d/1HgJcuj2wtsTkL9GQl9VmGbC2MB3dE_IsBLyqxm0i46o/edit?usp=sharing
