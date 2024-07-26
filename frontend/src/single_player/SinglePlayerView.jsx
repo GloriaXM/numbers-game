@@ -162,7 +162,7 @@ function SinglePlayerView() {
   return (
     <div className="view singlePlayerView">
       <Header />
-      {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
+      {bySeasonStats.isPending && <AppLoader />}
       <ErrorAlert
         displayError={displayServerError}
         setDisplayError={setDisplayServerError}
