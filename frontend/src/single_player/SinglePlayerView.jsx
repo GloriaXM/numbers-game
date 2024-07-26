@@ -1,6 +1,6 @@
 import Header from "../header/Header.jsx";
 import PlayerBanner from "./PlayerBanner";
-import ModelView from "../models/ModelView.jsx";
+import LineGraph from "../models/LineChart.jsx";
 import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
@@ -14,6 +14,7 @@ function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
+  const [setDisplayServerError] = useState(false);
 
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],
@@ -43,12 +44,18 @@ function SinglePlayerView() {
   });
 
   async function fetchPlayerDetails() {
-    const response = await fetch(
-      `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
-    );
-    const data = await response.json();
-    generateSummaryStats(data.results);
-    return data.results;
+    try {
+      const response = await fetch(
+        `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
+      );
+      const data = await response.json();
+      generateSummaryStats(data.results);
+      return data.results;
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+      return [];
+    }
   }
 
   async function handleAddPlayer(event) {
@@ -158,7 +165,7 @@ function SinglePlayerView() {
             {" "}
             Add to Opponents
           </Button>
-          <ModelView careerData={bySeasonStats.data} />
+          <LineGraph careerData={bySeasonStats.data} />
         </div>
       )}
 
