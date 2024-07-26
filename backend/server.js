@@ -159,6 +159,6 @@ app.delete("/player", async (req, res) => {
 });
 
 //Run the cron job every day at midnight
-cron.schedule("12 11 * * *", function () {
+cron.schedule("16 11 * * *", function () {
   run();
 });
