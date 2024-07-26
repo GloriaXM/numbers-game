@@ -175,6 +175,11 @@ app.delete("/player", async (req, res) => {
   }
 });
 
+//CRON_JOB for deployment
+app.get("/cronJob", async (req, res) => {
+  run();
+});
+
 //Run the cron job every day at midnight
 cron.schedule("16 11 * * *", function () {
   run();
