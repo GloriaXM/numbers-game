@@ -10,12 +10,14 @@ import { AppLoader } from "../suspense/AppLoader.jsx";
 import ShotChart from "./ShotChart.jsx";
 import { PlayerStats } from "./PlayerStats.js";
 import ErrorAlert from "../suspense/ErrorAlert.jsx";
+import FeedbackAlert from "../suspense/FeedbackAlert.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
   const [displayServerError, setDisplayServerError] = useState(false);
+  const [displayErrorFeedback, setDisplayErrorFeedback] = useState(null);
 
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],
@@ -65,7 +67,7 @@ function SinglePlayerView() {
     const queryUrl = new URL(`${PORT}/player`);
 
     try {
-      fetch(queryUrl, {
+      const response = await fetch(queryUrl, {
         method: "PATCH",
         body: JSON.stringify({
           playerType: playerType,
@@ -75,7 +77,9 @@ function SinglePlayerView() {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      }).then((response) => response.json());
+      });
+      const feedback = await response.json();
+      setDisplayErrorFeedback(feedback.response);
     } catch (error) {
       setDisplayServerError(true);
       console.error(error);
@@ -166,6 +170,10 @@ function SinglePlayerView() {
       <ErrorAlert
         displayError={displayServerError}
         setDisplayError={setDisplayServerError}
+      />
+      <FeedbackAlert
+        feedback={displayErrorFeedback}
+        setDisplayFeedback={setDisplayErrorFeedback}
       />
 
       {bySeasonStats.data && (
