@@ -7,6 +7,7 @@ import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ErrorAlert from "../suspense/ErrorAlert.jsx";
+import { Typography } from "@mui/material";
 
 function MyTeamView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -70,7 +71,9 @@ function MyTeamView() {
   }
 
   async function handleScoutClick() {
-    setDisplayScout(true);
+    if (opponents.data.length > 0) {
+      setDisplayScout(true);
+    }
   }
 
   return (
@@ -83,6 +86,14 @@ function MyTeamView() {
       />
 
       {myTeamPlayers.isPending && <AppLoader />}
+
+      {myTeamPlayers.data && myTeamPlayers.data.length == 0 && (
+        <Typography variant="h5">
+          {" "}
+          Use the Players page to find and add players to your team
+        </Typography>
+      )}
+
       {myTeamPlayers.data && (
         <div className="playerCardList">
           {myTeamPlayers.data.map((player) => {
@@ -99,27 +110,42 @@ function MyTeamView() {
         </div>
       )}
 
-      {!displayScout && recommendations.data && (
-        <button onClick={handleScoutClick}> Scout Opponent</button>
+      {opponents.data && opponents.data.length == 0 && (
+        <Typography>
+          {" "}
+          Add players to opponent team to see scouting view
+        </Typography>
       )}
 
-      {displayScout && recommendations.data && myTeamPlayers.isFetched && (
-        <ScoutOpponent
-          setDisplay={setDisplayScout}
-          myTeamPlayers={myTeamPlayers.data}
-          opponentPlayers={opponents.data}
-          recommendations={recommendations.data.response}
-          refetchPlayers={opponents.refetch}
-          refetchMyTeam={myTeamPlayers.refetch}
-          myTeamStyle={
-            style === ""
-              ? recommendations.data.response.recommendedStyle.style
-              : style
-          }
-          setMyTeamStyle={setStyle}
-        />
+      {!displayScout &&
+        myTeamPlayers.data &&
+        myTeamPlayers.data.length > 0 &&
+        recommendations.data && (
+          <button onClick={handleScoutClick}> Scout Opponent</button>
+        )}
+
+      {displayScout &&
+        myTeamPlayers.data.length > 0 &&
+        recommendations.data &&
+        myTeamPlayers.isFetched && (
+          <ScoutOpponent
+            setDisplay={setDisplayScout}
+            myTeamPlayers={myTeamPlayers.data}
+            opponentPlayers={opponents.data}
+            recommendations={recommendations.data.response}
+            refetchPlayers={opponents.refetch}
+            refetchMyTeam={myTeamPlayers.refetch}
+            myTeamStyle={
+              style === ""
+                ? recommendations.data.response.recommendedStyle.style
+                : style
+            }
+            setMyTeamStyle={setStyle}
+          />
+        )}
+      {myTeamPlayers.data && myTeamPlayers.data.length != 0 && (
+        <StatsTable playersList={myTeamPlayers.data} />
       )}
-      {myTeamPlayers.data && <StatsTable playersList={myTeamPlayers.data} />}
     </div>
   );
 }
