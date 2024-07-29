@@ -58,36 +58,43 @@ const OPPONENT_STYLE_TO_MYTEAM_STYLE = {
 
 //Maps the styles to actions that the user should take to improve said style score
 const STYLE_FEEDBACK = {
-  outsideOffenseScore: [
-    "Key task: focus on strong outside scoring",
-    "Spend extra time in the lead up to this match on form shooting and shooring drills",
-    "Practice plays designed for your outside shooters",
-  ],
-  insideOffenseScore: [
-    "Key task: have strong inside scoring",
-    "Practice play-making in the paint",
-    "Focus on attacking the rim and drawing fouls",
-  ],
-  offenseDisciplineScore: [
-    "Key task: play smart offense",
-    "Practice shot selection and encourage high percentage shots",
-    "Focus on minimizing turnovers",
-  ],
-  defenseDisciplineScore: [
-    "Key task: play disciplined defense",
-    "Practice clean man-to-man defense without fouling",
-    "Iron out player familiarity and communication for zone and help defense",
-  ],
-  consistencyScore: [
-    "Key task: use a strong bench to maintain consistency throughout the game",
-    "Focus on completing simple drills efficiently and consistently",
-    "Make sure that all players are getting possessions and making impacts throughout the game",
-  ],
-  reboundingScore: [
-    "Key task: make the hustle plays count",
-    "Focus on gathering all defensive rebounds. Don't give the opponent second chances",
-    "Play with a bigger roster that can get more offensive rebounds and convert on them",
-  ],
+  outsideOffenseScore: {
+    keyTask: "Win on strong outside scoring",
+    mainPracticePoint:
+      "Spend extra time in the lead up to this match on form shooting and shooring drills",
+    secondaryPracticePoint: "Practice plays designed for your outside shooters",
+  },
+  insideOffenseScore: {
+    keyTask: "Win on strong inside scoring",
+    mainPracticePoint: "Practice play-making in the paint",
+    secondaryPracticePoint: "Focus on attacking the rim and drawing fouls",
+  },
+  offenseDisciplineScore: {
+    keyTask: "Win on playing smart offense",
+    mainPracticePoint:
+      "Practice shot selection and encourage high percentage shots",
+    secondaryPracticePoint: "Focus on minimizing turnovers",
+  },
+  defenseDisciplineScore: {
+    keyTask: "Win on disciplined defense",
+    mainPracticePoint: "Practice clean man-to-man defense without fouling",
+    secondaryPracticePoint:
+      "Iron out player familiarity and communication for zone and help defense",
+  },
+  consistencyScore: {
+    keyTask: "Win with consistent performance across the bench",
+    mainPracticePoint:
+      "Focus on completing simple drills efficiently and consistently",
+    secondaryPracticePoint:
+      "Iron out player familiarity and communication for zone and help defense",
+  },
+  reboundingScore: {
+    keyTask: "Win on making the hustle plays count",
+    mainPracticePoint:
+      "Focus on gathering all defensive rebounds. Don't allow second chance shots",
+    secondaryPracticePoint:
+      "Play with a bigger roster that can get and convert more offensive rebounds",
+  },
 };
 
 export {

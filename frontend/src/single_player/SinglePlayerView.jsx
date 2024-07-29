@@ -1,6 +1,6 @@
 import Header from "../header/Header.jsx";
 import PlayerBanner from "./PlayerBanner";
-import ModelView from "../models/ModelView.jsx";
+import LineGraph from "../models/LineChart.jsx";
 import StatsTable from "../table_components/StatsTable.jsx";
 import { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
@@ -9,12 +9,14 @@ import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ShotChart from "./ShotChart.jsx";
 import { PlayerStats } from "./PlayerStats.js";
+import ErrorAlert from "../suspense/ErrorAlert.jsx";
 import FeedbackAlert from "../suspense/FeedbackAlert.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
+  const [displayServerError, setDisplayServerError] = useState(false);
   const [displayErrorFeedback, setDisplayErrorFeedback] = useState(null);
 
   const bySeasonStats = useQuery({
@@ -33,7 +35,8 @@ function SinglePlayerView() {
     queryKey: ["shotChartData"],
     queryFn: async () => {
       const data = await fetchShotChart();
-      if (data.count === 0) {
+
+      if (data.length === 0) {
         return null;
       }
 
@@ -45,12 +48,18 @@ function SinglePlayerView() {
   });
 
   async function fetchPlayerDetails() {
-    const response = await fetch(
-      `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
-    );
-    const data = await response.json();
-    generateSummaryStats(data.results);
-    return data.results;
+    try {
+      const response = await fetch(
+        `https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`
+      );
+      const data = await response.json();
+      generateSummaryStats(data.results);
+      return data.results;
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+      return [];
+    }
   }
 
   async function handleAddPlayer(event) {
@@ -72,6 +81,7 @@ function SinglePlayerView() {
       const feedback = await response.json();
       setDisplayErrorFeedback(feedback.response);
     } catch (error) {
+      setDisplayServerError(true);
       console.error(error);
     }
   }
@@ -147,14 +157,20 @@ function SinglePlayerView() {
       } while (queryUrl !== null);
 
       return aggregateShotData.results;
-    } catch {}
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
+    }
   }
 
   return (
     <div className="view singlePlayerView">
       <Header />
-      {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
-
+      {bySeasonStats.isPending && <AppLoader />}
+      <ErrorAlert
+        displayError={displayServerError}
+        setDisplayError={setDisplayServerError}
+      />
       <FeedbackAlert
         feedback={displayErrorFeedback}
         setDisplayFeedback={setDisplayErrorFeedback}
@@ -171,16 +187,19 @@ function SinglePlayerView() {
             {" "}
             Add to Opponents
           </Button>
-          <ModelView careerData={bySeasonStats.data} />
+          <LineGraph careerData={bySeasonStats.data} />
         </div>
       )}
 
-      {/* TODO: use exception handling to check if shot chart data is available */}
       {shotChartData.data == null && !shotChartData.isPending && (
-        <h3> Shot chart not available for this player</h3>
+        <h3>
+          {" "}
+          Shot chart not available for this player. Check Stephen Curry for an
+          example
+        </h3>
       )}
 
-      {shotChartData.isFetched && (
+      {shotChartData.data != null && (
         <ShotChart
           shotChartData={shotChartData.data}
           height={800}

@@ -15,14 +15,14 @@ function PlayerBanner({ aggregateStats }) {
       </div>
       <div className="details">
         <div className="row top">
-          <h3 className="stat careerGamesPlayed">
+          <h3 className="summaryStat careerGamesPlayed">
             Career Games: {playedGames}
           </h3>
-          <h3 className="stat careerGamesStarted">
+          <h3 className="summaryStat careerGamesStarted">
             {" "}
             Games Started: {aggregateStats.games_started}
           </h3>
-          <h3 className="stat pointsPerGame">
+          <h3 className="summaryStat pointsPerGame">
             PPG:{" "}
             {playedGames === 0
               ? 0
@@ -30,13 +30,13 @@ function PlayerBanner({ aggregateStats }) {
           </h3>
         </div>
         <div className="row middle">
-          <h3 className="stat minutesPlayedPerGame">
+          <h3 className="summaryStat minutesPlayedPerGame">
             Min Per Game:{" "}
             {playedGames === 0
               ? 0
               : (aggregateStats.minutes_played / playedGames).toFixed(2)}
           </h3>
-          <h3 className="stat fieldPercent">
+          <h3 className="summaryStat fieldPercent">
             Field %:{" "}
             {aggregateStats.field_attempts === 0
               ? 0
@@ -45,7 +45,7 @@ function PlayerBanner({ aggregateStats }) {
                   100
                 ).toFixed(2)}
           </h3>
-          <h3 className="stat ftPercent">
+          <h3 className="summaryStat ftPercent">
             FT %:{" "}
             {aggregateStats.fta === 0
               ? 0
@@ -53,19 +53,19 @@ function PlayerBanner({ aggregateStats }) {
           </h3>
         </div>
         <div className="row bottom">
-          <h3 className="stat averageRebounds">
+          <h3 className="summaryStat averageRebounds">
             Avg Rebounds:{" "}
             {playedGames === 0
               ? 0
               : (aggregateStats.TRB / playedGames).toFixed(2)}
           </h3>
-          <h3 className="stat averageTurnovers">
+          <h3 className="summaryStat averageTurnovers">
             Avg Turnovers:{" "}
             {playedGames === 0
               ? 0
               : (aggregateStats.TOV / playedGames).toFixed(2)}
           </h3>
-          <h3 className="stat averagePersonalFoulds">
+          <h3 className="summaryStat averagePersonalFoulds">
             Avg Personal Fouls:{" "}
             {playedGames === 0
               ? 0

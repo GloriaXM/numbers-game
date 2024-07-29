@@ -422,7 +422,16 @@ async function generateRecommendations(userId) {
 
     const bestPlayers = calcBestPlayers(bestFitStyles[0], myTeamPlayers);
     const response = generateFeedback(bestFitStyles);
-    return { response, bestPlayers };
+    const keyPoints = response.keyPoints;
+    const areasOfImprovement = response.areasOfImprovement;
+    return {
+      response: {
+        keyPoints,
+        areasOfImprovement,
+        recommendedStyle: bestFitStyles[0],
+      },
+      bestPlayers,
+    };
   } catch (error) {
     return { error: "Cannot generate recommendations" };
   }

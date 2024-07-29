@@ -80,6 +80,8 @@ function LoginSignup({ loginForm }) {
         </Alert>
       </Collapse>
 
+      <Typography variant="h1"> Numbers Game</Typography>
+
       <form className="loginSignupForm" onSubmit={handleSubmit}>
         <Typography> {loginForm ? "Login" : "Signup"}</Typography>
         <Collapse in={showUserError}>

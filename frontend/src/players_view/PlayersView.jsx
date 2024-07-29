@@ -8,9 +8,12 @@ import "./PlayersView.css";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader";
+import ErrorAlert from "../suspense/ErrorAlert";
 
 function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
+  const [displayServerError, setDisplayServerError] = useState(false);
+
   const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -48,8 +51,8 @@ function PlayersView() {
     asc: "Ascending",
     desc: "Descending",
   });
-
   const [sortDirection, setSortDirection] = useState("no_direction");
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
@@ -68,18 +71,17 @@ function PlayersView() {
   };
 
   async function loadPlayers() {
-    let queryUrl = new URL(`${PORT}/players`);
-    queryUrl.searchParams.append("sortType", sortType);
-    queryUrl.searchParams.append("sortDirection", sortDirection);
-    queryUrl.searchParams.append("playerName", searchQuery);
     try {
+      let queryUrl = new URL(`${PORT}/players`);
+      queryUrl.searchParams.append("sortType", sortType);
+      queryUrl.searchParams.append("sortDirection", sortDirection);
+      queryUrl.searchParams.append("playerName", searchQuery);
       const response = await fetch(queryUrl);
       const players = await response.json();
       return players;
-    } catch {
-      //TODO: add error handling
-      console.log("EROR");
-      return [];
+    } catch (error) {
+      setDisplayServerError(true);
+      console.error(error);
     }
   }
 
@@ -98,6 +100,11 @@ function PlayersView() {
   return (
     <div className="view playersView">
       <Header />
+      <ErrorAlert
+        displayError={displayServerError}
+        setDisplayError={setDisplayServerError}
+      />
+
       {playersList.isPending && <AppLoader />}
       {playersList.data && (
         <div>
