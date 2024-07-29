@@ -17,16 +17,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: `http://localhost:${FRONTEND_PORT}`,
+    origin: `${FRONTEND_PORT}`,
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(morgan());
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`${PORT}`));
 
 app.use(
   session({
