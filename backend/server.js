@@ -132,7 +132,7 @@ app.patch("/player", async (req, res) => {
       },
     });
 
-    res.json({ updateUser });
+    res.json({ response: "Player added to team" });
   } catch (error) {
     res.status(500).json({ error: error });
   }

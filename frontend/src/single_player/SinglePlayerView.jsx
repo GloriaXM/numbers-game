@@ -9,11 +9,13 @@ import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ShotChart from "./ShotChart.jsx";
 import { PlayerStats } from "./PlayerStats.js";
+import FeedbackAlert from "../suspense/FeedbackAlert.jsx";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const userContext = useContext(UserContext);
   const playerName = window.location.pathname.substring(8);
+  const [displayErrorFeedback, setDisplayErrorFeedback] = useState(null);
 
   const bySeasonStats = useQuery({
     queryKey: ["bySeasonStats"],
@@ -55,17 +57,23 @@ function SinglePlayerView() {
     const playerType = event.target.id;
     const queryUrl = new URL(`${PORT}/player`);
 
-    fetch(queryUrl, {
-      method: "PATCH",
-      body: JSON.stringify({
-        playerType: playerType,
-        playerId: bySeasonStats.data[0].id,
-        userId: userContext.user.id,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    }).then((response) => response.json());
+    try {
+      const response = await fetch(queryUrl, {
+        method: "PATCH",
+        body: JSON.stringify({
+          playerType: playerType,
+          playerId: bySeasonStats.data[0].id,
+          userId: userContext.user.id,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      const feedback = await response.json();
+      setDisplayErrorFeedback(feedback.response);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function extractShotCoordinates(shotsData) {
@@ -146,6 +154,11 @@ function SinglePlayerView() {
     <div className="view singlePlayerView">
       <Header />
       {bySeasonStats.isPending || (shotChartData.isPending && <AppLoader />)}
+
+      <FeedbackAlert
+        feedback={displayErrorFeedback}
+        setDisplayFeedback={setDisplayErrorFeedback}
+      />
 
       {bySeasonStats.data && (
         <div>
