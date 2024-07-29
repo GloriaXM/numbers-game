@@ -8,16 +8,42 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./StatsTable.css";
 import Link from "@mui/material/Link";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import { Typography } from "@mui/material";
 
 function StatsTable({ playersList }) {
+  function handleSortArrowClick() {
+    //TODO: implement logic to set the sort type and direction;
+  }
   return (
     <>
       <TableContainer className="statsTable" component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Player Name</TableCell>
-              <TableCell align="right">Season</TableCell>
+              <TableCell>
+                <Typography>Player Name</Typography>
+                <HorizontalRuleIcon
+                  onClick={handleSortArrowClick}
+                  className="sortArrow"
+                  fontSize="xsmall"
+                />
+              </TableCell>
+              <TableCell>
+                <Typography>Season</Typography>
+                <HorizontalRuleIcon className="sortArrow" fontSize="xsmall" />
+              </TableCell>
+              <TableCell>
+                <Typography>Minutes</Typography>
+                <HorizontalRuleIcon className="sortArrow" fontSize="xsmall" />
+              </TableCell>
+              <TableCell>
+                <Typography>Field Makes</Typography>
+                <HorizontalRuleIcon className="sortArrow" fontSize="xsmall" />
+              </TableCell>
+
               <TableCell align="right">Minutes</TableCell>
               <TableCell align="right">Field Makes</TableCell>
               <TableCell align="right">Field Attempts</TableCell>
