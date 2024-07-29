@@ -180,6 +180,7 @@ app.get("/cronJob", async (req, res) => {
   run();
 });
 
+//Cron Job
 //Run the cron job every day at midnight
 cron.schedule("16 11 * * *", function () {
   run();
