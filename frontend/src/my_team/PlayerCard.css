@@ -1,24 +1,24 @@
 .playerCardList {
   display: flex;
   overflow-x: scroll;
+  height: 500px;
 }
 
 .scene {
-  min-width: 450px;
   height: 260px;
   perspective: 600px;
 }
 
 .playerCard {
-  width: 90%;
-  height: 90%;
+  width: 280px;
+  height: 400px;
   background-color: #77b9ff;
   position: relative;
   transition: transform 1s;
   transform-style: preserve-3d;
   display: flex;
   border: solid thick;
-  margin: 10px;
+  margin: 20px;
   border-radius: 15px;
   align-self: flex-start;
 }
@@ -59,10 +59,6 @@
   color: white;
 }
 
-.stat {
-  margin: 10px;
-}
-
 .playerCardName {
   display: block;
   max-width: 400px;
@@ -74,6 +70,12 @@
 .statRow {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+}
+
+.stat {
+  width: 90px;
+  margin: 5px 10px 10px 10px;
 }
 
 .button {
