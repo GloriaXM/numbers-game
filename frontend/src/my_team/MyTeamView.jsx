@@ -1,10 +1,10 @@
 import Header from "../header/Header";
 import StatsTable from "../table_components/StatsTable.jsx";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../UserContext.js";
 import PlayerCard from "./PlayerCard.jsx";
 import ScoutOpponent from "../opponent/ScoutOpponent.jsx";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader.jsx";
 import ErrorAlert from "../suspense/ErrorAlert.jsx";
 import { Typography } from "@mui/material";
@@ -15,6 +15,9 @@ function MyTeamView() {
 
   const [displayScout, setDisplayScout] = useState(false);
   const [displayServerError, setDisplayServerError] = useState(false);
+
+  const [sortType, setSortType] = useState(null);
+  const [sortDirection, setSortDirection] = useState(null);
 
   const recommendations = useQuery({
     queryKey: ["recommendations"],
@@ -51,6 +54,8 @@ function MyTeamView() {
     const queryUrl = new URL(`${PORT}/teamPlayers`);
     queryUrl.searchParams.append("userId", userContext.user.id);
     queryUrl.searchParams.append("teamType", teamType);
+    queryUrl.searchParams.append("sortType", sortType);
+    queryUrl.searchParams.append("sortDirection", sortDirection);
 
     const sortStyle =
       style === ""
@@ -75,6 +80,10 @@ function MyTeamView() {
       setDisplayScout(true);
     }
   }
+
+  useEffect(() => {
+    myTeamPlayers.refetch();
+  }, [sortType, sortDirection]);
 
   return (
     <div className="view myTeamView">
@@ -125,9 +134,9 @@ function MyTeamView() {
         )}
 
       {displayScout &&
+        myTeamPlayers.data &&
         myTeamPlayers.data.length > 0 &&
-        recommendations.data &&
-        myTeamPlayers.isFetched && (
+        recommendations.data && (
           <ScoutOpponent
             setDisplay={setDisplayScout}
             myTeamPlayers={myTeamPlayers.data}
@@ -144,7 +153,12 @@ function MyTeamView() {
           />
         )}
       {myTeamPlayers.data && myTeamPlayers.data.length != 0 && (
-        <StatsTable playersList={myTeamPlayers.data} />
+        <StatsTable
+          playersList={myTeamPlayers.data}
+          setSortType={setSortType}
+          setSortDirection={setSortDirection}
+          sortType={sortType}
+        />
       )}
     </div>
   );
