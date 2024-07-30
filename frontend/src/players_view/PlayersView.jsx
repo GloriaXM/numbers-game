@@ -1,11 +1,9 @@
 import StatsTable from "../table_components/StatsTable";
 import Header from "../header/Header";
 import SearchBar from "../table_components/SearchBar";
-import SortBar from "../table_components/SortBar";
 import { useState, useEffect } from "react";
 import TablePagination from "@mui/material/TablePagination";
 import "./PlayersView.css";
-import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { AppLoader } from "../suspense/AppLoader";
 import ErrorAlert from "../suspense/ErrorAlert";
@@ -25,41 +23,9 @@ function PlayersView() {
     },
   });
 
-  const SORT_OPTIONS = Object.freeze({
-    no_sort: "Sort Players",
-    id: "ID",
-    player_name: "Player Name",
-    PTS: "Points",
-    field_percent: "Field Percent",
-    three_percent: "Three Percent",
-    two_percent: "Two Percent",
-    effect_fg_percent: "Effective FG Percent",
-    ft_percent: "Free Throw Percent",
-    ORB: "Offensive Rebounds",
-    DRB: "Defensive Rebounds",
-    TRB: "Total Rebounds",
-    AST: "Assists",
-    STL: "Steals",
-    BLK: "Blocks",
-    TOV: "Turnovers",
-    PF: "Personal Fouls",
-  });
   const [sortType, setSortType] = useState("no_sort");
-
-  const SORT_DIRECTIONS = Object.freeze({
-    no_direction: "No Direction",
-    asc: "Ascending",
-    desc: "Descending",
-  });
   const [sortDirection, setSortDirection] = useState("no_direction");
-
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [optionsAnchorEl, setOptionsAnchorEl] = useState(null);
-  const optionsIsOpen = optionsAnchorEl == null ? false : true;
-
-  const [directionAnchorEl, setDirectionAnchorEl] = useState(null);
-  const directionIsOpen = directionAnchorEl == null ? false : true;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,29 +74,15 @@ function PlayersView() {
       {playersList.isPending && <AppLoader />}
       {playersList.data && (
         <div>
-          <div className="sortMenu">
-            <Typography variant="h6" component="h3">
-              Sort Players:
-            </Typography>
-            <SortBar
-              isOpen={optionsIsOpen}
-              option={sortType}
-              setOption={setSortType}
-              anchorEl={optionsAnchorEl}
-              setAnchorEl={setOptionsAnchorEl}
-              options={SORT_OPTIONS}
-            />
-            <SortBar
-              isOpen={directionIsOpen}
-              option={sortDirection}
-              setOption={setSortDirection}
-              anchorEl={directionAnchorEl}
-              setAnchorEl={setDirectionAnchorEl}
-              options={SORT_DIRECTIONS}
-            />
+          <div className="searchPlayers">
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
-          <StatsTable playersList={playersDisplayed} />
+          <StatsTable
+            playersList={playersDisplayed}
+            setSortType={setSortType}
+            setSortDirection={setSortDirection}
+            sortType={sortType}
+          />
           <TablePagination
             component="div"
             count={playersList.data.length}
