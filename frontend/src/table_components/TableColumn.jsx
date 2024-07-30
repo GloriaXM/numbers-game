@@ -13,8 +13,12 @@ function TableColumn({
   sortType,
 }) {
   const [arrowType, setArrowType] = useState(null);
+  const isSortable = setSortType != null && setSortDirection != null;
 
   useEffect(() => {
+    if (setSortDirection == null) {
+      return;
+    }
     setSortDirection(arrowType == true ? "asc" : "desc");
   }, [arrowType]);
 
@@ -37,21 +41,21 @@ function TableColumn({
   return (
     <TableCell align="right">
       <Typography>{statName}</Typography>
-      {arrowType == null && (
+      {isSortable && arrowType == null && (
         <HorizontalRuleIcon
           onClick={handleSortArrowClick}
           className="sortArrow"
           fontSize="xsmall"
         />
       )}
-      {arrowType == true && (
+      {isSortable && arrowType == true && (
         <ArrowDropUpIcon
           onClick={handleSortArrowClick}
           className="sortArrow"
           fontSize="medium"
         />
       )}
-      {arrowType == false && (
+      {isSortable && arrowType == false && (
         <ArrowDropDownIcon
           onClick={handleSortArrowClick}
           className="sortArrow"

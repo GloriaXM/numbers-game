@@ -152,14 +152,16 @@ function MyTeamView() {
             setMyTeamStyle={setStyle}
           />
         )}
-      {myTeamPlayers.data && myTeamPlayers.data.length != 0 && (
-        <StatsTable
-          playersList={myTeamPlayers.data}
-          setSortType={setSortType}
-          setSortDirection={setSortDirection}
-          sortType={sortType}
-        />
-      )}
+      {myTeamPlayers.data &&
+        myTeamPlayers.data.length != 0 &&
+        !displayScout && (
+          <StatsTable
+            playersList={myTeamPlayers.data}
+            setSortType={setSortType}
+            setSortDirection={setSortDirection}
+            sortType={sortType}
+          />
+        )}
     </div>
   );
 }
