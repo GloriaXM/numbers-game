@@ -96,24 +96,47 @@ app.get("/teamPlayers", async (req, res) => {
     req.query.playingStyle == null
       ? "outsideOffenseScore"
       : req.query.playingStyle;
+  const sortType = req.query.sortType;
+  const sortDirection = req.query.sortDirection;
 
-  try {
-    const players = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        [teamType]: {
-          orderBy: {
-            [playingStyle]: "desc",
+  if (sortType !== "null" && sortDirection !== "null") {
+    try {
+      const players = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          [teamType]: {
+            orderBy: {
+              [sortType]: sortDirection,
+            },
           },
         },
-      },
-    });
+      });
 
-    res.json(players);
-  } catch (error) {
-    console.error(error);
+      res.json(players);
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    try {
+      const players = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          [teamType]: {
+            orderBy: {
+              [playingStyle]: "desc",
+            },
+          },
+        },
+      });
+
+      res.json(players);
+    } catch (error) {
+      console.error(error);
+    }
   }
 });
 

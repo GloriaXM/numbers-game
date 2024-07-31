@@ -8,36 +8,52 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./StatsTable.css";
 import Link from "@mui/material/Link";
+import TableColumn from "./TableColumn";
 
-function StatsTable({ playersList }) {
+function StatsTable({ playersList, setSortType, setSortDirection, sortType }) {
+  const stats = [
+    { stat: "player_name", statName: "Player Name" },
+    { stat: "season", statName: "Season" },
+    { stat: "minutes_played", statName: "Minutes" },
+    { stat: "field_goals", statName: "Field Makes" },
+    { stat: "field_attempts", statName: "Field Attempts" },
+    { stat: "field_percent", statName: "Field %" },
+    { stat: "three_fg", statName: "Three Makes" },
+    { stat: "three_attempts", statName: "Three Attempts" },
+    { stat: "three_percent", statName: "Three %" },
+    { stat: "two_fg", statName: "Two Makes" },
+    { stat: "two_attempts", statName: "Two Attempts" },
+    { stat: "two_percent", statName: "Twos %" },
+    { stat: "effect_fg_percent", statName: "Effective FG %" },
+    { stat: "ft", statName: "Free Throw Makes" },
+    { stat: "fta", statName: "FT Attempt" },
+    { stat: "ft_percent", statName: "FT %" },
+    { stat: "ORB", statName: "ORB" },
+    { stat: "DRB", statName: "DRB" },
+    { stat: "TRB", statName: "TRB" },
+    { stat: "AST", statName: "AST" },
+    { stat: "STL", statName: "STL" },
+    { stat: "BLK", statName: "BLK" },
+  ];
+
   return (
     <>
       <TableContainer className="statsTable" component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Player Name</TableCell>
-              <TableCell align="right">Season</TableCell>
-              <TableCell align="right">Minutes</TableCell>
-              <TableCell align="right">Field Makes</TableCell>
-              <TableCell align="right">Field Attempts</TableCell>
-              <TableCell align="right">Field %</TableCell>
-              <TableCell align="right">Three Makes</TableCell>
-              <TableCell align="right">Three Attempts</TableCell>
-              <TableCell align="right">Three %</TableCell>
-              <TableCell align="right">Two Makes</TableCell>
-              <TableCell align="right">Two Attempts</TableCell>
-              <TableCell align="right">Twos %</TableCell>
-              <TableCell align="right">Effective FG %</TableCell>
-              <TableCell align="right">Free Throw Makes</TableCell>
-              <TableCell align="right">FT Attempt</TableCell>
-              <TableCell align="right">FT %</TableCell>
-              <TableCell align="right">ORB</TableCell>
-              <TableCell align="right">DRB</TableCell>
-              <TableCell align="right">TRB</TableCell>
-              <TableCell align="right">AST</TableCell>
-              <TableCell align="right">STL</TableCell>
-              <TableCell align="right">BLK</TableCell>
+              {stats.map((stat) => {
+                return (
+                  <TableColumn
+                    className="columnHeader"
+                    stat={stat.stat}
+                    statName={stat.statName}
+                    setSortType={setSortType}
+                    setSortDirection={setSortDirection}
+                    sortType={sortType}
+                  />
+                );
+              })}
             </TableRow>
           </TableHead>
 
