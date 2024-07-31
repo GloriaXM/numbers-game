@@ -178,6 +178,11 @@ app.get("/cronJob", async (req, res) => {
   run();
 });
 
+//Cron-job to wake up backend
+app.get("/wakeUp", async (req, res) => {
+  res.status(200).json("Rise and shine!");
+});
+
 //Cron Job
 //Run the cron job every day at midnight
 cron.schedule("16 11 * * *", function () {
