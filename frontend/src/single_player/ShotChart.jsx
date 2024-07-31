@@ -1,11 +1,11 @@
 import * as d3 from "d3";
 import { useMemo } from "react";
-import "./ShotChart.css";
+import "./SinglePlayerView.css";
 
 function ShotChart({ shotChartData, height, width }) {
   const MARGIN = { top: 10, right: 10, bottom: 30, left: 30 };
-  const boundsWidth = 1000 - MARGIN.right - MARGIN.left;
-  const boundsHeight = 800 - MARGIN.top - MARGIN.bottom;
+  const boundsWidth = height - MARGIN.right - MARGIN.left;
+  const boundsHeight = width - MARGIN.top - MARGIN.bottom;
 
   const rows = useMemo(
     () => [...new Set(shotChartData.map((dataPoint) => dataPoint.top))],
@@ -16,17 +16,9 @@ function ShotChart({ shotChartData, height, width }) {
     [shotChartData]
   );
 
-  const xScale = d3
-    .scaleBand()
-    .range([0, boundsWidth])
-    .domain(columns)
-    .padding(0.01);
+  const xScale = d3.scaleBand().range([0, 600]).domain(columns).padding(0.01);
 
-  const yScale = d3
-    .scaleBand()
-    .range([boundsHeight, 0])
-    .domain(rows)
-    .padding(0.01);
+  const yScale = d3.scaleBand().range([500, 0]).domain(rows).padding(0.01);
 
   const [min, max] = d3.extent(
     shotChartData.map((dataPoint) => dataPoint.value)
@@ -65,13 +57,7 @@ function ShotChart({ shotChartData, height, width }) {
         alt="court image overlay"
       />
       <svg className="heatMap" width={width} height={height}>
-        <g
-          width={boundsWidth}
-          height={boundsHeight}
-          transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
-        >
-          {chartRegions}
-        </g>
+        <g className="heatRegions">{chartRegions}</g>
       </svg>
     </div>
   );

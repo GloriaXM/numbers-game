@@ -11,6 +11,7 @@ import ShotChart from "./ShotChart.jsx";
 import { PlayerStats } from "./PlayerStats.js";
 import ErrorAlert from "../suspense/ErrorAlert.jsx";
 import FeedbackAlert from "../suspense/FeedbackAlert.jsx";
+import "./SinglePlayerView.css";
 
 function SinglePlayerView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
@@ -122,10 +123,10 @@ function SinglePlayerView() {
 
     shotCoordinates.forEach((coord) => {
       const row = Math.floor(
-        coord.top / ((PIXEL_TO_REGION_SCALING_FACTOR - 100) / SHOT_CHART_COLS)
+        coord.top / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_ROWS)
       );
       const col = Math.floor(
-        coord.left / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_ROWS)
+        coord.left / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_COLS)
       );
       shotMatrix[row][col] += 1;
     });
@@ -187,27 +188,29 @@ function SinglePlayerView() {
             {" "}
             Add to Opponents
           </Button>
-          <LineGraph careerData={bySeasonStats.data} />
         </div>
       )}
 
-      {shotChartData.data == null && !shotChartData.isPending && (
-        <h3>
-          {" "}
-          Shot chart not available for this player. Check Stephen Curry for an
-          example
-        </h3>
-      )}
+      <div className="models">
+        {bySeasonStats.data && <LineGraph careerData={bySeasonStats.data} />}
+        {shotChartData.data == null && !shotChartData.isPending && (
+          <h3>
+            {" "}
+            Shot chart not available for this player. Check Stephen Curry for an
+            example
+          </h3>
+        )}
 
-      {shotChartData.isPending && <h3> Loading Shot Chart ...</h3>}
+        {shotChartData.isPending && <h3> Loading Shot Chart ...</h3>}
 
-      {shotChartData.data != null && (
-        <ShotChart
-          shotChartData={shotChartData.data}
-          height={800}
-          width={1000}
-        />
-      )}
+        {shotChartData.data != null && (
+          <ShotChart
+            shotChartData={shotChartData.data}
+            height={500}
+            width={600}
+          />
+        )}
+      </div>
 
       {bySeasonStats.data && <StatsTable playersList={bySeasonStats.data} />}
     </div>
