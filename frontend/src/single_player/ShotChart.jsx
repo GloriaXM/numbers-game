@@ -38,6 +38,9 @@ function ShotChart({ shotChartData, height, width }) {
     .domain([min, max]);
 
   const chartRegions = shotChartData.map((region, i) => {
+    const color = colorScale(region.value).substring(1);
+    const colorHex = parseInt(color, 16);
+    const whiteHex = 0xffffff;
     return (
       <rect
         key={i}
@@ -46,43 +49,11 @@ function ShotChart({ shotChartData, height, width }) {
         y={yScale(region.top)}
         width={xScale.bandwidth()}
         height={yScale.bandwidth()}
-        opacity={1}
+        opacity={colorHex / whiteHex}
         fill={colorScale(region.value)}
         rx={5}
         stroke={"white"}
       />
-    );
-  });
-
-  const xLabels = columns.map((name, i) => {
-    const xPos = xScale(name) ?? 0;
-    return (
-      <text
-        key={i}
-        x={xPos + xScale.bandwidth() / 2}
-        y={boundsHeight + 10}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fontSize={10}
-      >
-        {name}
-      </text>
-    );
-  });
-
-  const yLabels = rows.map((name, i) => {
-    const yPos = yScale(name) ?? 0;
-    return (
-      <text
-        key={i}
-        x={-5}
-        y={yPos + yScale.bandwidth() / 2}
-        textAnchor="end"
-        dominantBaseline="middle"
-        fontSize={10}
-      >
-        {name}
-      </text>
     );
   });
 
@@ -100,8 +71,6 @@ function ShotChart({ shotChartData, height, width }) {
           transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
         >
           {chartRegions}
-          {xLabels}
-          {yLabels}
         </g>
       </svg>
     </div>

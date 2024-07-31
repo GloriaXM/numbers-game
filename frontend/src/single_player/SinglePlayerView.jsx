@@ -27,8 +27,8 @@ function SinglePlayerView() {
   });
   const [byAggregateStats, setByAggregateStats] = useState([]);
 
-  const SHOT_CHART_ROWS = 20;
-  const SHOT_CHART_COLS = 20;
+  const SHOT_CHART_ROWS = 40;
+  const SHOT_CHART_COLS = 40;
   const PIXEL_TO_REGION_SCALING_FACTOR = 500;
 
   const shotChartData = useQuery({
@@ -122,7 +122,7 @@ function SinglePlayerView() {
 
     shotCoordinates.forEach((coord) => {
       const row = Math.floor(
-        coord.top / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_COLS)
+        coord.top / ((PIXEL_TO_REGION_SCALING_FACTOR - 100) / SHOT_CHART_COLS)
       );
       const col = Math.floor(
         coord.left / (PIXEL_TO_REGION_SCALING_FACTOR / SHOT_CHART_ROWS)
@@ -198,6 +198,8 @@ function SinglePlayerView() {
           example
         </h3>
       )}
+
+      {shotChartData.isPending && <h3> Loading Shot Chart ...</h3>}
 
       {shotChartData.data != null && (
         <ShotChart

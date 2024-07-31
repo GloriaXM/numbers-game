@@ -10,10 +10,11 @@
 }
 
 .img-overlay-wrap img {
+  position: absolute;
   display: block;
   max-width: 100%;
   height: auto;
-  transform: rotate(180deg) translate(0px, 150px);
+  transform: rotate(180deg) translate(10px, 170px);
   width: 970px;
   margin-left: 20px;
 }
@@ -22,5 +23,4 @@
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.5;
 }
