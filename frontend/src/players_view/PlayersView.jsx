@@ -12,7 +12,6 @@ function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [displayServerError, setDisplayServerError] = useState(false);
 
-  const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -41,7 +40,10 @@ function PlayersView() {
       let queryUrl = new URL(`${PORT}/players`);
       queryUrl.searchParams.append("sortType", sortType);
       queryUrl.searchParams.append("sortDirection", sortDirection);
+      queryUrl.searchParams.append("startPlayerIndex", page * rowsPerPage);
+      queryUrl.searchParams.append("rowsPerPage", rowsPerPage);
       queryUrl.searchParams.append("playerName", searchQuery);
+
       const response = await fetch(queryUrl);
       const players = await response.json();
       return players;
@@ -52,16 +54,8 @@ function PlayersView() {
   }
 
   useEffect(() => {
-    const start = page * rowsPerPage;
-    const end = start + rowsPerPage;
-    setPlayersDisplayed(
-      playersList.data ? playersList.data.slice(start, end) : []
-    );
-  }, [page, rowsPerPage, playersList.data]);
-
-  useEffect(() => {
     playersList.refetch();
-  }, [sortType, sortDirection, searchQuery]);
+  }, [sortType, sortDirection, searchQuery, page, rowsPerPage]);
 
   return (
     <div className="view playersView">
@@ -78,14 +72,14 @@ function PlayersView() {
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <StatsTable
-            playersList={playersDisplayed}
+            playersList={playersList.data}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
             sortType={sortType}
           />
           <TablePagination
             component="div"
-            count={playersList.data.length}
+            count={10}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
