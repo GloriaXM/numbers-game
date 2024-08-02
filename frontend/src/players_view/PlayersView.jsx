@@ -65,7 +65,11 @@ function PlayersView() {
 
   useEffect(() => {
     playersList.refetch();
-  }, [sortType, sortDirection, searchQuery, page, rowsPerPage]);
+  }, [sortType, sortDirection, page, searchQuery, rowsPerPage]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [searchQuery]);
 
   return (
     <div className="view playersView">
