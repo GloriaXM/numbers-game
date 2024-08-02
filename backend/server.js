@@ -44,6 +44,8 @@ app.use(userRoutes);
 //GETS
 app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
+  const startPlayerIndex = parseInt(req.query.startPlayerIndex);
+  const rowsPerPage = parseInt(req.query.rowsPerPage);
 
   if (sortType != "no_sort" && sortDirection != "no_direction") {
     try {
@@ -58,6 +60,8 @@ app.get("/players", async (req, res) => {
               }
             : {}),
         },
+        skip: startPlayerIndex,
+        take: rowsPerPage,
         orderBy: [
           {
             [sortType]: sortDirection,
@@ -81,6 +85,8 @@ app.get("/players", async (req, res) => {
               }
             : {}),
         },
+        skip: startPlayerIndex,
+        take: rowsPerPage,
       });
       res.json(players);
     } catch (error) {
@@ -145,6 +151,15 @@ app.get("/scoutOpponent", async (req, res) => {
   try {
     const result = await generateRecommendations(userId);
     return res.json(result);
+  } catch {
+    console.error(error);
+  }
+});
+
+app.get("/playersCount", async (req, res) => {
+  try {
+    const playerCount = await prisma.player.count();
+    return res.json(playerCount);
   } catch {
     console.error(error);
   }
