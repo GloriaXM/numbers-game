@@ -82,14 +82,14 @@ function PlayersView() {
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <StatsTable
-            playersList={playersList.data}
+            playersList={playersList.data.players}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
             sortType={sortType}
           />
           <TablePagination
             component="div"
-            count={playersCount.data}
+            count={playersList.data.count}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
