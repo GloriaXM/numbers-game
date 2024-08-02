@@ -26,6 +26,16 @@ function PlayersView() {
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const playersCount = useQuery({
+    queryKey: ["playersCount"],
+    queryFn: async () => {
+      let queryUrl = new URL(`${PORT}/playersCount`);
+      const response = await fetch(queryUrl);
+      const playersCount = await response.json();
+      return playersCount;
+    },
+  });
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -79,7 +89,7 @@ function PlayersView() {
           />
           <TablePagination
             component="div"
-            count={10}
+            count={playersCount.data}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

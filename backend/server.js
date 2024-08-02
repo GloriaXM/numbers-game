@@ -158,6 +158,15 @@ app.get("/scoutOpponent", async (req, res) => {
   }
 });
 
+app.get("/playersCount", async (req, res) => {
+  try {
+    const playerCount = await prisma.player.count();
+    return res.json(playerCount);
+  } catch {
+    console.error(error);
+  }
+});
+
 //UPDATES
 app.patch("/player", async (req, res) => {
   const playerType = req.body.playerType;
