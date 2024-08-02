@@ -14,6 +14,7 @@ function StatsTable({ playersList, setSortType, setSortDirection, sortType }) {
   const stats = [
     { stat: "player_name", statName: "Player Name" },
     { stat: "season", statName: "Season" },
+    { stat: "PTS", statName: "Points" },
     { stat: "minutes_played", statName: "Minutes" },
     { stat: "field_goals", statName: "Field Makes" },
     { stat: "field_attempts", statName: "Field Attempts" },
