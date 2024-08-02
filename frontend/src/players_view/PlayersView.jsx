@@ -65,7 +65,11 @@ function PlayersView() {
 
   useEffect(() => {
     playersList.refetch();
-  }, [sortType, sortDirection, searchQuery, page, rowsPerPage]);
+  }, [sortType, sortDirection, page, searchQuery, rowsPerPage]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [searchQuery]);
 
   return (
     <div className="view playersView">
@@ -82,14 +86,14 @@ function PlayersView() {
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <StatsTable
-            playersList={playersList.data}
+            playersList={playersList.data.players}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
             sortType={sortType}
           />
           <TablePagination
             component="div"
-            count={playersCount.data}
+            count={playersList.data.count}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

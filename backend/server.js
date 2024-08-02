@@ -46,49 +46,49 @@ app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
   const startPlayerIndex = parseInt(req.query.startPlayerIndex);
   const rowsPerPage = parseInt(req.query.rowsPerPage);
+  const query = {
+    where: {
+      ...(playerName !== ""
+        ? {
+            player_name: {
+              contains: playerName,
+              mode: "insensitive",
+            },
+          }
+        : {}),
+    },
+    skip: startPlayerIndex,
+    take: rowsPerPage,
+    orderBy: [
+      {
+        [sortType]: sortDirection,
+      },
+    ],
+  };
 
   if (sortType != "no_sort" && sortDirection != "no_direction") {
     try {
-      const players = await prisma.player.findMany({
-        where: {
-          ...(playerName !== ""
-            ? {
-                player_name: {
-                  contains: playerName,
-                  mode: "insensitive",
-                },
-              }
-            : {}),
-        },
-        skip: startPlayerIndex,
-        take: rowsPerPage,
-        orderBy: [
-          {
-            [sortType]: sortDirection,
-          },
-        ],
-      });
-      res.json(players);
+      const [players, count] = await prisma.$transaction([
+        prisma.player.findMany(query),
+        prisma.player.count({ where: query.where }),
+      ]);
+
+      res.json({ players, count });
     } catch (error) {
       console.error(error);
     }
   } else {
     try {
-      const players = await prisma.player.findMany({
-        where: {
-          ...(playerName !== ""
-            ? {
-                player_name: {
-                  contains: playerName,
-                  mode: "insensitive",
-                },
-              }
-            : {}),
-        },
-        skip: startPlayerIndex,
-        take: rowsPerPage,
-      });
-      res.json(players);
+      const [players, count] = await prisma.$transaction([
+        prisma.player.findMany({
+          where: query.where,
+          skip: query.skip,
+          take: query.take,
+        }),
+        prisma.player.count({ where: query.where }),
+      ]);
+
+      res.json({ players, count });
     } catch (error) {
       console.error(error);
     }
