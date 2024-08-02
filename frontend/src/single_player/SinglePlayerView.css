@@ -1,26 +1,40 @@
 /* Taken from https://stackoverflow.com/questions/43806515/position-svg-elements-over-an-image */
 
+.models {
+  display: flex;
+  justify-content: space-around;
+}
+
 .img-overlay-wrap {
   position: relative;
   display: inline-block;
   transition: transform 150ms ease-in-out;
-  width: 1000px;
-  height: 800px;
-  overflow: hidden;
+  width: 600px;
+  height: 500px;
+}
+
+.shotChart {
+  min-width: 600px;
+  height: 500px;
+  margin: 20px;
 }
 
 .img-overlay-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
-  max-width: 100%;
-  height: auto;
-  transform: rotate(180deg) translate(0px, 150px);
-  width: 970px;
-  margin-left: 20px;
+  width: 600px;
+  height: 500px;
+  transform: rotate(180deg);
 }
 
 .img-overlay-wrap svg {
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.5;
+}
+
+.heatRegions {
+  width: 100%;
 }

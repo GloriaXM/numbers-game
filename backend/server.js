@@ -44,45 +44,51 @@ app.use(userRoutes);
 //GETS
 app.get("/players", async (req, res) => {
   const { sortType, sortDirection, playerName } = req.query;
+  const startPlayerIndex = parseInt(req.query.startPlayerIndex);
+  const rowsPerPage = parseInt(req.query.rowsPerPage);
+  const query = {
+    where: {
+      ...(playerName !== ""
+        ? {
+            player_name: {
+              contains: playerName,
+              mode: "insensitive",
+            },
+          }
+        : {}),
+    },
+    skip: startPlayerIndex,
+    take: rowsPerPage,
+    orderBy: [
+      {
+        [sortType]: sortDirection,
+      },
+    ],
+  };
 
   if (sortType != "no_sort" && sortDirection != "no_direction") {
     try {
-      const players = await prisma.player.findMany({
-        where: {
-          ...(playerName !== ""
-            ? {
-                player_name: {
-                  contains: playerName,
-                  mode: "insensitive",
-                },
-              }
-            : {}),
-        },
-        orderBy: [
-          {
-            [sortType]: sortDirection,
-          },
-        ],
-      });
-      res.json(players);
+      const [players, count] = await prisma.$transaction([
+        prisma.player.findMany(query),
+        prisma.player.count({ where: query.where }),
+      ]);
+
+      res.json({ players, count });
     } catch (error) {
       console.error(error);
     }
   } else {
     try {
-      const players = await prisma.player.findMany({
-        where: {
-          ...(playerName !== ""
-            ? {
-                player_name: {
-                  contains: playerName,
-                  mode: "insensitive",
-                },
-              }
-            : {}),
-        },
-      });
-      res.json(players);
+      const [players, count] = await prisma.$transaction([
+        prisma.player.findMany({
+          where: query.where,
+          skip: query.skip,
+          take: query.take,
+        }),
+        prisma.player.count({ where: query.where }),
+      ]);
+
+      res.json({ players, count });
     } catch (error) {
       console.error(error);
     }
@@ -145,6 +151,15 @@ app.get("/scoutOpponent", async (req, res) => {
   try {
     const result = await generateRecommendations(userId);
     return res.json(result);
+  } catch {
+    console.error(error);
+  }
+});
+
+app.get("/playersCount", async (req, res) => {
+  try {
+    const playerCount = await prisma.player.count();
+    return res.json(playerCount);
   } catch {
     console.error(error);
   }

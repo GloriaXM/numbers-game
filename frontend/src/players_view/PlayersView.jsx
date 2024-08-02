@@ -12,7 +12,6 @@ function PlayersView() {
   const PORT = import.meta.env.VITE_BACKEND_PORT;
   const [displayServerError, setDisplayServerError] = useState(false);
 
-  const [playersDisplayed, setPlayersDisplayed] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -26,6 +25,16 @@ function PlayersView() {
   const [sortType, setSortType] = useState("no_sort");
   const [sortDirection, setSortDirection] = useState("no_direction");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const playersCount = useQuery({
+    queryKey: ["playersCount"],
+    queryFn: async () => {
+      let queryUrl = new URL(`${PORT}/playersCount`);
+      const response = await fetch(queryUrl);
+      const playersCount = await response.json();
+      return playersCount;
+    },
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -41,7 +50,10 @@ function PlayersView() {
       let queryUrl = new URL(`${PORT}/players`);
       queryUrl.searchParams.append("sortType", sortType);
       queryUrl.searchParams.append("sortDirection", sortDirection);
+      queryUrl.searchParams.append("startPlayerIndex", page * rowsPerPage);
+      queryUrl.searchParams.append("rowsPerPage", rowsPerPage);
       queryUrl.searchParams.append("playerName", searchQuery);
+
       const response = await fetch(queryUrl);
       const players = await response.json();
       return players;
@@ -52,16 +64,12 @@ function PlayersView() {
   }
 
   useEffect(() => {
-    const start = page * rowsPerPage;
-    const end = start + rowsPerPage;
-    setPlayersDisplayed(
-      playersList.data ? playersList.data.slice(start, end) : []
-    );
-  }, [page, rowsPerPage, playersList.data]);
+    playersList.refetch();
+  }, [sortType, sortDirection, page, searchQuery, rowsPerPage]);
 
   useEffect(() => {
-    playersList.refetch();
-  }, [sortType, sortDirection, searchQuery]);
+    setPage(0);
+  }, [searchQuery]);
 
   return (
     <div className="view playersView">
@@ -78,14 +86,14 @@ function PlayersView() {
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <StatsTable
-            playersList={playersDisplayed}
+            playersList={playersList.data.players}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
             sortType={sortType}
           />
           <TablePagination
             component="div"
-            count={playersList.data.length}
+            count={playersList.data.count}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
