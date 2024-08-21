@@ -30,7 +30,7 @@ populate the database with players from multiple different leagues.
 
 ## Stretch
 - [x] For players with shot chart data available, the user can see a shot chart of the most taken shots
-- [x] Deployed the project on Render: https://numbers-game-f22.onrender.com
+- [x] Deployed the project on Render: https://numbers-game-f22.onrender.com (currently suspended to preserve free instance)
 - [x] Error boundary, exception handling backend to prevent server crash, exception handling frontend ui feedback
 
 ## Resources
